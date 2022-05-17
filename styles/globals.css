@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-h1 {
+    @apply text-5xl 2xl:text-6xl;
+  }
+
+  .text-h2 {
+    @apply text-4xl 2xl:text-5xl;
+  }
+
+  .text-h3 {
+    @apply text-3xl 2xl:text-4xl;
+  }
+
+  .text-body2 {
+    @apply text-2xl 2xl:text-3xl;
+  }
+
+  .text-body3 {
+    @apply text-xl 2xl:text-2xl;
+  }
+
+  .px-section {
+    @apply px-36 2xl:px-52;
+  }
+}
