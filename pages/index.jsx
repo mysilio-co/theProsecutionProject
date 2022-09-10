@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import * as d3 from "d3";
+import Fuse from "fuse.js";
 import useSWR from "swr";
 import { Disclosure } from "@headlessui/react";
 import {
@@ -44,6 +45,7 @@ function DataTable({ title, data }) {
                         <th
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          key={h}
                         >
                           <a href="#" className="group inline-flex">
                             {h}
@@ -65,11 +67,11 @@ function DataTable({ title, data }) {
                   {data &&
                     data.map((row, idx) => (
                       <tr
-                        key={row["Case ID"]}
+                        key={idx}
                         className={idx % 2 === 0 ? undefined : "bg-gray-50"}
                       >
                         {headers.map((h) => (
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500" key={h}>
                             {row[h]}
                           </td>
                         ))}
@@ -92,10 +94,22 @@ const csvFetcher = (url) =>
 
 function DataDisplay({ search, title, dataUrl }) {
   const { data, isLoerror } = useSWR(dataUrl, csvFetcher);
-
-  // TODO filter data based on search value using Fuse
-
-  return <DataTable title={title} data={data} />;
+  const options = {
+    isCaseSensitive: false,
+    keys: [
+      "Case ID",
+    ]
+  };
+  if(!!data) {
+    let dataToBeDisplayed = data;
+    if (!!search) {
+      const cleanedData = Array.from(new Fuse(data, options).search(search), row=>row.item);
+      cleanedData.columns = data.columns;
+      dataToBeDisplayed = cleanedData;
+    }
+    return <DataTable title={title} data={ dataToBeDisplayed } />;
+  }
+  return <DataTable title={title} data={ null } />;
 }
 
 export default function DataExplorer() {
@@ -161,9 +175,10 @@ export default function DataExplorer() {
               >
                 {tabs.map((tab) => (
                   <Link
+                    key={tab}
                     href={{
                       pathname: "/",
-                      query: search ? { tab, search } : { tab },
+                      query: search ? { tab, search } : { tab }
                     }}
                   >
                     <a
