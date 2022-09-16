@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import Fuse from "fuse.js";
 import useSWR from "swr";
 import { Disclosure } from "@headlessui/react";
+import * as filter from "../scripts/filter.js";
 import {
   SearchIcon,
   ChevronDownIcon,
@@ -96,11 +97,13 @@ function DataDisplay({ search, title, dataUrl }) {
   const { data, isLoerror } = useSWR(dataUrl, csvFetcher);
   const options = {
     isCaseSensitive: false,
+    threshold: 0.2,
     keys: [
-      "Case ID",
+      "Group affiliation",
     ]
   };
   if(!!data) {
+    filter.generateListDropdowns(data);
     let dataToBeDisplayed = data;
     if (!!search) {
       const cleanedData = Array.from(new Fuse(data, options).search(search), row=>row.item);
