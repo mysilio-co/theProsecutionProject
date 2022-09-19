@@ -15,8 +15,6 @@ export const LIST_KEYS = [
 "Criminal method",
 "Additional criminal method",
 "Completion of crime",
-"# killed",
-"# injured",
 "Plea",
 "Verdict",
 "Gender",

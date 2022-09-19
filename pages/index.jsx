@@ -2,15 +2,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import * as d3 from "d3";
-import Fuse from "fuse.js";
+
 import useSWR from "swr";
+import SearchForm from '../components/basic-search.jsx';
 import { Disclosure } from "@headlessui/react";
-import * as filter from "../scripts/filter.js";
 import {
   SearchIcon,
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/solid";
+import fuzzySearch from "../scripts/fuzzy-search.js";
 
 const DataUrls = {
   Pending:
@@ -93,24 +94,9 @@ const csvFetcher = (url) =>
     .then((r) => r.text())
     .then((t) => d3.csvParse(t));
 
-function DataDisplay({ search, title, dataUrl }) {
-  const { data, isLoerror } = useSWR(dataUrl, csvFetcher);
-  const options = {
-    isCaseSensitive: false,
-    threshold: 0.2,
-    keys: [
-      "Group affiliation",
-    ]
-  };
+function DataDisplay({ title, data }) {
   if(!!data) {
-    filter.generateListDropdowns(data);
-    let dataToBeDisplayed = data;
-    if (!!search) {
-      const cleanedData = Array.from(new Fuse(data, options).search(search), row=>row.item);
-      cleanedData.columns = data.columns;
-      dataToBeDisplayed = cleanedData;
-    }
-    return <DataTable title={title} data={ dataToBeDisplayed } />;
+    return <DataTable title={title} data={ data } />;
   }
   return <DataTable title={title} data={ null } />;
 }
@@ -121,6 +107,9 @@ export default function DataExplorer() {
   const query = router.query;
   const selected = query.tab || tabs[0];
   const search = query.search || "";
+
+  const { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+  const cleanedData = fuzzySearch(data, search)
 
   return (
     <>
@@ -203,10 +192,11 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
+      <SearchForm
+        data={cleanedData}/>
       <DataDisplay
-        search={search}
         title={selected}
-        dataUrl={DataUrls[selected]}
+        data={cleanedData}
       />
     </>
   );
