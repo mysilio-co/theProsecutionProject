@@ -11,7 +11,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/solid";
-import fuzzySearch from "../scripts/fuzzy-search.js";
+import { fuzzySearch, sort } from "../scripts/data-handling.js";
 
 const DataUrls = {
   Pending:
@@ -25,6 +25,7 @@ function classNames(...classes) {
 
 function DataTable({ title, data }) {
   const headers = data && data[0] && Object.keys(data[0]);
+  const [refresh, setRefresh] = useState(0);
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -49,7 +50,7 @@ function DataTable({ title, data }) {
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                           key={h}
                         >
-                          <a href="#" className="group inline-flex">
+                          <a onClick={() => {sort(data, h); setRefresh(refresh => refresh + 1); }} className="group inline-flex">
                             {h}
                             <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
                               <ChevronDownIcon
@@ -57,7 +58,7 @@ function DataTable({ title, data }) {
                                 aria-hidden="true"
                               />
                               {
-                                // TODO: sort
+
                               }
                             </span>
                           </a>
@@ -109,7 +110,7 @@ export default function DataExplorer() {
   const search = query.search || "";
 
   const { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
-  const cleanedData = fuzzySearch(data, search)
+  const cleanedData = fuzzySearch(data, search);
 
   return (
     <>
