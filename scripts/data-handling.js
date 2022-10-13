@@ -1,13 +1,18 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
+import { SEARCH_BY_KEYS } from "./constants";
 
-export function fuzzySearch(data, search) {
-    const options = {
+export function fuzzySearch(data, search, key) {
+  if(key==="Any") {
+    key = SEARCH_BY_KEYS;
+  }
+  else {
+    key = [key];
+  }
+  const options = {
     isCaseSensitive: false,
     threshold: 0.2,
-    keys: [
-      "Group affiliation",
-    ]
+    keys: key
   };
   if(!!data) {
     data = data.filter(row => row.Date.length!=0);
@@ -20,8 +25,21 @@ export function fuzzySearch(data, search) {
   return data;
 }
 
-export function sort(data, column) {
-  data = data.sort((a, b)=> {
-    return d3.ascending(a[column], b[column]);
-  })
+export function sort(data, column, currentColumn, ascending) {
+  if(column===currentColumn) {
+    ascending = !ascending;
+  }
+  else {
+    ascending = true;
+  }
+  if(ascending) {
+    data = data.sort((a, b)=> {
+      return d3.ascending(a[column], b[column]);
+    });
+  }
+  else {
+    data = data.sort((a, b)=> {
+      return d3.descending(a[column], b[column]);
+    });
+  }
 }

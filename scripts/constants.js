@@ -25,3 +25,16 @@ export const LIST_KEYS = [
 "Combat veteran",
 "Citizenship status",
 ]
+
+export const SEARCH_BY_KEYS = [
+    "Any",
+    "Charges",
+    "Plea",
+    "Group affiliation",
+    "Full legal name",
+    "Other names/aliases",
+    "Name of case",
+    "Location: country",
+    "Location: state",
+    "Location: city"
+]

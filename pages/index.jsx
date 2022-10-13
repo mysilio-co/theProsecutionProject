@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { SEARCH_BY_KEYS } from "../scripts/constants";
 import * as d3 from "d3";
 
 import useSWR from "swr";
-import SearchForm from '../components/basic-search.jsx';
-import { Disclosure } from "@headlessui/react";
+import BasicSearch from '../components/basic-search.jsx';
+import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import {
   SearchIcon,
+  CheckIcon,
   ChevronDownIcon,
-  ChevronUpIcon,
+  ChevronUpIcon
 } from "@heroicons/react/solid";
 import { fuzzySearch, sort } from "../scripts/data-handling.js";
 
@@ -25,7 +27,12 @@ function classNames(...classes) {
 
 function DataTable({ title, data }) {
   const headers = data && data[0] && Object.keys(data[0]);
-  const [refresh, setRefresh] = useState(0);
+  const [currentColumn, setCurrentColumn] = useState("");
+  const [ascending, setAscending] = useState(true);
+  useEffect(()=>{
+    setCurrentColumn("");
+  },[data])
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -50,17 +57,23 @@ function DataTable({ title, data }) {
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                           key={h}
                         >
-                          <a onClick={() => {sort(data, h); setRefresh(refresh => refresh + 1); }} className="group inline-flex">
-                            {h}
-                            <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
-                              <ChevronDownIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                              {
-
-                              }
-                            </span>
+                          <a onClick={() => {sort(data, h, currentColumn, ascending); setAscending(ascending => {if(currentColumn===h){return !ascending;} else {return true}}); setCurrentColumn(h); }} className="group cursor-pointer inline-flex">
+                            <p className={(currentColumn===h ? 'underline' : '') + ""}>{h}</p>
+                            {currentColumn===h && !ascending ? (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                                <ChevronUpIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            ) : (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                                <ChevronDownIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            )}
                           </a>
                         </th>
                       ))}
@@ -108,9 +121,10 @@ export default function DataExplorer() {
   const query = router.query;
   const selected = query.tab || tabs[0];
   const search = query.search || "";
+  const [selectedKey, setSelectedKey] = useState(SEARCH_BY_KEYS[0])
 
   const { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
-  const cleanedData = fuzzySearch(data, search);
+  const cleanedData = fuzzySearch(data, search, selectedKey);
 
   return (
     <>
@@ -128,7 +142,7 @@ export default function DataExplorer() {
                     />
                   </div>
                 </div>
-                <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:absolute sm:inset-0">
+                <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:inset-0">
                   <div className="w-full sm:max-w-xs">
                     <label htmlFor="search" className="sr-only">
                       Search
@@ -160,7 +174,74 @@ export default function DataExplorer() {
                       />
                     </div>
                   </div>
-                </div>
+                </div>  
+                <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:inset-0">
+                    <div className="w-full sm:max-w-md inline-flex items-center">
+                    <Listbox value={selectedKey} onChange={setSelectedKey}>
+                        {({ open }) => (
+                          <>
+                            <Listbox.Label className="block text-sm pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
+                            <div className="relative mt-1">
+                              <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-40 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                <span className="flex items-center">
+                                  <span className="ml-3 block truncate">{selectedKey}</span>
+                                </span>
+                                <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                                  <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                </span>
+                              </Listbox.Button>
+
+                              <Transition
+                                show={open}
+                                as={Fragment}
+                                leave="transition ease-in duration-100"
+                                leaveFrom="opacity-100"
+                                leaveTo="opacity-0"
+                              >
+                                <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                  {SEARCH_BY_KEYS.map((key, idx) => (
+                                    <Listbox.Option
+                                      key={idx}
+                                      className={({ active }) =>
+                                        classNames(
+                                          active ? 'text-white bg-indigo-600' : 'text-gray-900',
+                                          'relative cursor-default select-none py-2 pl-3 pr-9 text-sm'
+                                        )
+                                      }
+                                      value={key}
+                                    >
+                                      {({ selectedKey, active }) => (
+                                        <>
+                                          <div className="flex items-center">
+                                            <span
+                                              className={classNames(selectedKey ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}
+                                            >
+                                              {key}
+                                            </span>
+                                          </div>
+
+                                          {selectedKey ? (
+                                            <span
+                                              className={classNames(
+                                                active ? 'text-white' : 'text-indigo-600',
+                                                'absolute inset-y-0 right-0 flex items-center pr-4'
+                                              )}
+                                            >
+                                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                            </span>
+                                          ) : null}
+                                        </>
+                                      )}
+                                    </Listbox.Option>
+                                  ))}
+                                </Listbox.Options>
+                              </Transition>
+                            </div>
+                          </>
+                        )}
+                      </Listbox>
+                    </div>
+                  </div>
               </div>
               <nav
                 className="hidden lg:py-2 lg:flex lg:space-x-8"
@@ -193,8 +274,8 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      <SearchForm
-        data={cleanedData}/>
+      {/* <SearchForm
+        data={data}/> */}
       <DataDisplay
         title={selected}
         data={cleanedData}
