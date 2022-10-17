@@ -5,7 +5,7 @@ import { SEARCH_BY_KEYS } from "../scripts/constants";
 import * as d3 from "d3";
 
 import useSWR from "swr";
-import BasicSearch from '../components/basic-search.jsx';
+import FilterDropdowns from '../components/filter.jsx';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import {
   SearchIcon,
@@ -274,8 +274,10 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      {/* <SearchForm
-        data={data}/> */}
+      <FilterDropdowns
+        data={data}
+        cleanedData={cleanedData}
+        />
       <DataDisplay
         title={selected}
         data={cleanedData}

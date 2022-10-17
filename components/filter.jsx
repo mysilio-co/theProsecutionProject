@@ -1,7 +1,7 @@
 import Dropdown from './dropdown.jsx';
 import { generateListDropdowns } from '../scripts/filter';
 
-export default function BasicSearch({data}) {
+export default function FilterDropdowns({data, cleanedData}) {
     return (
       <form>
         {
@@ -9,7 +9,6 @@ export default function BasicSearch({data}) {
             return <Dropdown label={Object.keys(entry)} options={Object.values(entry)[0]} key={index}/>
           })
         }
-        <input type="submit" value="Submit" />
       </form>
     );
   }
