@@ -1,14 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import * as d3 from "d3";
+
 import useSWR from "swr";
-import { Disclosure } from "@headlessui/react";
+import FilterDropdowns from '../components/filter.jsx';
+import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import {
   SearchIcon,
+  CheckIcon,
   ChevronDownIcon,
-  ChevronUpIcon,
+  ChevronUpIcon
 } from "@heroicons/react/solid";
+import { fuzzySearch, sort } from "../scripts/data-handling.js";
+import SearchBy from "../components/search-by";
+import { addQueryParam } from "../scripts/router-handling";
+import BasicSearch from "../components/basic-search";
 
 const DataUrls = {
   Pending:
@@ -22,6 +28,12 @@ function classNames(...classes) {
 
 function DataTable({ title, data }) {
   const headers = data && data[0] && Object.keys(data[0]);
+  const [currentColumn, setCurrentColumn] = useState("");
+  const [ascending, setAscending] = useState(true);
+  useEffect(()=>{
+    setCurrentColumn("");
+  },[data])
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -44,18 +56,25 @@ function DataTable({ title, data }) {
                         <th
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          key={h}
                         >
-                          <a href="#" className="group inline-flex">
-                            {h}
-                            <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
-                              <ChevronDownIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                              {
-                                // TODO: sort
-                              }
-                            </span>
+                          <a onClick={() => {sort(data, h, currentColumn, ascending); setAscending(ascending => {if(currentColumn===h){return !ascending;} else {return true}}); setCurrentColumn(h); }} className="group cursor-pointer inline-flex">
+                            <p className={(currentColumn===h ? 'underline' : '') + ""}>{h}</p>
+                            {currentColumn===h && !ascending ? (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                                <ChevronUpIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            ) : (
+                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                                <ChevronDownIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            )}
                           </a>
                         </th>
                       ))}
@@ -65,11 +84,11 @@ function DataTable({ title, data }) {
                   {data &&
                     data.map((row, idx) => (
                       <tr
-                        key={row["Case ID"]}
+                        key={idx}
                         className={idx % 2 === 0 ? undefined : "bg-gray-50"}
                       >
                         {headers.map((h) => (
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500" key={h}>
                             {row[h]}
                           </td>
                         ))}
@@ -90,20 +109,25 @@ const csvFetcher = (url) =>
     .then((r) => r.text())
     .then((t) => d3.csvParse(t));
 
-function DataDisplay({ search, title, dataUrl }) {
-  const { data, isLoerror } = useSWR(dataUrl, csvFetcher);
-
-  // TODO filter data based on search value using Fuse
-
-  return <DataTable title={title} data={data} />;
+function DataDisplay({ title, data }) {
+  if(!!data) {
+    return <DataTable title={title} data={ data } />;
+  }
+  return <DataTable title={title} data={ null } />;
 }
 
 export default function DataExplorer() {
   const tabs = Object.keys(DataUrls);
   const router = useRouter();
   const query = router.query;
+  useEffect(() => {
+    addQueryParam("tab", tabs[0], router);
+  }, []);
   const selected = query.tab || tabs[0];
   const search = query.search || "";
+
+  let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+  data = fuzzySearch(data, query.search, query.searchBy);
 
   return (
     <>
@@ -121,50 +145,17 @@ export default function DataExplorer() {
                     />
                   </div>
                 </div>
-                <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:absolute sm:inset-0">
-                  <div className="w-full sm:max-w-xs">
-                    <label htmlFor="search" className="sr-only">
-                      Search
-                    </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                        <SearchIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        id="search"
-                        name="search"
-                        value={search}
-                        className="block w-full bg-gray-700 border border-transparent rounded-md py-2 pl-10 pr-3 text-sm placeholder-gray-400 focus:outline-none focus:bg-white focus:border-white focus:ring-white focus:text-gray-900 focus:placeholder-gray-500 sm:text-sm"
-                        placeholder="Search"
-                        type="search"
-                        onChange={(e) => {
-                          const search = e.target.value;
-                          router.replace({
-                            pathname: "/",
-                            query: search
-                              ? { tab: selected, search }
-                              : { tab: selected },
-                          });
-                        }}
-                        onSubmit={(e) => {}}
-                      />
-                    </div>
-                  </div>
-                </div>
+                <BasicSearch router={router} search={search}/>
+                <SearchBy router={router}/>
               </div>
               <nav
-                className="hidden lg:py-2 lg:flex lg:space-x-8"
+                className="lg:py-2 lg:flex lg:space-x-8"
                 aria-label="Global"
               >
                 {tabs.map((tab) => (
-                  <Link
-                    href={{
-                      pathname: "/",
-                      query: search ? { tab, search } : { tab },
-                    }}
+                  <button
+                    key={tab}
+                    onClick={() => { addQueryParam("tab", tab, router)}}
                   >
                     <a
                       key={tab}
@@ -178,17 +169,21 @@ export default function DataExplorer() {
                     >
                       {tab}
                     </a>
-                  </Link>
+                  </button>
                 ))}
               </nav>
             </div>
           </>
         )}
       </Disclosure>
+      {/* Adding filter dropdowns will be next step */}
+      {/* <FilterDropdowns
+        data={data}
+        cleanedData={cleanedData}
+        /> */}
       <DataDisplay
-        search={search}
         title={selected}
-        dataUrl={DataUrls[selected]}
+        data={data}
       />
     </>
   );
