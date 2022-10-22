@@ -3,6 +3,11 @@ import {
     SearchIcon
   } from "@heroicons/react/solid";
 
+function updateSearchQueryParam(e, router) {
+    const search = e.target.value;
+    search ? addQueryParam("search", search, router) : removeQueryParam("search", router);
+}
+
 export default function BasicSearch({router, search}) {
     return (
         <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:inset-0">
@@ -25,8 +30,7 @@ export default function BasicSearch({router, search}) {
                     placeholder="Search"
                     type="search"
                     onChange={(e) => {
-                    const search = e.target.value;
-                    search ? addQueryParam("search", search, router) : removeQueryParam("search", router);
+                        updateSearchQueryParam(e, router);
                     }}
                     onSubmit={(e) => {}}
                 />
