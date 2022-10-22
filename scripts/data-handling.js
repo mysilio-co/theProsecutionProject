@@ -3,15 +3,10 @@ import * as d3 from "d3";
 import { SEARCH_BY_KEYS } from "./constants";
 
 export function fuzzySearch(data, search, key) {
-  if(key==="Any") {
-    key = SEARCH_BY_KEYS;
-  }
-  else {
-    key = [key];
-  }
+  key = !!key ? [key] : SEARCH_BY_KEYS;
   const options = {
     isCaseSensitive: false,
-    threshold: 0.2,
+    threshold: 0.1,
     keys: key
   };
   if(!!data) {
