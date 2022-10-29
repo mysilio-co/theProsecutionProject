@@ -1,8 +1,8 @@
-import { LIST_KEYS } from "./constants";
+import { DROPDOWN_KEYS } from "./constants";
 
 export function generateListDropdowns(data) {
     let dropdowns = [];
-    for(let col of LIST_KEYS) {
+    for(let col of DROPDOWN_KEYS) {
         dropdowns.push({[col]: getListOptionsByKey(data, col)});
     }
     return dropdowns;
