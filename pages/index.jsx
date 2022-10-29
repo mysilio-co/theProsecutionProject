@@ -15,11 +15,12 @@ import { fuzzySearch, sort } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
+import { TABLE_WIDTH_MAP } from "../scripts/constants.js";
 
 const DataUrls = {
   Pending:
     "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20Pending%20cases.csv",
-  FOUO: "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20U__FOUO.csv",
+  Completed: "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20U__FOUO.csv",
 };
 
 function classNames(...classes) {
@@ -40,22 +41,22 @@ function DataTable({ title, data }) {
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
           <p className="mt-2 text-sm text-gray-700">
-            Some information about the Prosectution Project...
+            Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
           </p>
         </div>
       </div>
       <div className="mt-8 flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 flex">
                   <tr>
                     {headers &&
                       headers.map((h) => (
                         <th
                           scope="col"
-                          className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900")}
                           key={h}
                         >
                           <a onClick={() => {sort(data, h, currentColumn, ascending); setAscending(ascending => {if(currentColumn===h){return !ascending;} else {return true}}); setCurrentColumn(h); }} className="group cursor-pointer inline-flex">
@@ -85,10 +86,11 @@ function DataTable({ title, data }) {
                     data.map((row, idx) => (
                       <tr
                         key={idx}
-                        className={idx % 2 === 0 ? undefined : "bg-gray-50"}
+                        className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100")}
                       >
                         {headers.map((h) => (
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500" key={h}>
+                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-scroll pl-4 pr-6 py-4 text-sm text-gray-500")} 
+                              key={h}>
                             {row[h]}
                           </td>
                         ))}
