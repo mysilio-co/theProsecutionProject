@@ -39,6 +39,13 @@ export const SEARCH_BY_KEYS = [
     "Location: city"
 ]
 
+export const RESULTS_PER_PAGE_KEYS = [
+    "10",
+    "25", 
+    "50",
+    "100"
+]
+
 export const TABLE_WIDTH_MAP = {
   "Date": "w-40",
   "Date descriptor": "w-40",

@@ -38,6 +38,3 @@ export default function BasicSearch({router, search}) {
             
     );
   }
-
-
-

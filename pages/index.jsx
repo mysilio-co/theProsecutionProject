@@ -13,9 +13,10 @@ import {
 } from "@heroicons/react/solid";
 import { fuzzySearch, sort } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam } from "../scripts/router-handling";
+import { addMultipleQueryParams, addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
-import { TABLE_WIDTH_MAP } from "../scripts/constants.js";
+import ResultsPerPage from "../components/results-per-page.jsx";
+import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP } from "../scripts/constants.js";
 
 const DataUrls = {
   Pending:
@@ -27,7 +28,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function DataTable({ title, data }) {
+function DataTable({ title, data, length }) {
   const headers = data && data[0] && Object.keys(data[0]);
   const [currentColumn, setCurrentColumn] = useState("");
   const [ascending, setAscending] = useState(true);
@@ -36,16 +37,19 @@ function DataTable({ title, data }) {
   },[data])
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div className="py-3 px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
           <p className="mt-2 text-sm text-gray-700">
             Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
           </p>
+          <p className="mt-6 text-lg font-semibold text-gray-700">
+            Search Results: {length + (length==1 ? " Case" : " Cases")}
+          </p>
         </div>
       </div>
-      <div className="mt-8 flex flex-col">
+      <div className="mt-3 flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -111,11 +115,8 @@ const csvFetcher = (url) =>
     .then((r) => r.text())
     .then((t) => d3.csvParse(t));
 
-function DataDisplay({ title, data }) {
-  if(!!data) {
-    return <DataTable title={title} data={ data } />;
-  }
-  return <DataTable title={title} data={ null } />;
+function DataDisplay({ title, data, length }) {
+  return <DataTable title={title} data={ data } length={length} />;
 }
 
 export default function DataExplorer() {
@@ -123,13 +124,22 @@ export default function DataExplorer() {
   const router = useRouter();
   const query = router.query;
   useEffect(() => {
-    addQueryParam("tab", tabs[0], router);
+    router.push(router.push({ 
+      pathname: '/', 
+      query: { ...router.query, tab: tabs[0], currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
+      undefined, 
+      {}
+    ));
   }, []);
   const selected = query.tab || tabs[0];
   const search = query.search || "";
+  let filteredData = null;
 
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
-  data = fuzzySearch(data, query.search, query.searchBy);
+  if(!!data) {
+    data = fuzzySearch(data, query.search, query.searchBy);
+    filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
+  }
 
   return (
     <>
@@ -185,8 +195,10 @@ export default function DataExplorer() {
         /> */}
       <DataDisplay
         title={selected}
-        data={data}
+        data={filteredData}
+        length={!!data ? data.length : 0}
       />
+      <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
     </>
   );
 }

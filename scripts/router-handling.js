@@ -19,3 +19,16 @@ export function addQueryParam(name, value, router) {
         { shallow: true }
     );
 }
+
+export function addMultipleQueryParams(queryMap, router) {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query);
+    queryMap.forEach((value, key)=> {
+        params.set(key, value);
+    })
+    router.replace(
+        { pathname, query: params.toString() },
+        undefined, 
+        { shallow: true }
+    );
+}
