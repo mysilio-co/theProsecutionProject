@@ -125,7 +125,7 @@ export default function DataExplorer() {
   const query = router.query;
   useEffect(() => {
     router.push(router.push({ 
-      pathname: '/', 
+      pathname: '/',
       query: { ...router.query, tab: tabs[0], currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
       undefined, 
       {}
@@ -138,7 +138,9 @@ export default function DataExplorer() {
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
   if(!!data) {
     data = fuzzySearch(data, query.search, query.searchBy);
-    filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
+    if(!!query.currentPage && !!query.numShown) {
+      filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
+    }
   }
 
   return (
