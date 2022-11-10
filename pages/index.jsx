@@ -13,10 +13,10 @@ import {
 } from "@heroicons/react/solid";
 import { fuzzySearch, sort } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addMultipleQueryParams, addQueryParam } from "../scripts/router-handling";
+import { addQueryParam, setSortingParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS } from "../scripts/constants.js";
 
 const DataUrls = {
   Pending:
@@ -28,14 +28,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function DataTable({ title, data, length }) {
+function DataTable({ title, data, length, router }) {
   const headers = data && data[0] && Object.keys(data[0]);
   const [currentColumn, setCurrentColumn] = useState("");
   const [ascending, setAscending] = useState(true);
+  console.log(router.query.order);
   useEffect(()=>{
     setCurrentColumn("");
   },[data])
-
+  
   return (
     <div className="py-3 px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -63,7 +64,7 @@ function DataTable({ title, data, length }) {
                           className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900")}
                           key={h}
                         >
-                          <a onClick={() => {sort(data, h, currentColumn, ascending); setAscending(ascending => {if(currentColumn===h){return !ascending;} else {return true}}); setCurrentColumn(h); }} className="group cursor-pointer inline-flex">
+                          <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
                             <p className={(currentColumn===h ? 'underline' : '') + ""}>{h}</p>
                             {currentColumn===h && !ascending ? (
                               <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
@@ -93,7 +94,7 @@ function DataTable({ title, data, length }) {
                         className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100")}
                       >
                         {headers.map((h) => (
-                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-scroll pl-4 pr-6 py-4 text-sm text-gray-500")} 
+                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-auto pl-4 pr-6 py-4 text-sm text-gray-500")} 
                               key={h}>
                             {row[h]}
                           </td>
@@ -115,8 +116,8 @@ const csvFetcher = (url) =>
     .then((r) => r.text())
     .then((t) => d3.csvParse(t));
 
-function DataDisplay({ title, data, length }) {
-  return <DataTable title={title} data={ data } length={length} />;
+function DataDisplay({ title, data, length, router }) {
+  return <DataTable title={title} data={ data } length={length} router={router} />;
 }
 
 export default function DataExplorer() {
@@ -124,23 +125,34 @@ export default function DataExplorer() {
   const router = useRouter();
   const query = router.query;
   useEffect(() => {
-    router.push(router.push({ 
+    router.push({ 
       pathname: '/',
       query: { ...router.query, tab: tabs[0], currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
       undefined, 
       {}
-    ));
+    );
   }, []);
   const selected = query.tab || tabs[0];
   const search = query.search || "";
   let filteredData = null;
+  let mobileData = [];
 
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
   if(!!data) {
     data = fuzzySearch(data, query.search, query.searchBy);
+    if(!!query.sortBy && !!query.order) {
+      sort(data, query.sortBy, query.order);
+    }
     if(!!query.currentPage && !!query.numShown) {
       filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
     }
+    else {
+      filteredData = data;
+    }
+    filteredData.forEach(function(row) {
+      mobileData.push(Object.fromEntries(Object.entries(row)
+      .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
+    })
   }
 
   return (
@@ -199,6 +211,7 @@ export default function DataExplorer() {
         title={selected}
         data={filteredData}
         length={!!data ? data.length : 0}
+        router={router}
       />
       <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
     </>

@@ -46,6 +46,14 @@ export const RESULTS_PER_PAGE_KEYS = [
     "100"
 ]
 
+export const MOBILE_COLUMN_KEYS = [
+    "Date",
+    "Full legal name", 
+    "Group affiliation",
+    "Ideological affiliation",
+    "Length of prison sentence"
+]
+
 export const TABLE_WIDTH_MAP = {
   "Date": "w-40",
   "Date descriptor": "w-40",

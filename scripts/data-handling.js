@@ -20,21 +20,18 @@ export function fuzzySearch(data, search, key) {
   return data;
 }
 
-export function sort(data, column, currentColumn, ascending) {
-  if(column===currentColumn) {
-    ascending = !ascending;
-  }
-  else {
-    ascending = true;
-  }
-  if(ascending) {
+export function sort(data, column, order) {
+  if(order=="asc") {
     data = data.sort((a, b)=> {
       return d3.ascending(a[column], b[column]);
     });
   }
-  else {
+  else if(order=="desc") {
     data = data.sort((a, b)=> {
       return d3.descending(a[column], b[column]);
     });
+  }
+  else {
+    return data;
   }
 }
