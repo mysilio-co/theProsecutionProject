@@ -30,12 +30,6 @@ function classNames(...classes) {
 
 function DataTable({ title, data, length, router }) {
   const headers = data && data[0] && Object.keys(data[0]);
-  const [currentColumn, setCurrentColumn] = useState("");
-  const [ascending, setAscending] = useState(true);
-  console.log(router.query.order);
-  useEffect(()=>{
-    setCurrentColumn("");
-  },[data])
   
   return (
     <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -65,8 +59,8 @@ function DataTable({ title, data, length, router }) {
                           key={h}
                         >
                           <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
-                            <p className={(currentColumn===h ? 'underline' : '') + ""}>{h}</p>
-                            {currentColumn===h && !ascending ? (
+                            <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + ""}>{h}</p>
+                            {router.query.sortBy===h && router.query.order==="desc" ? (
                               <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
                                 <ChevronUpIcon
                                   className="h-5 w-5"
