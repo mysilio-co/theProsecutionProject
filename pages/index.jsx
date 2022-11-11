@@ -118,6 +118,11 @@ export default function DataExplorer() {
   const tabs = Object.keys(DataUrls);
   const router = useRouter();
   const query = router.query;
+  const [isMobile, setIsMobile] = useState(false);
+
+  function updateMobileState() {
+    setIsMobile(window.innerWidth<768 ? true : false);
+  }
   
   useEffect(() => {
     router.push({ 
@@ -126,6 +131,7 @@ export default function DataExplorer() {
       undefined, 
       {}
     );
+    updateMobileState();
   }, []);
   const selected = query.tab || tabs[0];
   const search = query.search || "";
@@ -133,6 +139,7 @@ export default function DataExplorer() {
   let mobileData = [];
 
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+
   if(!!data) {
     data = fuzzySearch(data, query.search, query.searchBy);
     if(!!query.sortBy && !!query.order) {
@@ -208,7 +215,7 @@ export default function DataExplorer() {
         /> */}
       <DataDisplay
         title={selected}
-        data={!!window && window.innerWidth<768 ? mobileData : filteredData}
+        data={isMobile ? mobileData : filteredData}
         length={!!data ? data.length : 0}
         router={router}
       />
