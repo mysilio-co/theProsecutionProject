@@ -118,6 +118,7 @@ export default function DataExplorer() {
   const tabs = Object.keys(DataUrls);
   const router = useRouter();
   const query = router.query;
+  
   useEffect(() => {
     router.push({ 
       pathname: '/',
@@ -207,7 +208,7 @@ export default function DataExplorer() {
         /> */}
       <DataDisplay
         title={selected}
-        data={filteredData}
+        data={!!window && window.innerWidth<768 ? mobileData : filteredData}
         length={!!data ? data.length : 0}
         router={router}
       />
