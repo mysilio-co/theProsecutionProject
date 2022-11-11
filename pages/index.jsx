@@ -55,7 +55,7 @@ function DataTable({ title, data, length, router }) {
                       headers.map((h) => (
                         <th
                           scope="col"
-                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900")}
+                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900")}
                           key={h}
                         >
                           <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
@@ -88,7 +88,7 @@ function DataTable({ title, data, length, router }) {
                         className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100")}
                       >
                         {headers.map((h) => (
-                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-auto pl-4 pr-6 py-4 text-sm text-gray-500")} 
+                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-auto pl-4 pr-6 py-4 text-xs md:text-sm text-gray-500")} 
                               key={h}>
                             {row[h]}
                           </td>

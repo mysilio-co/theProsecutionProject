@@ -55,11 +55,11 @@ export const MOBILE_COLUMN_KEYS = [
 ]
 
 export const TABLE_WIDTH_MAP = {
-  "Date": "w-40",
+  "Date": "mobile-w-28 w-40",
   "Date descriptor": "w-52",
   "Case ID": "w-52",
   "Group identifier": "w-52",
-  "Full legal name": "w-52",
+  "Full legal name": "mobile-w-40 w-52",
   "First name": "w-40",
   "Family name": "w-40",
   "Other names/aliases": "w-64",
@@ -73,9 +73,9 @@ export const TABLE_WIDTH_MAP = {
   "People vs. property": "w-64",
   "Physical target": "w-64",
   "Ideological target": "w-72",
-  "Ideological affiliation": "w-72",
+  "Ideological affiliation": "mobile-w-48 w-72",
   "Affiliation with FTO": "w-52",
-  "Group affiliation": "w-72",
+  "Group affiliation": "mobile-w-48 w-72",
   "Hate Crime": "w-40",
   "LEO Informant": "w-40",
   "Previous similar crime": "w-40",
@@ -87,7 +87,7 @@ export const TABLE_WIDTH_MAP = {
   "Charges": "w-96",
   "Plea": "w-52",
   "Verdict": "w-52",
-  "Length of prison sentence": "w-52",
+  "Length of prison sentence": "mobile-w-40 w-52",
   "Life sentence": "w-52",
   "Death sentence": "w-52",
   "Additional details": "w-72",
@@ -111,3 +111,11 @@ export const TABLE_WIDTH_MAP = {
   "Questionable Inclusion": "w-52",
   "Tags": "w-64"
 }
+
+export const TABLE_WIDTH_MAP_MOBILE = {
+    "Date": "w-20",
+    "Full legal name": "w-20",
+    "Ideological affiliation": "w-20",
+    "Group affiliation": "w-20",
+    "Length of prison sentence": "w-20"
+  }
