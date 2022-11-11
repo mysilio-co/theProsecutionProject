@@ -56,9 +56,9 @@ export const MOBILE_COLUMN_KEYS = [
 
 export const TABLE_WIDTH_MAP = {
   "Date": "w-40",
-  "Date descriptor": "w-40",
+  "Date descriptor": "w-52",
   "Case ID": "w-52",
-  "Group identifier": "w-40",
+  "Group identifier": "w-52",
   "Full legal name": "w-52",
   "First name": "w-40",
   "Family name": "w-40",

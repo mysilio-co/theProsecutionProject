@@ -59,7 +59,7 @@ function DataTable({ title, data, length, router }) {
                           key={h}
                         >
                           <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
-                            <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + ""}>{h}</p>
+                            <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + " px-1 rounded"}>{h}</p>
                             {router.query.sortBy===h && router.query.order==="desc" ? (
                               <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
                                 <ChevronUpIcon
@@ -154,22 +154,26 @@ export default function DataExplorer() {
       <Disclosure as="header" className="bg-gray-800">
         {({ open }) => (
           <>
-            <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:divide-y lg:divide-gray-700 lg:px-8">
-              <div className="relative h-16 flex justify-between">
-                <div className="relative z-10 px-2 flex lg:px-0">
+            <div className="max-w-7xl mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
+              <div className="relative md:h-16 flex flex-col md:flex-row">
+                <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-20 lg:mr-40">
                   <div className="flex-shrink-0 flex items-center">
                     <img
-                      className="block h-8 w-auto"
+                      className="block h-12 md:h-8 w-auto"
                       src="https://theprosecutionproject.org/wp-content/uploads/2020/08/tPP-4.png"
                       alt="The Prosecution Project"
                     />
                   </div>
                 </div>
-                <BasicSearch router={router} search={search}/>
-                <SearchBy router={router}/>
+                <div className="flex py-2 md:py-0 items-center md:mr-20 lg:mr-30">
+                  <BasicSearch router={router} search={search}/>
+                </div>
+                <div className="flex py-2 pb-5 md:py-0 items-center">
+                  <SearchBy router={router}/>
+                </div>
               </div>
               <nav
-                className="lg:py-2 lg:flex lg:space-x-8"
+                className="md:py-2 md:flex md:space-x-8"
                 aria-label="Global"
               >
                 {tabs.map((tab) => (
