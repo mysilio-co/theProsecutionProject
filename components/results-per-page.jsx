@@ -30,8 +30,7 @@ export default function ResultsPerPage({router, length}) {
     },[router.query.search, router.query.searchBy])
     
     return (
-        <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
-        <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
+        <div className="md:flex items-center">
         <Listbox value={currentPage} onChange={setCurrentPage}>
             {({ open }) => (
                 <>
@@ -161,7 +160,6 @@ export default function ResultsPerPage({router, length}) {
             )}
             </Listbox>
         </div>
-    </div> 
     );
   }
 

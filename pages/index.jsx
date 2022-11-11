@@ -123,6 +123,10 @@ export default function DataExplorer() {
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
   }
+
+  function createExportUrl(data) {
+    return !!data ? URL.createObjectURL(new Blob([d3.csvFormat(data)], { type: "text/csv" })) : "#";
+  }
   
   useEffect(() => {
     router.push({ 
@@ -156,6 +160,8 @@ export default function DataExplorer() {
       .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
     })
   }
+
+  
 
   return (
     <>
@@ -219,7 +225,17 @@ export default function DataExplorer() {
         length={!!data ? data.length : 0}
         router={router}
       />
-      <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
+      <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+        <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
+          <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
+          <a href={createExportUrl(data)} download="tpp-data.csv">
+            <button className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-3/4 bg-[#FC8F4D] hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-black py-2 px-4 rounded">
+              Export Data
+            </button>
+          </a>
+        </div>
+      </div>
+
     </>
   );
 }
