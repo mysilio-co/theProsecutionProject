@@ -1,6 +1,6 @@
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { useState, Fragment, useEffect } from "react";
-import { SEARCH_BY_KEYS } from "../scripts/constants";
+import { SEARCH_BY_KEYS, SEARCH_BY_KEYS_MOBILE } from "../scripts/constants";
 import {
     SearchIcon,
     CheckIcon,
@@ -10,11 +10,12 @@ import {
 import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
 
 function classNames(...classes) {
-return classes.filter(Boolean).join(" ");
+    return classes.filter(Boolean).join(" ");
 }
 
-export default function SearchBy({router}) {
-    const [searchBy, setSearchBy] = useState(SEARCH_BY_KEYS[0]);
+export default function SearchBy({router, isMobile}) {
+    const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS;
+    const [searchBy, setSearchBy] = useState(searchByKeys[0]);
 
     useEffect(()=>{
         searchBy==="Any" ? 
@@ -47,7 +48,7 @@ export default function SearchBy({router}) {
                     leaveTo="opacity-0"
                     >
                     <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {SEARCH_BY_KEYS.map((key, idx) => (
+                        {searchByKeys.map((key, idx) => (
                         <Listbox.Option
                             key={idx}
                             className={({ active }) =>

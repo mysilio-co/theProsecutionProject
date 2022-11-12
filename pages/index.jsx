@@ -16,7 +16,8 @@ import SearchBy from "../components/search-by";
 import { addQueryParam, setSortingParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS } from "../scripts/constants.js";
+import Spinner from "../components/spinner.jsx";
 
 const DataUrls = {
   Pending:
@@ -28,7 +29,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function DataTable({ title, data, length, router }) {
+function DataTable({ title, data, length, router, isLoading }) {
   const headers = data && data[0] && Object.keys(data[0]);
   
   return (
@@ -40,7 +41,7 @@ function DataTable({ title, data, length, router }) {
             Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
           </p>
           <p className="mt-6 text-lg font-semibold text-gray-700">
-            Search Results: {length + (length==1 ? " Case" : " Cases")}
+            Search Results: {length + (length==1 ? " Case" : " Cases")} {isLoading ? "loading" : ""}
           </p>
         </div>
       </div>
@@ -97,6 +98,7 @@ function DataTable({ title, data, length, router }) {
                     ))}
                 </tbody>
               </table>
+              <Spinner display={isLoading}></Spinner>
             </div>
           </div>
         </div>
@@ -110,8 +112,8 @@ const csvFetcher = (url) =>
     .then((r) => r.text())
     .then((t) => d3.csvParse(t));
 
-function DataDisplay({ title, data, length, router }) {
-  return <DataTable title={title} data={ data } length={length} router={router} />;
+function DataDisplay({ title, data, length, router, isLoading }) {
+  return <DataTable title={title} data={ data } length={length} router={router} isLoading={isLoading}/>;
 }
 
 export default function DataExplorer() {
@@ -140,25 +142,33 @@ export default function DataExplorer() {
   const selected = query.tab || tabs[0];
   const search = query.search || "";
   let filteredData = null;
-  let mobileData = [];
+  let displayData = [];
+  let isLoading = true;
 
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
 
   if(!!data) {
-    data = fuzzySearch(data, query.search, query.searchBy);
+    isLoading = false;
+    data = fuzzySearch(data, query.search, query.searchBy, isMobile);
     if(!!query.sortBy && !!query.order) {
       sort(data, query.sortBy, query.order);
-    }
-    if(!!query.currentPage && !!query.numShown) {
+    } if(!!query.currentPage && !!query.numShown) {
       filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
-    }
-    else {
+    } else {
       filteredData = data;
     }
-    filteredData.forEach(function(row) {
-      mobileData.push(Object.fromEntries(Object.entries(row)
-      .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
-    })
+    if(isMobile) {
+      filteredData.forEach(function(row) {
+        displayData.push(Object.fromEntries(Object.entries(row)
+        .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
+      })
+    } else {
+      filteredData.forEach(function(row) {
+        displayData.push(Object.fromEntries(Object.entries(row)
+        .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
+      })
+    }
+
   }
 
   
@@ -183,7 +193,7 @@ export default function DataExplorer() {
                   <BasicSearch router={router} search={search}/>
                 </div>
                 <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router}/>
+                  <SearchBy router={router} isMobile={isMobile}/>
                 </div>
               </div>
               <nav
@@ -221,9 +231,10 @@ export default function DataExplorer() {
         /> */}
       <DataDisplay
         title={selected}
-        data={isMobile ? mobileData : filteredData}
+        data={displayData}
         length={!!data ? data.length : 0}
         router={router}
+        isLoading={isLoading}
       />
       <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">

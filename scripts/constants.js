@@ -39,6 +39,15 @@ export const SEARCH_BY_KEYS = [
     "Location: city"
 ]
 
+export const SEARCH_BY_KEYS_MOBILE = [
+    "Any",
+    "Date",
+    "Full legal name", 
+    "Group affiliation",
+    "Ideological affiliation",
+    "Length of prison sentence"
+]
+
 export const RESULTS_PER_PAGE_KEYS = [
     "10",
     "25", 
@@ -119,3 +128,54 @@ export const TABLE_WIDTH_MAP_MOBILE = {
     "Group affiliation": "w-20",
     "Length of prison sentence": "w-20"
   }
+
+export const DESKTOP_COLUMN_KEYS = [
+    "Date",
+    "Date descriptor",
+    "Case ID",
+    "Group identifier",
+    "Full legal name",
+    "First name",
+    "Family name",
+    "Other names/aliases",
+    "Co-offenders",
+    "Reason for inclusion",
+    "Name of case",
+    "Jurisdiction",
+    "Location: country",
+    "Location: state",
+    "Location: city",
+    "People vs. property",
+    "Physical target",
+    "Ideological target",
+    "Ideological affiliation",
+    "Affiliation with FTO",
+    "Group affiliation",
+    "Hate Crime",
+    "LEO Informant",
+    "Previous similar crime",
+    "Criminal method",
+    "Additional criminal method",
+    "Completion of crime",
+    "# killed",
+    "# injured",
+    "Charges",
+    "Plea",
+    "Verdict",
+    "Length of prison sentence",
+    "Life sentence",
+    "Death sentence",
+    "Additional details",
+    "Age",
+    "Gender",
+    "Other' status",
+    "Racial/ethnic group",
+    "Religion",
+    "Veteran status",
+    "Combat veteran",
+    "Service Classification",
+    "Citizenship status",
+    "Short narrative",
+    "Name of coder(s)",
+    "Source description",
+]
