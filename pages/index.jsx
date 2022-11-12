@@ -41,7 +41,7 @@ function DataTable({ title, data, length, router, isLoading }) {
             Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
           </p>
           <p className="mt-6 text-lg font-semibold text-gray-700">
-            Search Results: {length + (length==1 ? " Case" : " Cases")} {isLoading ? "loading" : ""}
+            Search Results: {length + (length==1 ? " Case" : " Cases")}
           </p>
         </div>
       </div>
