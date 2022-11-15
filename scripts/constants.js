@@ -83,7 +83,7 @@ export const TABLE_WIDTH_MAP = {
   "Physical target": "w-64",
   "Ideological target": "w-52",
   "Ideological affiliation": "mobile-w-48 w-72",
-  "Affiliation with FTO": "w-52",
+  "Affiliation with FTO": "w-36",
   "Group affiliation": "mobile-w-52 w-72",
   "Hate Crime": "w-36",
   "LEO Informant": "w-36",
