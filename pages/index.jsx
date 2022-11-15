@@ -56,7 +56,7 @@ function DataTable({ title, data, length, router, isLoading }) {
                       headers.map((h) => (
                         <th
                           scope="col"
-                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900")}
+                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-3 pr-2 text-left text-sm md:text-xs font-semibold text-gray-900")}
                           key={h}
                         >
                           <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
@@ -86,10 +86,10 @@ function DataTable({ title, data, length, router, isLoading }) {
                     data.map((row, idx) => (
                       <tr
                         key={idx}
-                        className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100")}
+                        className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100 items-center")}
                       >
                         {headers.map((h) => (
-                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-auto pl-4 pr-6 py-4 text-xs md:text-sm text-gray-500")} 
+                          <td className={classNames(TABLE_WIDTH_MAP[h], h=="Charges" || h=="Short narrative" || h=="Additional details" ? "whitespace-nowrap overflow-x-auto " : "", "pl-4 pr-6 py-3 md:py-2 text-sm md:text-xs text-gray-500")} 
                               key={h}>
                             {row[h]}
                           </td>
@@ -241,7 +241,7 @@ export default function DataExplorer() {
           <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
           <a href={createExportUrl(data)} download="tpp-data.csv">
             <button className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-3/4 bg-[#FC8F4D] hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-black py-2 px-4 rounded">
-              Export Data
+              Download as CSV
             </button>
           </a>
         </div>
