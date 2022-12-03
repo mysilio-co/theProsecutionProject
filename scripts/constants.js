@@ -55,12 +55,13 @@ export const RESULTS_PER_PAGE_KEYS = [
     "100"
 ]
 
-export const MOBILE_COLUMN_KEYS = [
-    "Date",
-    "Full legal name", 
-    "Group affiliation",
-    "Ideological affiliation",
-    "Length of prison sentence"
+export const SCROLL_BAR_COLUMN_KEYS = [
+    "Charges",
+    "Short narrative", 
+    "Additional details",
+    "Case ID",
+    "Group identifier",
+    "Source description"
 ]
 
 export const TABLE_WIDTH_MAP = {
@@ -68,7 +69,7 @@ export const TABLE_WIDTH_MAP = {
   "Date descriptor": "w-40",
   "Case ID": "w-52",
   "Group identifier": "w-40",
-  "Full legal name": "mobile-w-48 w-52",
+  "Full legal name": "mobile-w-40 w-52",
   "First name": "w-40",
   "Family name": "w-40",
   "Other names/aliases": "w-64",
@@ -106,12 +107,12 @@ export const TABLE_WIDTH_MAP = {
   "Racial/ethnic group": "w-64",
   "Religion": "w-36",
   "Veteran status": "w-36",
-  "Combat veteran": "w-40",
-  "Service Classification": "w-52",
+  "Combat veteran": "w-36",
+  "Service Classification": "w-44",
   "Citizenship status": "w-52",
   "Short narrative": "w-96",
   "Name of coder(s)": "w-64",
-  "Source description": "w-72",
+  "Source description": "w-96",
   "Audited": "w-52",
   "Date of last review": "w-52",
   "Ready": "w-52",
@@ -128,6 +129,25 @@ export const TABLE_WIDTH_MAP_MOBILE = {
     "Group affiliation": "w-20",
     "Length of prison sentence": "w-20"
   }
+
+  export const MOBILE_COLUMN_KEYS = [
+    "Date",
+    "Full legal name", 
+    "Group affiliation",
+    "Ideological affiliation",
+    "Length of prison sentence"
+]
+
+export const DESKTOP_EXPRESS_COLUMN_KEYS = [
+    "Date",
+    "Full legal name", 
+    "Ideological affiliation",
+    "Group affiliation",
+    "Ideological affiliation",
+    "Criminal method",
+    "Length of prison sentence",
+    "Short narrative"
+]
 
 export const DESKTOP_COLUMN_KEYS = [
     "Date",
@@ -176,6 +196,5 @@ export const DESKTOP_COLUMN_KEYS = [
     "Service Classification",
     "Citizenship status",
     "Short narrative",
-    "Name of coder(s)",
     "Source description",
 ]

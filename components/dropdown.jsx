@@ -1,11 +1,11 @@
 import {React, useState, Fragment} from 'react';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import {
-  SearchIcon,
+  MagnifyingGlassIcon,
   CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon
-} from "@heroicons/react/solid";
+} from "@heroicons/react/20/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

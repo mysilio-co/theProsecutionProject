@@ -6,17 +6,17 @@ import useSWR from "swr";
 import FilterDropdowns from '../components/filter.jsx';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import {
-  SearchIcon,
-  CheckIcon,
+  MagnifyingGlassIcon,
   ChevronDownIcon,
-  ChevronUpIcon
-} from "@heroicons/react/solid";
+  ChevronUpIcon,
+  ChevronUpDownIcon
+} from "@heroicons/react/20/solid";
 import { fuzzySearch, sort } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam, setSortingParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS, SCROLL_BAR_COLUMN_KEYS } from "../scripts/constants.js";
 import Spinner from "../components/spinner.jsx";
 
 const DataUrls = {
@@ -56,26 +56,34 @@ function DataTable({ title, data, length, router, isLoading }) {
                       headers.map((h) => (
                         <th
                           scope="col"
-                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-3 pr-2 text-left text-sm font-semibold text-gray-900")}
+                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-3 pr-2 text-left text-xs md:text-sm font-semibold text-gray-900")}
                           key={h}
                         >
                           <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
                             <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + " px-1 rounded"}>{h}</p>
-                            {router.query.sortBy===h && router.query.order==="desc" ? (
-                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                            {router.query.sortBy!=h ? (
+                              <span className="ml-2 flex items-center rounded text-gray-400 group-hover:visible group-focus:visible">
+                                <ChevronUpDownIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                            ) : router.query.order==="desc" ? (
+                              <span className="ml-2 flex items-center rounded text-gray-400 group-hover:visible group-focus:visible">
                                 <ChevronUpIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
                                 />
                               </span>
                             ) : (
-                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                              <span className="ml-2 flex items-center rounded text-gray-400 group-hover:visible group-focus:visible">
                                 <ChevronDownIcon
                                   className="h-5 w-5"
                                   aria-hidden="true"
                                 />
                               </span>
-                            )}
+                            )
+                            }
                           </a>
                         </th>
                       ))}
@@ -89,7 +97,7 @@ function DataTable({ title, data, length, router, isLoading }) {
                         className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100 items-center")}
                       >
                         {headers.map((h) => (
-                          <td className={classNames(TABLE_WIDTH_MAP[h], h=="Charges" || h=="Short narrative" || h=="Additional details" || h=="Case ID" || h=="Group identifier" ? "whitespace-nowrap overflow-x-auto " : "", "pl-4 pr-6 py-3 md:py-2 text-sm text-gray-500")} 
+                          <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) ? "whitespace-nowrap overflow-x-auto " : "", "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-500")} 
                               key={h}>
                             {row[h]}
                           </td>
@@ -121,6 +129,7 @@ export default function DataExplorer() {
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
+  const [isExpress, setIsExpress] = useState(false);
 
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
@@ -163,12 +172,19 @@ export default function DataExplorer() {
         .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
       })
     } else {
-      filteredData.forEach(function(row) {
-        displayData.push(Object.fromEntries(Object.entries(row)
-        .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
-      })
+        if(isExpress) {
+          filteredData.forEach(function(row) {
+            displayData.push(Object.fromEntries(Object.entries(row)
+            .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
+          })
+        }
+        else {
+          filteredData.forEach(function(row) {
+            displayData.push(Object.fromEntries(Object.entries(row)
+            .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
+          })
+        }
     }
-
   }
 
   

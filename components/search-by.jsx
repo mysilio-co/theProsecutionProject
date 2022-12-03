@@ -2,11 +2,11 @@ import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { useState, Fragment, useEffect } from "react";
 import { SEARCH_BY_KEYS, SEARCH_BY_KEYS_MOBILE } from "../scripts/constants";
 import {
-    SearchIcon,
+    MagnifyingGlassIcon,
     CheckIcon,
     ChevronDownIcon,
     ChevronUpIcon
-  } from "@heroicons/react/solid";
+  } from "@heroicons/react/20/solid";
 import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
 
 function classNames(...classes) {
