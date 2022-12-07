@@ -2,6 +2,7 @@ import { useState, Fragment, useEffect } from "react";
 import { useRouter } from "next/router";
 import * as d3 from "d3";
 
+
 import useSWR from "swr";
 import FilterDropdowns from '../components/filter.jsx';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
@@ -18,6 +19,8 @@ import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS } from "../scripts/constants.js";
 import Spinner from "../components/spinner.jsx";
+import DownloadModal from "../components/download-modal.jsx";
+import {getSheetsData} from "../scripts/sheets.js";
 
 const DataUrls = {
   Pending:
@@ -27,6 +30,12 @@ const DataUrls = {
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
+}
+
+export async function getServerSideProps() {
+  const file = await getSheetsData();
+  const fileJSON = JSON.stringify(file);
+  return { props: { fileJSON } }
 }
 
 function DataTable({ title, data, length, router, isLoading }) {
@@ -116,11 +125,13 @@ function DataDisplay({ title, data, length, router, isLoading }) {
   return <DataTable title={title} data={ data } length={length} router={router} isLoading={isLoading}/>;
 }
 
-export default function DataExplorer() {
+export default function DataExplorer(props) {
   const tabs = Object.keys(DataUrls);
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
+
+  console.log(JSON.parse(props.fileJSON));
 
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
@@ -145,9 +156,11 @@ export default function DataExplorer() {
   let displayData = [];
   let isLoading = true;
 
-  let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+  let data = JSON.parse(props.fileJSON);
+  // let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
 
   if(!!data) {
+    console.log(data);
     isLoading = false;
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
     if(!!query.sortBy && !!query.order) {
@@ -244,6 +257,7 @@ export default function DataExplorer() {
               Export Data
             </button>
           </a>
+          <DownloadModal></DownloadModal>
         </div>
       </div>
 
