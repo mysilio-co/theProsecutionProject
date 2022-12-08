@@ -39,3 +39,16 @@ export function sort(data, column, order) {
     return data;
   }
 }
+
+export function parseSheetsResponse(response) {
+  const keys = response[0];
+  const ret = [];
+  for(let i = 1; i<response.length; i++) {
+    const obj = {};
+    keys.forEach((element, index) => {
+      obj[element] = response[i][index];
+    });
+    ret.push(obj);
+  }
+  return ret
+}

@@ -20,6 +20,17 @@ export function addQueryParam(name, value, router) {
     );
 }
 
+export function addQueryParamDeep(name, value, router) {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query);
+    params.set(name, value);
+    router.replace(
+        { pathname, query: params.toString() },
+        undefined, 
+        { shallow: false }
+    );
+}
+
 export function removeMultipleQueryParams(queryList, router) {
     const { pathname, query } = router;
     const params = new URLSearchParams(query);

@@ -2,7 +2,6 @@ import { useState, Fragment, useEffect } from "react";
 import { useRouter } from "next/router";
 import * as d3 from "d3";
 
-
 import useSWR from "swr";
 import FilterDropdowns from '../components/filter.jsx';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
@@ -12,29 +11,32 @@ import {
   ChevronDownIcon,
   ChevronUpIcon
 } from "@heroicons/react/solid";
-import { fuzzySearch, sort } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, parseSheetsResponse } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam, setSortingParams } from "../scripts/router-handling";
+import { addQueryParam, addQueryParamDeep, setSortingParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, SHEET_NAMES } from "../scripts/constants.js";
 import Spinner from "../components/spinner.jsx";
 import DownloadModal from "../components/download-modal.jsx";
 import {getSheetsData} from "../scripts/sheets.js";
 
-const DataUrls = {
-  Pending:
-    "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20Pending%20cases.csv",
-  Completed: "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20U__FOUO.csv",
-};
+const SheetNames = SHEET_NAMES;
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export async function getServerSideProps() {
-  const file = await getSheetsData();
-  const fileJSON = JSON.stringify(file);
+export async function getServerSideProps(context) {
+  const selected = context.query.tab || SheetNames[0];
+  const file = await getSheetsData(selected);
+  let sheetData = [];
+  file.data.valueRanges.forEach(sheet=>{
+    sheetData = sheetData.concat(sheet.values);
+  })
+  file.headers['cache-control'] = 'public, s-maxage=10, stale-while-revalidate=59';
+  const fileJSON = JSON.stringify(parseSheetsResponse(sheetData));
+
   return { props: { fileJSON } }
 }
 
@@ -116,22 +118,15 @@ function DataTable({ title, data, length, router, isLoading }) {
   );
 }
 
-const csvFetcher = (url) =>
-  fetch(url)
-    .then((r) => r.text())
-    .then((t) => d3.csvParse(t));
-
 function DataDisplay({ title, data, length, router, isLoading }) {
   return <DataTable title={title} data={ data } length={length} router={router} isLoading={isLoading}/>;
 }
 
 export default function DataExplorer(props) {
-  const tabs = Object.keys(DataUrls);
+  const tabs = Object.keys(SheetNames);
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
-
-  console.log(JSON.parse(props.fileJSON));
 
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
@@ -157,10 +152,9 @@ export default function DataExplorer(props) {
   let isLoading = true;
 
   let data = JSON.parse(props.fileJSON);
-  // let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+  console.log(data);
 
   if(!!data) {
-    console.log(data);
     isLoading = false;
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
     if(!!query.sortBy && !!query.order) {
@@ -183,8 +177,6 @@ export default function DataExplorer(props) {
     }
 
   }
-
-  
 
   return (
     <>
@@ -216,7 +208,7 @@ export default function DataExplorer(props) {
                 {tabs.map((tab) => (
                   <button
                     key={tab}
-                    onClick={() => { addQueryParam("tab", tab, router)}}
+                    onClick={() => { addQueryParamDeep("tab", tab, router);}}
                   >
                     <a
                       key={tab}
