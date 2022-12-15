@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { fuzzySearch, sort } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam, setSortingParams } from "../scripts/router-handling";
+import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS, SCROLL_BAR_COLUMN_KEYS } from "../scripts/constants.js";
@@ -29,8 +29,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function DataTable({ title, data, length, router, isLoading }) {
+function DataTable({ title, data, length, router, isLoading, isMobile }) {
   const headers = data && data[0] && Object.keys(data[0]);
+  console.log(isMobile)
   
   return (
     <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -40,9 +41,21 @@ function DataTable({ title, data, length, router, isLoading }) {
           <p className="mt-2 text-sm text-gray-700">
             Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
           </p>
-          <p className="mt-6 text-lg font-semibold text-gray-700">
-            Search Results: {length + (length==1 ? " Case" : " Cases")}
-          </p>
+          <div className="flex justify-start items-center mt-6">
+            <p className="text-lg font-semibold text-gray-700">
+              Search Results: {length + (length==1 ? " Case" : " Cases")}
+            </p>
+            {!isMobile ? 
+              <div className="flex ml-6 items-center">
+              <label className="inline-flex relative items-center cursor-pointer">
+              <input type="checkbox" value="" className="sr-only peer"
+                onChange={(e) => {e.target.checked ? addQueryParam('showAll', 'true', router) : removeQueryParam('showAll', router)}} />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className="ml-3 text-sm font-sm text-gray-900">Show all columns</span>
+              </label>
+            </div> : ""}
+          </div>
+
         </div>
       </div>
       <div className="mt-3 flex flex-col">
@@ -120,8 +133,8 @@ const csvFetcher = (url) =>
     .then((r) => r.text())
     .then((t) => d3.csvParse(t));
 
-function DataDisplay({ title, data, length, router, isLoading }) {
-  return <DataTable title={title} data={ data } length={length} router={router} isLoading={isLoading}/>;
+function DataDisplay({ title, data, length, router, isLoading, isMobile }) {
+  return <DataTable title={title} data={ data } length={length} router={router} isLoading={isLoading} isMobile={isMobile}/>;
 }
 
 export default function DataExplorer() {
@@ -129,7 +142,6 @@ export default function DataExplorer() {
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
-  const [isExpress, setIsExpress] = useState(false);
 
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
@@ -153,6 +165,7 @@ export default function DataExplorer() {
   let filteredData = null;
   let displayData = [];
   let isLoading = true;
+  console.log('og:' + isMobile)
 
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
 
@@ -172,7 +185,7 @@ export default function DataExplorer() {
         .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
       })
     } else {
-        if(isExpress) {
+        if(!query.showAll) {
           filteredData.forEach(function(row) {
             displayData.push(Object.fromEntries(Object.entries(row)
             .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
@@ -209,7 +222,7 @@ export default function DataExplorer() {
                   <BasicSearch router={router} search={search}/>
                 </div>
                 <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router} isMobile={isMobile}/>
+                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll}/>
                 </div>
               </div>
               <nav
@@ -251,16 +264,24 @@ export default function DataExplorer() {
         length={!!data ? data.length : 0}
         router={router}
         isLoading={isLoading}
+        isMobile={isMobile}
       />
-      <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+      <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
           <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
           <a href={createExportUrl(data)} download="tpp-data.csv">
             <button className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-3/4 bg-[#FC8F4D] hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-black py-2 px-4 rounded">
-              Download as CSV
+              Export Data
             </button>
           </a>
         </div>
+      </div>
+      <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+        <img
+          className="block h-24"
+          src="https://i0.wp.com/theprosecutionproject.org/wp-content/uploads/2020/08/Illustration-Hiking-Website-Email-Header-2.png?w=600&ssl=1"
+          alt="The Prosecution Project"
+        />
       </div>
 
     </>

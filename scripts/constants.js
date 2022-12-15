@@ -26,6 +26,17 @@ export const DROPDOWN_KEYS = [
     "Citizenship status",
 ]
 
+export const SEARCH_BY_KEYS_EXPRESS = [
+    "Any",
+    "Date",
+    "Full legal name", 
+    "Ideological affiliation",
+    "Group affiliation",
+    "Criminal method",
+    "Length of prison sentence",
+    "Short narrative"
+]
+
 export const SEARCH_BY_KEYS = [
     "Any",
     "Charges",
@@ -143,7 +154,6 @@ export const DESKTOP_EXPRESS_COLUMN_KEYS = [
     "Full legal name", 
     "Ideological affiliation",
     "Group affiliation",
-    "Ideological affiliation",
     "Criminal method",
     "Length of prison sentence",
     "Short narrative"
