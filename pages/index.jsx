@@ -31,7 +31,6 @@ function classNames(...classes) {
 
 function DataTable({ title, data, length, router, isLoading, isMobile }) {
   const headers = data && data[0] && Object.keys(data[0]);
-  console.log(isMobile)
   
   return (
     <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -165,7 +164,6 @@ export default function DataExplorer() {
   let filteredData = null;
   let displayData = [];
   let isLoading = true;
-  console.log('og:' + isMobile)
 
   let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
 

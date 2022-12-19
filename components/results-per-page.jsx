@@ -27,7 +27,7 @@ export default function ResultsPerPage({router, length}) {
 
     useEffect(()=> {
         setCurrentPage(1);
-    },[router.query.search, router.query.searchBy])
+    },[router.query.search, router.query.searchBy, router.query.tab])
     
     return (
         <div className="md:flex items-center">
