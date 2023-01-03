@@ -31,6 +31,8 @@ function classNames(...classes) {
 
 function DataTable({ title, data, length, router, isLoading, isMobile }) {
   const headers = data && data[0] && Object.keys(data[0]);
+  const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
+
   
   return (
     <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -64,6 +66,12 @@ function DataTable({ title, data, length, router, isLoading, isMobile }) {
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50 flex">
                   <tr>
+                    <th
+                      scope="col"
+                      className="w-14 md:py-2 text-xs md:text-sm text-gray-500"
+                      key="index"
+                    >
+                    </th>
                     {headers &&
                       headers.map((h) => (
                         <th
@@ -106,10 +114,11 @@ function DataTable({ title, data, length, router, isLoading, isMobile }) {
                     data.map((row, idx) => (
                       <tr
                         key={idx}
-                        className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100 items-center")}
+                        className={classNames(idx % 2 === 0 ? undefined : "bg-gray-200", "flex hover:bg-stone-100 items-center")}
                       >
+                        <td className="w-14 pl-4 py-3 md:py-2 text-xs md:text-sm text-gray-500">{currentIndex+idx}</td>
                         {headers.map((h) => (
-                          <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) ? "whitespace-nowrap overflow-x-auto " : "", "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-500")} 
+                          <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) ? "whitespace-nowrap overflow-x-auto " : undefined, "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-500")} 
                               key={h}>
                             {row[h]}
                           </td>
