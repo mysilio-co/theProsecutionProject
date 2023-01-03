@@ -2,11 +2,11 @@ import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { useState, Fragment, useEffect } from "react";
 import { RESULTS_PER_PAGE_KEYS } from "../scripts/constants";
 import {
-    SearchIcon,
+    MagnifyingGlassIcon,
     CheckIcon,
     ChevronDownIcon,
     ChevronUpIcon
-  } from "@heroicons/react/solid";
+  } from "@heroicons/react/20/solid";
 import { addMultipleQueryParams, addQueryParam, removeQueryParam } from "../scripts/router-handling";
 
 function classNames(...classes) {
@@ -22,23 +22,21 @@ export default function ResultsPerPage({router, length}) {
     },[resultsPerPage])
 
     useEffect(()=>{
-        let map = new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]);
-        addMultipleQueryParams(map, router);
+        addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
     },[currentPage, resultsPerPage])
 
     useEffect(()=> {
         setCurrentPage(1);
-    },[router.query.search, router.query.searchBy])
+    },[router.query.search, router.query.searchBy, router.query.tab])
     
     return (
-        <div className="relative z-0 flex-1 px-2 pt-2 pb-6 flex items-center justify-center sm:inset-0">
-        <div className="w-full inline-flex items-center justify-center">
+        <div className="md:flex items-center">
         <Listbox value={currentPage} onChange={setCurrentPage}>
             {({ open }) => (
                 <>
-                <Listbox.Label className="block text-sm pl-4 pr-2 font-medium text-gray-400">Page </Listbox.Label>
+                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400">Page </Listbox.Label>
                 <div className="relative mt-1">
-                    <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-16 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     <span className="flex items-center">
                         <span className="ml-3 block truncate">{currentPage}</span>
                     </span>
@@ -54,13 +52,13 @@ export default function ResultsPerPage({router, length}) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                     >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {Array.from({length: maxPages}, (_, i) => i + 1).map((key, idx) => (
                         <Listbox.Option
                             key={idx}
                             className={({ active }) =>
                             classNames(
-                                active ? 'text-white bg-indigo-600' : 'text-gray-900',
+                                active ? 'text-white bg-gray-800' : 'text-gray-900',
                                 'relative cursor-default select-none py-2 pl-3 pr-9 text-sm'
                             )
                             }
@@ -93,14 +91,14 @@ export default function ResultsPerPage({router, length}) {
                     </Listbox.Options>
                     </Transition>
                 </div>
-                <Listbox.Label className="block text-sm pl-4 pr-16 font-medium text-gray-400"> of {maxPages==0 ? 1 : maxPages}</Listbox.Label>
+                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-16 font-medium text-gray-400"> of {maxPages==0 ? 1 : maxPages}</Listbox.Label>
                 </>
             )}
         </Listbox>
         <Listbox value={resultsPerPage} onChange={setResultsPerPage}>
             {({ open }) => (
                 <>
-                <Listbox.Label className="block text-sm pl-4 pr-2 font-medium text-gray-400">Showing </Listbox.Label>
+                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0">Showing </Listbox.Label>
                 <div className="relative mt-1">
                     <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     <span className="flex items-center">
@@ -118,13 +116,13 @@ export default function ResultsPerPage({router, length}) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                     >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {RESULTS_PER_PAGE_KEYS.map((key, idx) => (
                         <Listbox.Option
                             key={idx}
                             className={({ active }) =>
                             classNames(
-                                active ? 'text-white bg-indigo-600' : 'text-gray-900',
+                                active ? 'text-white bg-gray-800' : 'text-gray-900',
                                 'relative cursor-default select-none py-2 pl-3 pr-9 text-sm'
                             )
                             }
@@ -157,12 +155,11 @@ export default function ResultsPerPage({router, length}) {
                     </Listbox.Options>
                     </Transition>
                 </div>
-                <Listbox.Label className="block text-sm pl-4 pr-2 font-medium text-gray-400"> Results Per Page</Listbox.Label>
+                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400"> Results Per Page</Listbox.Label>
                 </>
             )}
             </Listbox>
         </div>
-    </div> 
     );
   }
 
