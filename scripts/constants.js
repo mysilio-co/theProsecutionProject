@@ -1,6 +1,6 @@
 export const SHEET_NAMES = {
-    General: "General",
-    J20: "J20 cases",
+    "General": "General",
+    "J20": "J20 cases",
     "Summer-Fall 2020 Protests":"Summer-Fall 2020 protest cases",
     "Capitol Raid":"Capitol raid cases"
   };
@@ -151,9 +151,13 @@ export const TABLE_WIDTH_MAP_MOBILE = {
   export const MOBILE_COLUMN_KEYS = [
     "Date",
     "Full legal name", 
-    "Group affiliation",
     "Ideological affiliation",
+    "Group affiliation",
     "Length of prison sentence"
+]
+
+export const MOBILE_COLUMN_IDS = [
+    "A", "E", "S", "U", "AT"
 ]
 
 export const DESKTOP_EXPRESS_COLUMN_KEYS = [
@@ -164,6 +168,10 @@ export const DESKTOP_EXPRESS_COLUMN_KEYS = [
     "Criminal method",
     "Length of prison sentence",
     "Short narrative"
+]
+
+export const DESKTOP_EXPRESS_COLUMN_IDS = [
+    "A", "E", "S", "U", "Y", "AG", "AT"
 ]
 
 export const DESKTOP_COLUMN_KEYS = [

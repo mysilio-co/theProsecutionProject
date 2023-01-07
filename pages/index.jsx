@@ -12,9 +12,14 @@ import SearchBy from "../components/search-by";
 import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS, SHEET_NAMES } from "../scripts/constants.js";
 
 const SheetNames = SHEET_NAMES;
+const DataUrls = {
+  Pending:
+    "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20Pending%20cases.csv",
+  Completed: "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20U__FOUO.csv",
+};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -54,8 +59,7 @@ export default function DataExplorer() {
   let displayData = [];
   let isLoading = true;
 
-  let data = JSON.parse(props.fileJSON);
-  console.log(data);
+  let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
 
   if(!!data) {
     isLoading = false;
@@ -160,7 +164,6 @@ export default function DataExplorer() {
               Export Data
             </button>
           </a>
-          <DownloadModal></DownloadModal>
         </div>
       </div>
       <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
