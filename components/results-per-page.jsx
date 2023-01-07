@@ -2,11 +2,11 @@ import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { useState, Fragment, useEffect } from "react";
 import { RESULTS_PER_PAGE_KEYS } from "../scripts/constants";
 import {
-    SearchIcon,
+    MagnifyingGlassIcon,
     CheckIcon,
     ChevronDownIcon,
     ChevronUpIcon
-  } from "@heroicons/react/solid";
+  } from "@heroicons/react/20/solid";
 import { addMultipleQueryParams, addQueryParam, removeQueryParam } from "../scripts/router-handling";
 
 function classNames(...classes) {
@@ -27,7 +27,7 @@ export default function ResultsPerPage({router, length}) {
 
     useEffect(()=> {
         setCurrentPage(1);
-    },[router.query.search, router.query.searchBy])
+    },[router.query.search, router.query.searchBy, router.query.tab])
     
     return (
         <div className="md:flex items-center">
@@ -52,7 +52,7 @@ export default function ResultsPerPage({router, length}) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                     >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {Array.from({length: maxPages}, (_, i) => i + 1).map((key, idx) => (
                         <Listbox.Option
                             key={idx}
@@ -116,7 +116,7 @@ export default function ResultsPerPage({router, length}) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                     >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {RESULTS_PER_PAGE_KEYS.map((key, idx) => (
                         <Listbox.Option
                             key={idx}

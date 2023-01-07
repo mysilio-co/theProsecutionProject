@@ -1,7 +1,7 @@
 import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
 import {
-    SearchIcon
-  } from "@heroicons/react/solid";
+    MagnifyingGlassIcon
+  } from "@heroicons/react/20/solid";
 
 function updateSearchQueryParam(e, router) {
     const search = e.target.value;
@@ -17,7 +17,7 @@ export default function BasicSearch({router, search}) {
                 </label>
                 <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                    <SearchIcon
+                    <MagnifyingGlassIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                     />

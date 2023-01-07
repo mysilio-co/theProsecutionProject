@@ -1,20 +1,20 @@
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
 import { useState, Fragment, useEffect } from "react";
-import { SEARCH_BY_KEYS, SEARCH_BY_KEYS_MOBILE } from "../scripts/constants";
+import { SEARCH_BY_KEYS, SEARCH_BY_KEYS_EXPRESS, SEARCH_BY_KEYS_MOBILE } from "../scripts/constants";
 import {
-    SearchIcon,
+    MagnifyingGlassIcon,
     CheckIcon,
     ChevronDownIcon,
     ChevronUpIcon
-  } from "@heroicons/react/solid";
+  } from "@heroicons/react/20/solid";
 import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-export default function SearchBy({router, isMobile}) {
-    const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS;
+export default function SearchBy({router, isMobile, isAllColumns}) {
+    const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : !isAllColumns ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
     const [searchBy, setSearchBy] = useState(searchByKeys[0]);
 
     useEffect(()=>{

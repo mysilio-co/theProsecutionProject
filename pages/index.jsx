@@ -1,25 +1,18 @@
-import { useState, Fragment, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import * as d3 from "d3";
 
 import useSWR from "swr";
 import FilterDropdowns from '../components/filter.jsx';
-import { Disclosure, Listbox, Transition } from "@headlessui/react";
-import {
-  SearchIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon
-} from "@heroicons/react/solid";
-import { fuzzySearch, sort, parseSheetsResponse } from "../scripts/data-handling.js";
+import DataTable from "../components/data-table.jsx";
+import { Disclosure } from "@headlessui/react";
+
+import { fuzzySearch, sort } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam, addQueryParamDeep, setSortingParams } from "../scripts/router-handling";
+import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TABLE_WIDTH_MAP, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, SHEET_NAMES } from "../scripts/constants.js";
-import Spinner from "../components/spinner.jsx";
-import DownloadModal from "../components/download-modal.jsx";
-import {getSheetsData} from "../scripts/sheets.js";
+import { RESULTS_PER_PAGE_KEYS, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS } from "../scripts/constants.js";
 
 const SheetNames = SHEET_NAMES;
 
@@ -27,103 +20,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export async function getServerSideProps(context) {
-  const selected = context.query.tab || SheetNames[0];
-  const file = await getSheetsData(selected);
-  let sheetData = [];
-  file.data.valueRanges.forEach(sheet=>{
-    sheetData = sheetData.concat(sheet.values);
-  })
-  file.headers['cache-control'] = 'public, s-maxage=10, stale-while-revalidate=59';
-  const fileJSON = JSON.stringify(parseSheetsResponse(sheetData));
+const csvFetcher = (url) =>
+  fetch(url)
+    .then((r) => r.text())
+    .then((t) => d3.csvParse(t));
 
-  return { props: { fileJSON } }
-}
-
-function DataTable({ title, data, length, router, isLoading }) {
-  const headers = data && data[0] && Object.keys(data[0]);
-  
-  return (
-    <div className="py-3 px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
-          </p>
-          <p className="mt-6 text-lg font-semibold text-gray-700">
-            Search Results: {length + (length==1 ? " Case" : " Cases")}
-          </p>
-        </div>
-      </div>
-      <div className="mt-3 flex flex-col">
-        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50 flex">
-                  <tr>
-                    {headers &&
-                      headers.map((h) => (
-                        <th
-                          scope="col"
-                          className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900")}
-                          key={h}
-                        >
-                          <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
-                            <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + " px-1 rounded"}>{h}</p>
-                            {router.query.sortBy===h && router.query.order==="desc" ? (
-                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
-                                <ChevronUpIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            ) : (
-                              <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
-                                <ChevronDownIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            )}
-                          </a>
-                        </th>
-                      ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {data &&
-                    data.map((row, idx) => (
-                      <tr
-                        key={idx}
-                        className={classNames(idx % 2 === 0 ? undefined : "bg-gray-50", "flex hover:bg-stone-100")}
-                      >
-                        {headers.map((h) => (
-                          <td className={classNames(TABLE_WIDTH_MAP[h], "whitespace-nowrap overflow-x-auto pl-4 pr-6 py-4 text-xs md:text-sm text-gray-500")} 
-                              key={h}>
-                            {row[h]}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              <Spinner display={isLoading}></Spinner>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DataDisplay({ title, data, length, router, isLoading }) {
-  return <DataTable title={title} data={ data } length={length} router={router} isLoading={isLoading}/>;
-}
-
-export default function DataExplorer(props) {
-  const tabs = Object.keys(SheetNames);
+export default function DataExplorer() {
+  const tabs = Object.keys(DataUrls);
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
@@ -170,12 +73,19 @@ export default function DataExplorer(props) {
         .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
       })
     } else {
-      filteredData.forEach(function(row) {
-        displayData.push(Object.fromEntries(Object.entries(row)
-        .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
-      })
+        if(!query.showAll) {
+          filteredData.forEach(function(row) {
+            displayData.push(Object.fromEntries(Object.entries(row)
+            .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
+          })
+        }
+        else {
+          filteredData.forEach(function(row) {
+            displayData.push(Object.fromEntries(Object.entries(row)
+            .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
+          })
+        }
     }
-
   }
 
   return (
@@ -198,7 +108,7 @@ export default function DataExplorer(props) {
                   <BasicSearch router={router} search={search}/>
                 </div>
                 <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router} isMobile={isMobile}/>
+                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll}/>
                 </div>
               </div>
               <nav
@@ -234,14 +144,15 @@ export default function DataExplorer(props) {
         data={data}
         cleanedData={cleanedData}
         /> */}
-      <DataDisplay
+      <DataTable
         title={selected}
         data={displayData}
         length={!!data ? data.length : 0}
         router={router}
         isLoading={isLoading}
+        isMobile={isMobile}
       />
-      <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+      <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
           <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
           <a href={createExportUrl(data)} download="tpp-data.csv">
@@ -251,6 +162,13 @@ export default function DataExplorer(props) {
           </a>
           <DownloadModal></DownloadModal>
         </div>
+      </div>
+      <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+        <img
+          className="block h-24"
+          src="https://i0.wp.com/theprosecutionproject.org/wp-content/uploads/2020/08/Illustration-Hiking-Website-Email-Header-2.png?w=600&ssl=1"
+          alt="The Prosecution Project"
+        />
       </div>
 
     </>
