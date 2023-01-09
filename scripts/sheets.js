@@ -3,9 +3,11 @@ import { SHEET_NAMES } from './constants';
 const { google } = require('googleapis');
 const {GoogleAuth} = require('google-auth-library');
 
-export async function getSheetsData(tab, query) {
+export async function getSheetsData(query) {
   const SCOPES = ['https://www.googleapis.com/auth/drive'];
   const creds = {
+    client_email: "",
+    private_key: ""
   };
   const auth = new GoogleAuth({
       credentials: creds,
@@ -52,10 +54,18 @@ export function concatAllColumns(file) {
 
 export function concatSpecificColumns(file) {
   let sheetData = [];
+  let allSheetsData = [];
   if(!!file) {
     file.data.valueRanges.forEach(sheet=>{
+      console.log(sheet);
       sheetData.push(sheet.values.flat(1));
     })
   }
+  // sheetData.forEach(sheet=> {
+  //   const sheetJson = sheet.map((col, i) => sheetData.map(row => row[i]));
+  //   console.log(sheet)
+  //   allSheetsData = allSheetsData.concat(sheetJson);
+  // })
   return sheetData[0].map((col, i) => sheetData.map(row => row[i]));
+  // return sheetData;
 }

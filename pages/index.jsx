@@ -25,13 +25,10 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const csvFetcher = (url) =>
-  fetch(url)
-    .then((r) => r.text())
-    .then((t) => d3.csvParse(t));
+const fetcher = async (url) => await fetch(url).then((res) => {return res.json()});
 
 export default function DataExplorer() {
-  const tabs = Object.keys(DataUrls);
+  const tabs = Object.keys(SHEET_NAMES);
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
@@ -58,8 +55,9 @@ export default function DataExplorer() {
   let filteredData = null;
   let displayData = [];
   let isLoading = true;
+  const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
 
-  let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+  let { data, error } = useSWR('/api/sheets/getAllColumns?tab='+selected+'&range='+viewType, fetcher);
 
   if(!!data) {
     isLoading = false;
@@ -71,25 +69,26 @@ export default function DataExplorer() {
     } else {
       filteredData = data;
     }
-    if(isMobile) {
-      filteredData.forEach(function(row) {
-        displayData.push(Object.fromEntries(Object.entries(row)
-        .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
-      })
-    } else {
-        if(!query.showAll) {
-          filteredData.forEach(function(row) {
-            displayData.push(Object.fromEntries(Object.entries(row)
-            .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
-          })
-        }
-        else {
-          filteredData.forEach(function(row) {
-            displayData.push(Object.fromEntries(Object.entries(row)
-            .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
-          })
-        }
-    }
+    // Logic to filter down columns based on view, shouldn't be needed anymore with api change 
+    // if(isMobile) {
+    //   filteredData.forEach(function(row) {
+    //     displayData.push(Object.fromEntries(Object.entries(row)
+    //     .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
+    //   })
+    // } else {
+    //     if(!query.showAll) {
+    //       filteredData.forEach(function(row) {
+    //         displayData.push(Object.fromEntries(Object.entries(row)
+    //         .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
+    //       })
+    //     }
+    //     else {
+    //       filteredData.forEach(function(row) {
+    //         displayData.push(Object.fromEntries(Object.entries(row)
+    //         .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
+    //       })
+    //     }
+    // }
   }
 
   return (
@@ -122,7 +121,7 @@ export default function DataExplorer() {
                 {tabs.map((tab) => (
                   <button
                     key={tab}
-                    onClick={() => { addQueryParamDeep("tab", tab, router);}}
+                    onClick={() => { addQueryParam("tab", tab, router);}}
                   >
                     <a
                       key={tab}
@@ -150,7 +149,7 @@ export default function DataExplorer() {
         /> */}
       <DataTable
         title={selected}
-        data={displayData}
+        data={filteredData}
         length={!!data ? data.length : 0}
         router={router}
         isLoading={isLoading}
