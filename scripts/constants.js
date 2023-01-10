@@ -223,3 +223,9 @@ export const DESKTOP_COLUMN_KEYS = [
     "Short narrative",
     "Source description",
 ]
+
+export const RANGE_MAP = {
+    "mobile" : MOBILE_COLUMN_IDS,
+    "express" : DESKTOP_EXPRESS_COLUMN_IDS,
+    "desktop" : []
+}

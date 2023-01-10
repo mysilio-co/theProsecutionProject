@@ -1,4 +1,4 @@
-import { DESKTOP_EXPRESS_COLUMN_IDS, MOBILE_COLUMN_IDS, SHEET_NAMES } from '../../../scripts/constants';
+import { DESKTOP_EXPRESS_COLUMN_IDS, MOBILE_COLUMN_IDS, RANGE_MAP, SHEET_NAMES } from '../../../scripts/constants';
 import { parseSheetsResponse } from '../../../scripts/data-handling';
 import { concatAllColumns, concatSpecificColumns, generateSheetsQuery, getSheetsData } from '../../../scripts/sheets';
 
@@ -7,11 +7,7 @@ export const config = {
 }
 
 export default async function handler(req, res) {
-  const RANGE_MAP = {
-    "mobile" : MOBILE_COLUMN_IDS,
-    "express" : DESKTOP_EXPRESS_COLUMN_IDS,
-    "desktop" : []
-  }
+
   // Validate Request
   if((!(req.query.tab in SHEET_NAMES) && req.query.tab!="General")) {
     res.status(500).send({ error: 'tab param is missing or invalid, must be one of: ' + Object.keys(SHEET_NAMES) })
@@ -30,7 +26,7 @@ export default async function handler(req, res) {
   }
   // Used when getting specific columns, need an extra step to combine the columns into one object
   else {
-    sheetData = concatSpecificColumns(file);
+    sheetData = concatSpecificColumns(file, range);
   }
   const fileJSON = parseSheetsResponse(sheetData);
   res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');

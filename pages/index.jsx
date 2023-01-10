@@ -57,7 +57,7 @@ export default function DataExplorer() {
   let isLoading = true;
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
 
-  let { data, error } = useSWR('/api/sheets/getAllColumns?tab='+selected+'&range='+viewType, fetcher);
+  let { data, error } = useSWR('/api/sheets/getSheets?tab='+selected+'&range='+viewType, fetcher);
 
   if(!!data) {
     isLoading = false;
