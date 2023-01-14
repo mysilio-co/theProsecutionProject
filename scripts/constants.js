@@ -1,6 +1,5 @@
 export const SHEET_NAMES = {
     "General": "General",
-    "J20": "J20 cases",
     "Summer-Fall 2020 Protests":"Summer-Fall 2020 protest cases",
     "Capitol Raid":"Capitol raid cases"
   };

@@ -10,13 +10,18 @@ export function fuzzySearch(data, search, key, isMobile) {
   }
   const options = {
     isCaseSensitive: false,
+    ignoreLocation: true,
     threshold: 0.1,
     keys: key
   };
   if(!!data) {
     // data = data.filter(row => row.Date.length!=0);
     if (!!search) {
-      const cleanedData = Array.from(new Fuse(data, options).search(search), row=>row.item);
+      console.log("search is " + search);
+      console.log("key is " + key);
+      const fuse = new Fuse(data, options).search(search);
+      console.log(fuse)
+      const cleanedData = Array.from(fuse, row => row.item);
       cleanedData.columns = data.columns;
       data = cleanedData;
     }

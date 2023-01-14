@@ -14,13 +14,6 @@ import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS, SHEET_NAMES } from "../scripts/constants.js";
 
-const SheetNames = SHEET_NAMES;
-const DataUrls = {
-  Pending:
-    "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20Pending%20cases.csv",
-  Completed: "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20U__FOUO.csv",
-};
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -69,26 +62,6 @@ export default function DataExplorer() {
     } else {
       filteredData = data;
     }
-    // Logic to filter down columns based on view, shouldn't be needed anymore with api change 
-    // if(isMobile) {
-    //   filteredData.forEach(function(row) {
-    //     displayData.push(Object.fromEntries(Object.entries(row)
-    //     .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
-    //   })
-    // } else {
-    //     if(!query.showAll) {
-    //       filteredData.forEach(function(row) {
-    //         displayData.push(Object.fromEntries(Object.entries(row)
-    //         .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
-    //       })
-    //     }
-    //     else {
-    //       filteredData.forEach(function(row) {
-    //         displayData.push(Object.fromEntries(Object.entries(row)
-    //         .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
-    //       })
-    //     }
-    // }
   }
 
   return (
