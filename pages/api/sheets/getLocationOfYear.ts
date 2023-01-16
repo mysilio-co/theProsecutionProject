@@ -19,14 +19,20 @@ export default async function handler(req, res) {
     else {
       const file:any = await getSingleSheetData(generateSheetsDateQuery(tab));
       let sheetData:any = file.data.values.slice(1,);
-      sheetData.forEach(function callback(date:Array<string>, index:number) {
-        let yearData = date[0].substring(date[0].length-4)
+      let yearFound = false;
+      let index = 0;
+      while(index<sheetData.length && !yearFound) {
+        let yearData = sheetData[index][0].substring(sheetData[index][0].length-4);
         if(yearData>=yearParam) {
           // adding 2 because the first row is skipped in this loop (variable name row)
           // and index is base 0 while sheets is base 1
           res.status(200).json({'index': index+2});
+          yearFound = true;
         }
-      });
-      res.status(200).json({'index': -1});
+        index++;
+      };
+      if(!yearFound) {
+        res.status(200).json({'index': -1});
+      }
     }
 }
