@@ -1,8 +1,17 @@
-export const SHEET_NAMES = {
+export const TAB_NAMES = {
     "General": "General",
     "Summer-Fall 2020 Protests":"Summer-Fall 2020 protest cases",
     "Capitol Raid":"Capitol raid cases"
   };
+
+  export const SHEET_NAMES = [
+    "U//FOUO",
+    "Summer-Fall 2020 protest cases",
+    "Capitol raid cases",
+    "Case starters",
+    "J20 cases", 
+    "Pending cases"
+]
 
 export const DROPDOWN_KEYS = [
     "Date descriptor",

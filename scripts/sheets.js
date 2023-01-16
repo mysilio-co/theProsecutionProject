@@ -1,4 +1,4 @@
-import { RANGE_MAP, SHEET_NAMES } from './constants';
+import { RANGE_MAP, TAB_NAMES } from './constants';
 
 const { google } = require('googleapis');
 const {GoogleAuth} = require('google-auth-library');
@@ -25,10 +25,32 @@ export async function getSheetsData(query) {
   return ret;
 }
 
+export async function getSingleSheetData(query) {
+  const SCOPES = ['https://www.googleapis.com/auth/drive'];
+  const creds = {
+    client_email: process.env.GCP_CLIENT_EMAIL,
+    private_key: process.env.GCP_PRIVATE_KEY
+  };
+  const auth = new GoogleAuth({
+      credentials: creds,
+      scopes: SCOPES,
+  });
+  const sheets = google.sheets({version: 'v4', auth});
+  
+  let ret = null;
+  await sheets.spreadsheets.values.get({
+      spreadsheetId: '19n55x92uJQBbRmIa_8bR-SP8phiZ-NQC4oW86sbGNm4',
+      range: query
+    }).then(function(result) {
+      ret = result;
+    })  
+  return ret;
+}
+
 export function generateSheetsQuery(tabs, columnKeys) {
   let query = [];
   if(!columnKeys || columnKeys.length===0) {
-    tabs.forEach(tab=> {
+    tabs.forEach(tab => {
       query.push(tab+'!A:AT');
     })
   }
@@ -39,6 +61,12 @@ export function generateSheetsQuery(tabs, columnKeys) {
       })
     })
   }
+  return query;
+}
+
+export function generateSheetsDateQuery(tab) {
+  let query = [];
+  query.push(tab+'!A:A');
   return query;
 }
 
