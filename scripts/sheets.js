@@ -3,6 +3,8 @@ import { RANGE_MAP, TAB_NAMES } from './constants';
 const { google } = require('googleapis');
 const {GoogleAuth} = require('google-auth-library');
 
+const fetcher = async (url) => await fetch(url).then((res) => {return res.json()});
+
 export async function getSheetsData(query) {
   const SCOPES = ['https://www.googleapis.com/auth/drive'];
   const creds = {
@@ -47,17 +49,17 @@ export async function getSingleSheetData(query) {
   return ret;
 }
 
-export function generateSheetsQuery(tabs, columnKeys) {
+export function generateSheetsQuery(tabs, columnKeys, start, end) {
   let query = [];
   if(!columnKeys || columnKeys.length===0) {
     tabs.forEach(tab => {
-      query.push(tab+'!A:AT');
+      query.push(tab+'!A'+start+':AT'+end);
     })
   }
   else {
     tabs.forEach(tab => {
       columnKeys.forEach(key => {
-        query.push(tab+'!'+key+':'+key);
+        query.push(tab+'!'+key+start+':'+key+end);
       })
     })
   }

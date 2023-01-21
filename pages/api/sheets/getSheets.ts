@@ -17,18 +17,26 @@ export default async function handler(req, res) {
   }
   const range = req.query.range;
   const tab = req.query.tab === 'General' ? ['U//FOUO', 'Pending cases'] : [TAB_NAMES[req.query.tab]]; 
-  const file:any = await getSheetsData(generateSheetsQuery(tab, RANGE_MAP[range]));
+  const start = !!req.query.start ? req.query.start : '';
+  const end = !!req.query.end ? req.query.end : '';
+  const file:any = await getSheetsData(generateSheetsQuery(tab, RANGE_MAP[range], start, end));
   let sheetData:any = [];
-  
-  // Used when getting all the columns on a table
-  if(range==="desktop") {
-    sheetData = concatAllColumns(file);
+
+  if(!!file.data) {
+    // Used when getting all the columns on a table
+    if(range==="desktop") {
+      sheetData = concatAllColumns(file);
+    }
+    // Used when getting specific columns, need an extra step to combine the columns into one object
+    else {
+      sheetData = concatSpecificColumns(file, range);
+    }
+    const fileJSON = parseSheetsResponse(sheetData);
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
+    res.status(200).json(fileJSON);
   }
-  // Used when getting specific columns, need an extra step to combine the columns into one object
   else {
-    sheetData = concatSpecificColumns(file, range);
+    res.status(404).json({'error':'an error occurred'});
   }
-  const fileJSON = parseSheetsResponse(sheetData);
-  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
-  res.status(200).json(fileJSON);
+
 }

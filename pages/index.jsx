@@ -8,11 +8,12 @@ import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
 import { fuzzySearch, sort } from "../scripts/data-handling.js";
+// import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS, SHEET_NAMES } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SHEET_NAMES } from "../scripts/constants.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -21,7 +22,7 @@ function classNames(...classes) {
 const fetcher = async (url) => await fetch(url).then((res) => {return res.json()});
 
 export default function DataExplorer() {
-  const tabs = Object.keys(SHEET_NAMES);
+  const tabs = Object.keys(TAB_NAMES);
   const router = useRouter();
   const query = router.query;
   const [isMobile, setIsMobile] = useState(false);
@@ -32,6 +33,16 @@ export default function DataExplorer() {
 
   function createExportUrl(data) {
     return !!data ? URL.createObjectURL(new Blob([d3.csvFormat(data)], { type: "text/csv" })) : "#";
+  }
+
+  function getChunksOfSheet(sheet, range, year) {
+    const locationOfYear = useSWR('/api/sheets/getLocationOfYear?sheet='+sheet+'&year='+year, fetcher);
+    if(!!locationOfYear) {
+      const midPoint = Number(locationOfYear.data?.index);
+      let { firstHalf } = useSWR('/api/sheets/getSheets?tab='+sheet+'&range='+range+'&start='+1+'&end='+midPoint, fetcher);
+      let { secondHalf } = useSWR('/api/sheets/getSheets?tab='+sheet+'&range='+range+'&start='+midPoint+1+'&end=1000', fetcher);
+      console.log(firstHalf);
+    }
   }
   
   useEffect(() => {
@@ -51,6 +62,7 @@ export default function DataExplorer() {
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
 
   let { data, error } = useSWR('/api/sheets/getSheets?tab='+selected+'&range='+viewType, fetcher);
+  getChunksOfSheet('U//FOUO', 'desktop', '2010');
 
   if(!!data) {
     isLoading = false;

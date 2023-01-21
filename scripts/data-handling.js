@@ -17,10 +17,7 @@ export function fuzzySearch(data, search, key, isMobile) {
   if(!!data) {
     // data = data.filter(row => row.Date.length!=0);
     if (!!search) {
-      console.log("search is " + search);
-      console.log("key is " + key);
       const fuse = new Fuse(data, options).search(search);
-      console.log(fuse)
       const cleanedData = Array.from(fuse, row => row.item);
       cleanedData.columns = data.columns;
       data = cleanedData;

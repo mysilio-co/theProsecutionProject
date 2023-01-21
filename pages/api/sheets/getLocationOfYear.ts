@@ -6,18 +6,18 @@ export const config = {
 }
 
 export default async function handler(req, res) {
-    const tab = req.query.tab;
+    const sheet = req.query.sheet;
     const yearParam = req.query.year;
     const yearRegex = new RegExp('^(19|20)[0-9][0-9]');
 
-    if(((SHEET_NAMES.indexOf(tab) <= -1))) {
-      res.status(500).send({ error: 'tab param is missing or invalid, must be one of: ' + SHEET_NAMES })
+    if(((SHEET_NAMES.indexOf(sheet) <= -1))) {
+      res.status(500).send({ error: 'sheet param is missing or invalid, must be one of: ' + SHEET_NAMES })
     }
     else if(!yearParam || !yearRegex.test(yearParam)) {
       res.status(500).send({ error: 'year param is missing or invalid, must be a 4 digit year beginning with 19 or 20'})
     }
     else {
-      const file:any = await getSingleSheetData(generateSheetsDateQuery(tab));
+      const file:any = await getSingleSheetData(generateSheetsDateQuery(sheet));
       let sheetData:any = file.data.values.slice(1,);
       let yearFound = false;
       let index = 0;
