@@ -54,3 +54,21 @@ export function parseSheetsResponse(response) {
   }
   return ret
 }
+
+export function findFirstOccurenceOfYear(dateColumn, year) {
+  let yearFound = false;
+  let index = 0;
+  let dates = dateColumn.slice(1,);
+  while(index<dates.length && !yearFound) {
+    let yearData = dates[index][0].substring(dates[index][0].length-4);
+    if(yearData>=year) {
+      // adding 2 because the first row is skipped in this loop (variable name row)
+      // and index is base 0 while sheets is base 1
+      return index+2;
+    }
+    index++;
+  };
+  if(!yearFound) {
+    return null;
+  }
+ }

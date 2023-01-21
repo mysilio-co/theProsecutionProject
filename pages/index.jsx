@@ -7,7 +7,7 @@ import FilterDropdowns from '../components/filter.jsx';
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear } from "../scripts/data-handling.js";
 // import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam } from "../scripts/router-handling";
@@ -35,10 +35,12 @@ export default function DataExplorer() {
     return !!data ? URL.createObjectURL(new Blob([d3.csvFormat(data)], { type: "text/csv" })) : "#";
   }
 
- async function getChunksOfSheet(sheet, range, year) {
-    const { data: locationOfYear } = useSWR('/api/sheets/getLocationOfYear?sheet='+sheet+'&year='+year, fetcher);
-    const { firstHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+1+'&end='+(Number(locationOfYear?.index)-1) : null, fetcher);
-    const { secondHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+locationOfYear?.index+'&end=1000' : null, fetcher);
+  function getChunksOfSheet(sheet, range, year) {
+    const { data:dateColumn } = useSWR('/api/sheets/getSheetDateColumn?sheet='+sheet, fetcher);
+    const locationOfYear = findFirstOccurenceOfYear(dateColumn ? dateColumn : [], year);
+    const lengthOfSheet = dateColumn ? dateColumn.length : null;;
+    const { data: firstHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
+    const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
     return !!firstHalf && !!secondHalf ? firstHalf.concat(secondHalf) : null;
   }
   
@@ -61,11 +63,8 @@ export default function DataExplorer() {
   // let { data, error } = useSWR('/api/sheets/getSheets?sheet=U//FOUO&range='+viewType, fetcher);
   const sheet = 'U//FOUO';
   const year = '2010';
-  const { data: locationOfYear } = useSWR('/api/sheets/getLocationOfYear?sheet='+sheet+'&year='+year, fetcher);
-  const { data: lengthOfSheet } = useSWR('/api/sheets/getLengthOfSheet?sheet='+sheet, fetcher);
-  const { data: firstHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(Number(locationOfYear?.index)-1) : null, fetcher);
-  const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(Number(locationOfYear?.index)-1)+'&end='+(Number(lengthOfSheet?.length)) : null, fetcher);
-  let data = !!firstHalf && !!secondHalf ? firstHalf.concat(secondHalf) : null;
+  let data = getChunksOfSheet(sheet, viewType, year);
+
 
   if(!!data?.error) {
     console.log(data);

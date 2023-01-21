@@ -3,8 +3,6 @@ import { RANGE_MAP, TAB_NAMES } from './constants';
 const { google } = require('googleapis');
 const {GoogleAuth} = require('google-auth-library');
 
-const fetcher = async (url) => await fetch(url).then((res) => {return res.json()});
-
 export async function getSheetsData(query) {
   const SCOPES = ['https://www.googleapis.com/auth/drive'];
   const creds = {
