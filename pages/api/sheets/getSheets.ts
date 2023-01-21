@@ -1,6 +1,6 @@
-import { DESKTOP_EXPRESS_COLUMN_IDS, MOBILE_COLUMN_IDS, RANGE_MAP, TAB_NAMES } from '../../../scripts/constants';
+import { DESKTOP_EXPRESS_COLUMN_IDS, MOBILE_COLUMN_IDS, RANGE_MAP, SHEET_NAMES } from '../../../scripts/constants';
 import { parseSheetsResponse } from '../../../scripts/data-handling';
-import { concatAllColumns, concatSpecificColumns, generateSheetsQuery, getSheetsData } from '../../../scripts/sheets';
+import { concatAllColumns, concatSpecificColumns, generateSheetsQuery, getSheetsData, getSingleSheetData } from '../../../scripts/sheets';
 
 export const config = {
   runtime: 'nodejs'
@@ -9,18 +9,19 @@ export const config = {
 export default async function handler(req, res) {
 
   // Validate Request
-  if((!(req.query.tab in TAB_NAMES) && req.query.tab!="General")) {
-    res.status(500).send({ error: 'tab param is missing or invalid, must be one of: ' + Object.keys(TAB_NAMES) })
+  if(!(SHEET_NAMES.includes(req.query.sheet))) {
+    res.status(500).send({ error: 'sheet param is missing or invalid, must be one of: ' + SHEET_NAMES })
   }
   else if(!(req.query.range in RANGE_MAP)) {
     res.status(500).send({ error: 'range param is missing or invalid, must be one of: ' + Object.keys(RANGE_MAP) })
   }
   const range = req.query.range;
-  const tab = req.query.tab === 'General' ? ['U//FOUO', 'Pending cases'] : [TAB_NAMES[req.query.tab]]; 
+  const sheet = [req.query.sheet]; 
   const start = !!req.query.start ? req.query.start : '';
   const end = !!req.query.end ? req.query.end : '';
-  const file:any = await getSheetsData(generateSheetsQuery(tab, RANGE_MAP[range], start, end));
+  const file:any = await getSheetsData(generateSheetsQuery(sheet, RANGE_MAP[range], start, end));
   let sheetData:any = [];
+  
 
   if(!!file.data) {
     // Used when getting all the columns on a table

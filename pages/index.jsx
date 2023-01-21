@@ -35,14 +35,11 @@ export default function DataExplorer() {
     return !!data ? URL.createObjectURL(new Blob([d3.csvFormat(data)], { type: "text/csv" })) : "#";
   }
 
-  function getChunksOfSheet(sheet, range, year) {
-    const locationOfYear = useSWR('/api/sheets/getLocationOfYear?sheet='+sheet+'&year='+year, fetcher);
-    if(!!locationOfYear) {
-      const midPoint = Number(locationOfYear.data?.index);
-      let { firstHalf } = useSWR('/api/sheets/getSheets?tab='+sheet+'&range='+range+'&start='+1+'&end='+midPoint, fetcher);
-      let { secondHalf } = useSWR('/api/sheets/getSheets?tab='+sheet+'&range='+range+'&start='+midPoint+1+'&end=1000', fetcher);
-      console.log(firstHalf);
-    }
+ async function getChunksOfSheet(sheet, range, year) {
+    const { data: locationOfYear } = useSWR('/api/sheets/getLocationOfYear?sheet='+sheet+'&year='+year, fetcher);
+    const { firstHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+1+'&end='+(Number(locationOfYear?.index)-1) : null, fetcher);
+    const { secondHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+locationOfYear?.index+'&end=1000' : null, fetcher);
+    return !!firstHalf && !!secondHalf ? firstHalf.concat(secondHalf) : null;
   }
   
   useEffect(() => {
@@ -61,9 +58,19 @@ export default function DataExplorer() {
   let isLoading = true;
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
 
-  let { data, error } = useSWR('/api/sheets/getSheets?tab='+selected+'&range='+viewType, fetcher);
-  getChunksOfSheet('U//FOUO', 'desktop', '2010');
+  // let { data, error } = useSWR('/api/sheets/getSheets?sheet=U//FOUO&range='+viewType, fetcher);
+  const sheet = 'U//FOUO';
+  const year = '2010';
+  const { data: locationOfYear } = useSWR('/api/sheets/getLocationOfYear?sheet='+sheet+'&year='+year, fetcher);
+  const { data: lengthOfSheet } = useSWR('/api/sheets/getLengthOfSheet?sheet='+sheet, fetcher);
+  const { data: firstHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(Number(locationOfYear?.index)-1) : null, fetcher);
+  const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(Number(locationOfYear?.index)-1)+'&end='+(Number(lengthOfSheet?.length)) : null, fetcher);
+  let data = !!firstHalf && !!secondHalf ? firstHalf.concat(secondHalf) : null;
 
+  if(!!data?.error) {
+    console.log(data);
+    data = null;
+  }
   if(!!data) {
     isLoading = false;
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);

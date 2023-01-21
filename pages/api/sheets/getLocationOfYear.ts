@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const yearParam = req.query.year;
     const yearRegex = new RegExp('^(19|20)[0-9][0-9]');
 
-    if(((SHEET_NAMES.indexOf(sheet) <= -1))) {
+    if(!(SHEET_NAMES.includes(req.query.sheet))) {
       res.status(500).send({ error: 'sheet param is missing or invalid, must be one of: ' + SHEET_NAMES })
     }
     else if(!yearParam || !yearRegex.test(yearParam)) {
