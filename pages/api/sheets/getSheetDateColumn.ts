@@ -12,8 +12,12 @@ export default async function handler(req, res) {
       res.status(500).send({ error: 'sheet param is missing or invalid, must be one of: ' + SHEET_NAMES })
     }
     else {
-      const file:any = await getSingleSheetData(generateSheetsDateQuery(sheet));
-      let sheetData:any = file.data.values;
-      res.status(200).json(sheetData);
+      try {
+        const file:any = await getSingleSheetData(generateSheetsDateQuery(req.query.sheet));
+        let sheetData:any = file.data.values;
+        res.status(200).json(sheetData);
+      } catch(err) {
+        res.status(500).json({'error': err.errors});
+      }
     }
 }

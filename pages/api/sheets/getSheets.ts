@@ -15,15 +15,13 @@ export default async function handler(req, res) {
   else if(!(req.query.range in RANGE_MAP)) {
     res.status(500).send({ error: 'range param is missing or invalid, must be one of: ' + Object.keys(RANGE_MAP) })
   }
-  const range = req.query.range;
-  const sheet = [req.query.sheet]; 
-  const start = !!req.query.start ? req.query.start : '';
-  const end = !!req.query.end ? req.query.end : '';
-  const file:any = await getSheetsData(generateSheetsQuery(sheet, RANGE_MAP[range], start, end));
-  let sheetData:any = [];
-  
-
-  if(!!file.data) {
+  try {
+    const range = req.query.range;
+    const sheet = [req.query.sheet]; 
+    const start = !!req.query.start ? req.query.start : '';
+    const end = !!req.query.end ? req.query.end : '';
+    const file:any = await getSheetsData(generateSheetsQuery(sheet, RANGE_MAP[range], start, end));
+    let sheetData:any = [];
     // Used when getting all the columns on a table
     if(range==="desktop") {
       sheetData = concatAllColumns(file);
@@ -35,9 +33,8 @@ export default async function handler(req, res) {
     const fileJSON = parseSheetsResponse(sheetData);
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
     res.status(200).json(fileJSON);
-  }
-  else {
-    res.status(404).json({'error':'an error occurred'});
+  } catch(err) {
+    res.status(500).json({'error': err.errors});
   }
 
 }

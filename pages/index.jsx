@@ -12,6 +12,7 @@ import { fuzzySearch, sort, findFirstOccurenceOfYear } from "../scripts/data-han
 import SearchBy from "../components/search-by";
 import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
+import ErrorMessage from "../components/error-message";
 import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SHEET_NAMES } from "../scripts/constants.js";
 
@@ -25,23 +26,42 @@ export default function DataExplorer() {
   const tabs = Object.keys(TAB_NAMES);
   const router = useRouter();
   const query = router.query;
+  let isError = false;
   const [isMobile, setIsMobile] = useState(false);
 
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
   }
 
+  function updateIsError(errorFormula) {
+    isError = isError || errorFormula;
+  }
+
   function createExportUrl(data) {
     return !!data ? URL.createObjectURL(new Blob([d3.csvFormat(data)], { type: "text/csv" })) : "#";
   }
 
-  function getChunksOfSheet(sheet, range, year) {
-    const { data:dateColumn } = useSWR('/api/sheets/getSheetDateColumn?sheet='+sheet, fetcher);
-    const locationOfYear = findFirstOccurenceOfYear(dateColumn ? dateColumn : [], year);
-    const lengthOfSheet = dateColumn ? dateColumn.length : null;;
-    const { data: firstHalf } = useSWR(locationOfYear ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
-    const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet ? '/api/sheets/getSheets?sheet='+sheet+'&range='+range+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
-    return !!firstHalf && !!secondHalf ? firstHalf.concat(secondHalf) : null;
+  function getSheetData(tab, viewType) {
+    const isGeneral = tab==="General" ? true : false;
+      const fouo = getChunksOfSheet('U//FOUO', viewType, '2010', tab);
+      const { data: pending } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
+      const { data: nonGeneral } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
+      updateIsError(pending?.error || nonGeneral?.error);
+      return isGeneral ? (fouo && pending && !isError ? fouo.concat(pending) : null) : (nonGeneral && !isError ? nonGeneral : null);
+  }
+
+  function getChunksOfSheet(sheet, viewType, year, tab) {
+    //shouldCall is used to determine if the call should be made using nextJS conditional fetching
+    //if false, cascades down and prevents the sheets calls from being made
+    const shouldCall = tab==="General" ? true : false;
+    const { data:dateColumn } = useSWR(shouldCall ? '/api/sheets/getSheetDateColumn?sheet='+sheet : null, fetcher);
+    updateIsError(dateColumn?.error);
+    const locationOfYear = dateColumn && !isError ? findFirstOccurenceOfYear(dateColumn, year) : null;
+    const lengthOfSheet = dateColumn ? dateColumn.length : null;
+    const { data: firstHalf } = useSWR(locationOfYear && !isError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
+    const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet && !isError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
+    updateIsError(firstHalf?.error || secondHalf?.error);
+    return firstHalf && secondHalf && !isError ? firstHalf.concat(secondHalf) : null;
   }
   
   useEffect(() => {
@@ -53,23 +73,13 @@ export default function DataExplorer() {
     );
     updateMobileState();
   }, []);
-  const selected = query.tab || tabs[0];
+  const selectedTab = query.tab || tabs[0];
   const search = query.search || "";
   let filteredData = null;
-  let displayData = [];
   let isLoading = true;
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
+  let data = getSheetData(selectedTab, viewType);
 
-  // let { data, error } = useSWR('/api/sheets/getSheets?sheet=U//FOUO&range='+viewType, fetcher);
-  const sheet = 'U//FOUO';
-  const year = '2010';
-  let data = getChunksOfSheet(sheet, viewType, year);
-
-
-  if(!!data?.error) {
-    console.log(data);
-    data = null;
-  }
   if(!!data) {
     isLoading = false;
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
@@ -117,12 +127,12 @@ export default function DataExplorer() {
                     <a
                       key={tab}
                       className={classNames(
-                        tab === selected
+                        tab === selectedTab
                           ? "bg-gray-900 text-white"
                           : "text-gray-300 hover:bg-gray-700 hover:text-white",
                         "rounded-md py-2 px-3 inline-flex items-center text-sm font-medium"
                       )}
-                      aria-current={tab === selected ? "page" : undefined}
+                      aria-current={tab === selectedTab ? "page" : undefined}
                     >
                       {tab}
                     </a>
@@ -138,14 +148,16 @@ export default function DataExplorer() {
         data={data}
         cleanedData={cleanedData}
         /> */}
-      <DataTable
-        title={selected}
+      { isError ? 
+        <ErrorMessage></ErrorMessage>
+      : <DataTable
+        title={selectedTab}
         data={filteredData}
         length={!!data ? data.length : 0}
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
-      />
+      />}
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
           <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
