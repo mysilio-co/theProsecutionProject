@@ -81,6 +81,11 @@ export const RESULTS_PER_PAGE_KEYS = [
     "100"
 ]
 
+export const ORDER_BY_KEYS = [
+    "asc",
+    "desc"
+]
+
 export const SCROLL_BAR_COLUMN_KEYS = [
     "Charges",
     "Short narrative", 

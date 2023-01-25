@@ -13,10 +13,17 @@ function classNames(...classes) {
 return classes.filter(Boolean).join(" ");
 }
 
-export default function ResultsPerPage({router, length}) {
+export default function ResultsPerPage({router, length, isLoading}) {
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE_KEYS[0]);
     const [currentPage, setCurrentPage] = useState(1);
     const maxPages = Math.ceil(length / parseInt(resultsPerPage));
+
+    useEffect(()=>{
+        if(!isLoading && router.query.numShown) {
+            setResultsPerPage(router.query.numShown);
+        }
+    },[isLoading])
+
     useEffect(()=>{
         setCurrentPage(1);
     },[resultsPerPage])
@@ -28,6 +35,12 @@ export default function ResultsPerPage({router, length}) {
     useEffect(()=> {
         setCurrentPage(1);
     },[router.query.search, router.query.searchBy, router.query.tab])
+
+    useEffect(()=>{
+        if(router.query.numShown) {
+            setResultsPerPage(router.query.numShown);
+        }
+    },[router.query.numShown])
     
     return (
         <div className="md:flex items-center">

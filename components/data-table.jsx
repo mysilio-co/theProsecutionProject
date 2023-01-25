@@ -6,7 +6,8 @@ import {
 
   import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
-  import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS } from "../scripts/constants.js";
+  import ShowAllCheckbox from "./show-all-checkbox";
+  import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -15,7 +16,16 @@ import {
 export default function DataTable({ title, data, length, router, isLoading, isMobile }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
-  
+    
+    function resetUrl() {
+      const tab = router.query.tab ? router.query.tab : bject.keys(TAB_NAMES)[0];
+      router.push({ 
+        pathname: '/',
+        query: { tab: tab, currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
+        undefined, 
+        {}
+      );
+    }
     
     return (
       <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -29,17 +39,11 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
               <p className="text-lg font-semibold text-gray-700">
                 Search Results: {length + (length==1 ? " Case" : " Cases")}
               </p>
-              {!isMobile ? 
-                <div className="flex ml-6 items-center">
-                <label className="inline-flex relative items-center cursor-pointer">
-                <input type="checkbox" value="" className="sr-only peer"
-                  onChange={(e) => {e.target.checked ? addQueryParam('showAll', 'true', router) : removeQueryParam('showAll', router)}} />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                <span className="ml-3 text-sm font-sm text-gray-900">Show all columns</span>
-                </label>
-              </div> : ""}
+              {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading}/>: ""}
+              <button onClick={resetUrl} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+                Reset Search
+              </button>
             </div>
-  
           </div>
         </div>
         <div className="mt-3 flex flex-col">

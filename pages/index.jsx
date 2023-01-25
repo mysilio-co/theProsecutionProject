@@ -14,7 +14,7 @@ import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ErrorMessage from "../components/error-message";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SHEET_NAMES } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -27,6 +27,9 @@ export default function DataExplorer() {
   const router = useRouter();
   const query = router.query;
   let isError = false;
+  let data = null;
+  let filteredData = null;
+  let isLoading = true;
   const [isMobile, setIsMobile] = useState(false);
 
   function updateMobileState() {
@@ -43,11 +46,11 @@ export default function DataExplorer() {
 
   function getSheetData(tab, viewType) {
     const isGeneral = tab==="General" ? true : false;
-      const fouo = getChunksOfSheet('U//FOUO', viewType, '2010', tab);
-      const { data: pending } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
-      const { data: nonGeneral } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
-      updateIsError(pending?.error || nonGeneral?.error);
-      return isGeneral ? (fouo && pending && !isError ? fouo.concat(pending) : null) : (nonGeneral && !isError ? nonGeneral : null);
+    const fouo = getChunksOfSheet('U//FOUO', viewType, '2010', tab);
+    const { data: pending } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
+    const { data: nonGeneral } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
+    updateIsError(pending?.error || nonGeneral?.error);
+    return isGeneral ? (fouo && pending && !isError ? fouo.concat(pending) : null) : (nonGeneral && !isError ? nonGeneral : null);
   }
 
   function getChunksOfSheet(sheet, viewType, year, tab) {
@@ -65,20 +68,45 @@ export default function DataExplorer() {
   }
   
   useEffect(() => {
-    router.push({ 
-      pathname: '/',
-      query: { ...router.query, tab: tabs[0], currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
-      undefined, 
-      {}
-    );
     updateMobileState();
   }, []);
+
+  useEffect(()=>{
+    if(router.isReady) {
+      const tab = router.query.tab in TAB_NAMES ? router.query.tab : Object.keys(TAB_NAMES)[0];
+      const numShown = RESULTS_PER_PAGE_KEYS.includes(router.query.numShown) ? router.query.numShown : RESULTS_PER_PAGE_KEYS[0];
+      const sortBy = DESKTOP_COLUMN_KEYS.includes(router.query.sortBy) ? router.query.sortBy : null;
+      const order = ORDER_BY_KEYS.includes(router.query.order) ? router.query.order : null;
+      const search = router.query.search ? router.query.search : null;
+      const searchBy = SEARCH_BY_KEYS_EXPRESS.includes(router.query.searchBy) ? router.query.searchBy : null;
+      const showAll = router.query.showAll=="true" ? "true" : null;
+      let query = {tab: tab, currentPage: 1, numShown: numShown};
+      if(sortBy && order) { 
+        query.sortBy = sortBy; 
+        query.order = order;
+      }
+      if(search) { 
+        query.search = search; 
+      }
+      if(searchBy) { 
+        query.searchBy = searchBy;
+      }
+      if(showAll) {
+        query.showAll = showAll;
+      }
+      router.replace({ 
+        pathname: '',
+        query: query }, 
+        undefined, 
+        {shallow: true}
+      );
+    }
+  }, [router.isReady]);
+
   const selectedTab = query.tab || tabs[0];
   const search = query.search || "";
-  let filteredData = null;
-  let isLoading = true;
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
-  let data = getSheetData(selectedTab, viewType);
+  data = getSheetData(selectedTab, viewType);
 
   if(!!data) {
     isLoading = false;
@@ -112,7 +140,7 @@ export default function DataExplorer() {
                   <BasicSearch router={router} search={search}/>
                 </div>
                 <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll}/>
+                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading}/>
                 </div>
               </div>
               <nav
@@ -160,7 +188,7 @@ export default function DataExplorer() {
       />}
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
-          <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
+          <ResultsPerPage router={router} length={!!data ? data.length : 0} isLoading={isLoading}/>
           <a href={createExportUrl(data)} download="tpp-data.csv">
             <button className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-3/4 bg-[#FC8F4D] hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-black py-2 px-4 rounded">
               Export Data
