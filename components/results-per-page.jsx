@@ -37,10 +37,16 @@ export default function ResultsPerPage({router, length, isLoading}) {
     },[router.query.search, router.query.searchBy, router.query.tab])
 
     useEffect(()=>{
-        if(router.query.numShown) {
+        if(!isLoading && router.query.numShown) {
             setResultsPerPage(router.query.numShown);
         }
     },[router.query.numShown])
+
+    useEffect(()=>{
+        if(!isLoading && router.query.currentPage) {
+            setCurrentPage(router.query.currentPage);
+        }
+    },[router.query.currentPage])
     
     return (
         <div className="md:flex items-center">
