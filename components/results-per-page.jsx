@@ -18,35 +18,37 @@ export default function ResultsPerPage({router, length, isLoading}) {
     const [currentPage, setCurrentPage] = useState(1);
     const maxPages = Math.ceil(length / parseInt(resultsPerPage));
 
-    // useEffect(()=>{
-    //     if(!isLoading && router.query.numShown) {
-    //         setResultsPerPage(router.query.numShown);
-    //     }
-    // },[isLoading])
+    useEffect(()=>{
+        if(!isLoading && router.query.numShown) {
+            setResultsPerPage(router.query.numShown);
+        }
+    },[isLoading])
 
-    // useEffect(()=>{
-    //     setCurrentPage(1);
-    // },[resultsPerPage])
+    useEffect(()=>{
+        setCurrentPage(1);
+    },[resultsPerPage])
 
-    // useEffect(()=>{
-    //     addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
-    // },[currentPage, resultsPerPage])
+    useEffect(()=>{
+        addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
+    },[currentPage, resultsPerPage])
 
-    // useEffect(()=> {
-    //     setCurrentPage(1);
-    // },[router.query.search, router.query.searchBy, router.query.tab])
+    useEffect(()=> {
+        if(!isLoading) {
+            setCurrentPage(1);
+        }
+    },[router.query.search, router.query.searchBy, router.query.tab])
 
-    // useEffect(()=>{
-    //     if(!isLoading && router.query.numShown) {
-    //         setResultsPerPage(router.query.numShown);
-    //     }
-    // },[router.query.numShown])
+    useEffect(()=>{
+        if(!isLoading && router.query.numShown) {
+            setResultsPerPage(router.query.numShown);
+        }
+    },[router.query.numShown])
 
-    // useEffect(()=>{
-    //     if(!isLoading && router.query.currentPage) {
-    //         setCurrentPage(router.query.currentPage);
-    //     }
-    // },[router.query.currentPage])
+    useEffect(()=>{
+        if(!isLoading && router.query.currentPage) {
+            setCurrentPage(router.query.currentPage);
+        }
+    },[router.query.currentPage])
     
     return (
         <div className="md:flex items-center">
