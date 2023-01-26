@@ -26,7 +26,7 @@ export default function ShowAllCheckbox({router, isLoading}) {
     },[showAll])
 
     useEffect(()=>{
-        if(!router.query.showAll) {
+        if(!isLoading && !router.query.showAll) {
             setShowAll(false);
         }
     },[router.query.showAll])
