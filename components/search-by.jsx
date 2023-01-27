@@ -22,9 +22,9 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading}) {
     //     }
     // },[isLoading])
 
-    useEffect(()=>{
-        searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
-    },[searchBy])
+    // useEffect(()=>{
+    //     searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
+    // },[searchBy])
 
     // useEffect(()=>{
     //     if(!isLoading && !router.query.searchBy) {

@@ -21,9 +21,9 @@ export default function ShowAllCheckbox({router, isLoading}) {
     //     }
     // },[isLoading])
 
-    useEffect(()=>{
-        showAll ? addQueryParam("showAll", showAll, router) : removeQueryParam("showAll", router);
-    },[showAll])
+    // useEffect(()=>{
+    //     showAll ? addQueryParam("showAll", showAll, router) : removeQueryParam("showAll", router);
+    // },[showAll])
 
     // useEffect(()=>{
     //     if(!isLoading && !router.query.showAll) {

@@ -24,13 +24,13 @@ export default function ResultsPerPage({router, length, isLoading}) {
     //     }
     // },[isLoading])
 
-    useEffect(()=>{
-        setCurrentPage(1);
-    },[resultsPerPage])
+    // useEffect(()=>{
+    //     setCurrentPage(1);
+    // },[resultsPerPage])
 
-    useEffect(()=>{
-        addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
-    },[currentPage, resultsPerPage])
+    // useEffect(()=>{
+    //     addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
+    // },[currentPage, resultsPerPage])
 
     // useEffect(()=> {
     //     if(!isLoading) {
