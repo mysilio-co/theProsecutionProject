@@ -20,7 +20,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const fetcher = async (url) => await fetch(url).then((res) => {return res.json()});
+const fetcher = async (url) => await fetch(url).then((res) => {
+  if (!res.ok) {
+    const error = new Error('An error occurred while fetching the data.')
+    error.status = res.status
+    throw error
+  }
+  return res.json()}
+  );
 
 export default function DataExplorer() {
   const tabs = Object.keys(TAB_NAMES);
@@ -47,9 +54,9 @@ export default function DataExplorer() {
   function getSheetData(tab, viewType) {
     const isGeneral = tab==="General" ? true : false;
     const fouo = getChunksOfSheet('U//FOUO', viewType, '2010', tab);
-    const { data: pending } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
-    const { data: nonGeneral } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
-    updateHasError(pending?.error || nonGeneral?.error);
+    const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
+    const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
+    updateHasError(pendingError|| nonGeneralError);
     return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
   }
 
@@ -57,15 +64,13 @@ export default function DataExplorer() {
     //shouldCall is used to determine if the call should be made using nextJS conditional fetching
     //if false, cascades down and prevents the sheets calls from being made
     const shouldCall = tab==="General" ? true : false;
-    const { data:dateColumn } = useSWR(shouldCall ? '/api/sheets/getSheetDateColumn?sheet='+sheet : null, fetcher);
-    updateHasError(dateColumn?.error);
+    const { data:dateColumn, error:dateColumnError } = useSWR(shouldCall ? '/api/sheets/getSheetDateColumn?sheet='+sheet : null, fetcher);
+    updateHasError(dateColumnError);
     const locationOfYear = dateColumn && !hasError ? findFirstOccurenceOfYear(dateColumn, year) : null;
     const lengthOfSheet = dateColumn ? dateColumn.length : null;
-    const { data: firstHalf } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
-    const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
-    console.log(firstHalf);
-    console.log(secondHalf);
-    updateHasError(firstHalf?.error || secondHalf?.error);
+    const { data: firstHalf, error: firstHalfError } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
+    const { data: secondHalf, error: secondHalfError } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
+    updateHasError(firstHalfError|| secondHalfError);
     return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
   
