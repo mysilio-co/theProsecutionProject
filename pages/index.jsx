@@ -26,7 +26,7 @@ export default function DataExplorer() {
   const tabs = Object.keys(TAB_NAMES);
   const router = useRouter();
   const query = router.query;
-  let isError = false;
+  let hasError = false;
   let data = null;
   let filteredData = null;
   let isLoading = true;
@@ -36,8 +36,8 @@ export default function DataExplorer() {
     setIsMobile(window.innerWidth<768 ? true : false);
   }
 
-  function updateIsError(errorFormula) {
-    isError = isError || errorFormula;
+  function updateHasError(errorFormula) {
+    hasError = hasError || errorFormula;
   }
 
   function createExportUrl(data) {
@@ -49,8 +49,8 @@ export default function DataExplorer() {
     const fouo = getChunksOfSheet('U//FOUO', viewType, '2010', tab);
     const { data: pending } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
     const { data: nonGeneral } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
-    updateIsError(pending?.error || nonGeneral?.error);
-    return isGeneral ? (fouo && pending && !isError ? fouo.concat(pending) : null) : (nonGeneral && !isError ? nonGeneral : null);
+    updateHasError(pending?.error || nonGeneral?.error);
+    return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
   }
 
   function getChunksOfSheet(sheet, viewType, year, tab) {
@@ -58,13 +58,15 @@ export default function DataExplorer() {
     //if false, cascades down and prevents the sheets calls from being made
     const shouldCall = tab==="General" ? true : false;
     const { data:dateColumn } = useSWR(shouldCall ? '/api/sheets/getSheetDateColumn?sheet='+sheet : null, fetcher);
-    updateIsError(dateColumn?.error);
-    const locationOfYear = dateColumn && !isError ? findFirstOccurenceOfYear(dateColumn, year) : null;
+    updateHasError(dateColumn?.error);
+    const locationOfYear = dateColumn && !hasError ? findFirstOccurenceOfYear(dateColumn, year) : null;
     const lengthOfSheet = dateColumn ? dateColumn.length : null;
-    const { data: firstHalf } = useSWR(locationOfYear && !isError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
-    const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet && !isError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
-    updateIsError(firstHalf?.error || secondHalf?.error);
-    return firstHalf && secondHalf && !isError ? firstHalf.concat(secondHalf) : null;
+    const { data: firstHalf } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
+    const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
+    console.log(firstHalf?.status);
+    console.log(secondHalf?.status);
+    updateHasError(firstHalf?.error || secondHalf?.error);
+    return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
   
   useEffect(() => {
@@ -176,7 +178,7 @@ export default function DataExplorer() {
         data={data}
         cleanedData={cleanedData}
         /> */}
-      { isError ? 
+      { hasError ? 
         <ErrorMessage></ErrorMessage>
       : <DataTable
         title={selectedTab}
