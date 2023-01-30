@@ -56,7 +56,7 @@ export default function ResultsPerPage({router, length, isLoading}) {
     
     return (
         <div className="md:flex items-center">
-        <Listbox value={currentPage} onChange={setCurrentPage}>
+        <Listbox value={currentPage} onChange={setCurrentPage} disabled={isLoading}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400">Page </Listbox.Label>
@@ -120,7 +120,7 @@ export default function ResultsPerPage({router, length, isLoading}) {
                 </>
             )}
         </Listbox>
-        <Listbox value={resultsPerPage} onChange={setResultsPerPage}>
+        <Listbox value={resultsPerPage} onChange={setResultsPerPage} disabled={isLoading}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0">Showing </Listbox.Label>
