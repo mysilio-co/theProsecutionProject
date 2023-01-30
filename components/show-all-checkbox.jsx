@@ -15,21 +15,21 @@ function classNames(...classes) {
 
 export default function ShowAllCheckbox({router, isLoading}) {
     const [showAll, setShowAll] = useState(false);
-    // useEffect(()=>{
-    //     if(!isLoading && router.query.showAll) {
-    //         setShowAll(true);
-    //     }
-    // },[isLoading])
+    useEffect(()=>{
+        if(!isLoading && router.query.showAll) {
+            setShowAll(true);
+        }
+    },[isLoading])
 
-    // useEffect(()=>{
-    //     showAll ? addQueryParam("showAll", showAll, router) : removeQueryParam("showAll", router);
-    // },[showAll])
+    useEffect(()=>{
+        showAll ? addQueryParam("showAll", showAll, router) : removeQueryParam("showAll", router);
+    },[showAll])
 
-    // useEffect(()=>{
-    //     if(!isLoading && !router.query.showAll) {
-    //         setShowAll(false);
-    //     }
-    // },[router.query.showAll])
+    useEffect(()=>{
+        if(!isLoading && !router.query.showAll) {
+            setShowAll(false);
+        }
+    },[router.query.showAll])
 
     return (
     <div className="flex ml-6 items-center">

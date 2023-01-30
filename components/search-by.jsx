@@ -16,21 +16,21 @@ function classNames(...classes) {
 export default function SearchBy({router, isMobile, isAllColumns, isLoading}) {
     const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : !isAllColumns ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
     const [searchBy, setSearchBy] = useState(searchByKeys[0]);
-    // useEffect(()=>{
-    //     if(!isLoading && router.query.searchBy) {
-    //         setSearchBy(router.query.searchBy);
-    //     }
-    // },[isLoading])
+    useEffect(()=>{
+        if(!isLoading && router.query.searchBy) {
+            setSearchBy(router.query.searchBy);
+        }
+    },[isLoading])
 
-    // useEffect(()=>{
-    //     searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
-    // },[searchBy])
+    useEffect(()=>{
+        searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
+    },[searchBy])
 
-    // useEffect(()=>{
-    //     if(!isLoading && !router.query.searchBy) {
-    //         setSearchBy("Any");
-    //     }
-    // },[router.query.searchBy])
+    useEffect(()=>{
+        if(!isLoading && !router.query.searchBy) {
+            setSearchBy("Any");
+        }
+    },[router.query.searchBy])
     
     return (
         <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:inset-0">
