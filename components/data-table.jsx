@@ -8,14 +8,16 @@ import {
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./show-all-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
+import ErrorMessage from "./error-message";
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
-export default function DataTable({ title, data, length, router, isLoading, isMobile }) {
+export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
+    const isDisabled = isLoading && !hasError;
     
     function resetUrl() {
       const tab = router.query.tab ? router.query.tab : bject.keys(TAB_NAMES)[0];
@@ -40,14 +42,17 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                 <p className="text-lg font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
-                {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading}/>: ""}
+                {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError}/>: ""}
               </div>
-              <button onClick={resetUrl} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+              <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
                 Reset Search
               </button>
             </div>
           </div>
         </div>
+        {hasError ? 
+        <ErrorMessage/>
+        : 
         <div className="mt-3 flex flex-col">
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -120,7 +125,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
               </div>
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     );
   }

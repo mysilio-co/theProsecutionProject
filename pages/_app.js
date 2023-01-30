@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }) {
   return <>
     <Head>
       <title>The Prosecution Project</title>
-      <link rel="shortcut icon" href="https://theprosecutionproject.org/wp-content/uploads/2020/08/tPP-4.png"></link>
+      <link rel="shortcut icon" href="/favicon.png"></link>
     </Head>
 
     <Component {...pageProps} />
