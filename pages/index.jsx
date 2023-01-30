@@ -147,7 +147,7 @@ export default function DataExplorer() {
                   <BasicSearch router={router} search={search}/>
                 </div>
                 <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading}/>
+                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
                 </div>
               </div>
               <nav
@@ -183,19 +183,18 @@ export default function DataExplorer() {
         data={data}
         cleanedData={cleanedData}
         /> */}
-      { hasError ? 
-        <ErrorMessage></ErrorMessage>
-      : <DataTable
+      <DataTable
         title={selectedTab}
         data={filteredData}
         length={!!data ? data.length : 0}
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
-      />}
+        hasError={hasError}
+      />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
-          <ResultsPerPage router={router} length={!!data ? data.length : 0} isLoading={isLoading}/>
+          <ResultsPerPage router={router} length={!!data ? data.length : 0} isLoading={isLoading} hasError={hasError}/>
           <a href={createExportUrl(data)} download="tpp-data.csv">
             <button className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-3/4 bg-[#FC8F4D] hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-black py-2 px-4 rounded">
               Export Data

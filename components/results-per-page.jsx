@@ -13,10 +13,11 @@ function classNames(...classes) {
 return classes.filter(Boolean).join(" ");
 }
 
-export default function ResultsPerPage({router, length, isLoading}) {
+export default function ResultsPerPage({router, length, isLoading, hasError}) {
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE_KEYS[0]);
     const [currentPage, setCurrentPage] = useState(1);
     const maxPages = Math.ceil(length / parseInt(resultsPerPage));
+    const isDisabled = isLoading && !hasError;
 
     useEffect(()=>{
         if(!isLoading && router.query.numShown) {
@@ -31,7 +32,7 @@ export default function ResultsPerPage({router, length, isLoading}) {
     },[resultsPerPage])
 
     useEffect(()=>{
-        if(!isLoading) {
+        if(!isLoading || hasError) {
             addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
         }
     },[currentPage, resultsPerPage])
@@ -56,7 +57,7 @@ export default function ResultsPerPage({router, length, isLoading}) {
     
     return (
         <div className="md:flex items-center">
-        <Listbox value={currentPage} onChange={setCurrentPage} disabled={isLoading}>
+        <Listbox value={currentPage} onChange={setCurrentPage} disabled={isDisabled}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400">Page </Listbox.Label>
@@ -120,7 +121,7 @@ export default function ResultsPerPage({router, length, isLoading}) {
                 </>
             )}
         </Listbox>
-        <Listbox value={resultsPerPage} onChange={setResultsPerPage} disabled={isLoading}>
+        <Listbox value={resultsPerPage} onChange={setResultsPerPage} disabled={isDisabled}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0">Showing </Listbox.Label>

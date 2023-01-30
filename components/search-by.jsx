@@ -13,9 +13,10 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-export default function SearchBy({router, isMobile, isAllColumns, isLoading}) {
+export default function SearchBy({router, isMobile, isAllColumns, isLoading, hasError}) {
     const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : !isAllColumns ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
     const [searchBy, setSearchBy] = useState(searchByKeys[0]);
+    const isDisabled = isLoading && !hasError;
     useEffect(()=>{
         if(!isLoading && router.query.searchBy) {
             setSearchBy(router.query.searchBy);
@@ -23,7 +24,7 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading}) {
     },[isLoading])
 
     useEffect(()=>{
-        if(!isLoading) {
+        if(!isLoading || hasError) {
             searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
         }
     },[searchBy])
@@ -37,7 +38,7 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading}) {
     return (
         <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:inset-0">
         <div className="w-full sm:max-w-xs md:inline-flex md:items-center md:justify-center">
-        <Listbox value={ searchBy} onChange={setSearchBy} disabled={isLoading}>
+        <Listbox value={ searchBy} onChange={setSearchBy} disabled={isDisabled}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-0 md:pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
