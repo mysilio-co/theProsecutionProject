@@ -17,15 +17,15 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     
-    function resetUrl() {
-      const tab = router.query.tab ? router.query.tab : bject.keys(TAB_NAMES)[0];
-      router.push({ 
-        pathname: '/',
-        query: { tab: tab, currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
-        undefined, 
-        {}
-      );
-    }
+    // function resetUrl() {
+    //   const tab = router.query.tab ? router.query.tab : bject.keys(TAB_NAMES)[0];
+    //   router.push({ 
+    //     pathname: '/',
+    //     query: { tab: tab, currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
+    //     undefined, 
+    //     {}
+    //   );
+    // }
     
     return (
       <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -42,9 +42,9 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                 </p>
                 {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading}/>: ""}
               </div>
-              <button onClick={resetUrl} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+              {/* <button onClick={resetUrl} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
                 Reset Search
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
