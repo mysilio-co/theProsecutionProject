@@ -23,7 +23,9 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading}) {
     },[isLoading])
 
     useEffect(()=>{
-        searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
+        if(!isLoading) {
+            searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
+        }
     },[searchBy])
 
     useEffect(()=>{
