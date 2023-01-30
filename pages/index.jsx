@@ -63,8 +63,8 @@ export default function DataExplorer() {
     const lengthOfSheet = dateColumn ? dateColumn.length : null;
     const { data: firstHalf } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
     const { data: secondHalf } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
-    console.log(firstHalf?.status);
-    console.log(secondHalf?.status);
+    console.log(firstHalf);
+    console.log(secondHalf);
     updateHasError(firstHalf?.error || secondHalf?.error);
     return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
