@@ -20,37 +20,37 @@ export default function ResultsPerPage({router, length, isLoading, hasError}) {
     const isDisabled = isLoading && !hasError;
 
     useEffect(()=>{
-        if(!isLoading && router.query.numShown) {
+        if(!isDisabled && router.query.numShown) {
             setResultsPerPage(router.query.numShown);
         }
-    },[isLoading])
+    },[isDisabled])
 
     useEffect(()=>{
-        if(!isLoading) {
+        if(!isDisabled) {
             setCurrentPage(1);
         }
     },[resultsPerPage])
 
     useEffect(()=>{
-        if(!isLoading || hasError) {
+        if(!isDisabled) {
             addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
         }
     },[currentPage, resultsPerPage])
 
     useEffect(()=> {
-        if(!isLoading) {
+        if(!isDisabled) {
             setCurrentPage(1);
         }
     },[router.query.search, router.query.searchBy, router.query.tab])
 
     useEffect(()=>{
-        if(!isLoading && router.query.numShown) {
+        if(!isDisabled && router.query.numShown) {
             setResultsPerPage(router.query.numShown);
         }
     },[router.query.numShown])
 
     useEffect(()=>{
-        if(!isLoading && router.query.currentPage) {
+        if(!isDisabled && router.query.currentPage) {
             setCurrentPage(router.query.currentPage);
         }
     },[router.query.currentPage])

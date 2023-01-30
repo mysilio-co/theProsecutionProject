@@ -17,19 +17,19 @@ export default function ShowAllCheckbox({router, isLoading, hasError}) {
     const [showAll, setShowAll] = useState(false);
     const isDisabled = isLoading && !hasError;
     useEffect(()=>{
-        if(!isLoading && router.query.showAll) {
+        if(!isDisabled && router.query.showAll) {
             setShowAll(true);
         }
-    },[isLoading])
+    },[isDisabled])
 
     useEffect(()=>{
-        if(!isLoading || hasError) {
+        if(!isDisabled || hasError) {
             showAll ? addQueryParam("showAll", showAll, router) : removeQueryParam("showAll", router);
         }
     },[showAll])
 
     useEffect(()=>{
-        if(!isLoading && !router.query.showAll) {
+        if(!isDisabled && !router.query.showAll) {
             setShowAll(false);
         }
     },[router.query.showAll])

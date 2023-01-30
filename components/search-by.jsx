@@ -18,19 +18,19 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading, has
     const [searchBy, setSearchBy] = useState(searchByKeys[0]);
     const isDisabled = isLoading && !hasError;
     useEffect(()=>{
-        if(!isLoading && router.query.searchBy) {
+        if(!isDisabled && router.query.searchBy) {
             setSearchBy(router.query.searchBy);
         }
-    },[isLoading])
+    },[isDisabled])
 
     useEffect(()=>{
-        if(!isLoading || hasError) {
+        if(!isDisabled) {
             searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
         }
     },[searchBy])
 
     useEffect(()=>{
-        if(!isLoading && !router.query.searchBy) {
+        if(!isDisabled && !router.query.searchBy) {
             setSearchBy("Any");
         }
     },[router.query.searchBy])
