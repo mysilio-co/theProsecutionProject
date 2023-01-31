@@ -14,7 +14,7 @@ import { addQueryParam } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ErrorMessage from "../components/error-message";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -85,7 +85,8 @@ export default function DataExplorer() {
       const sortBy = DESKTOP_COLUMN_KEYS.includes(router.query.sortBy) ? router.query.sortBy : null;
       const order = ORDER_BY_KEYS.includes(router.query.order) ? router.query.order : null;
       const search = router.query.search ? router.query.search : null;
-      const searchBy = SEARCH_BY_KEYS_EXPRESS.includes(router.query.searchBy) ? router.query.searchBy : null;
+      const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
+      const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 

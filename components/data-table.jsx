@@ -20,7 +20,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
     const isDisabled = isLoading && !hasError;
     
     function resetUrl() {
-      const tab = router.query.tab ? router.query.tab : bject.keys(TAB_NAMES)[0];
+      const tab = router.query.tab ? router.query.tab : Object.keys(TAB_NAMES)[0];
       router.push({ 
         pathname: '/',
         query: { tab: tab, currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
