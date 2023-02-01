@@ -170,7 +170,7 @@ export const TABLE_WIDTH_MAP_MOBILE = {
 ]
 
 export const MOBILE_COLUMN_IDS = [
-    "A", "E", "S", "U", "AT"
+    "A", "E", "S", "U", "AG", "AT"
 ]
 
 export const DESKTOP_EXPRESS_COLUMN_KEYS = [
