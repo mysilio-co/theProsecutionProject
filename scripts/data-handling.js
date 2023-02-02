@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
-import { DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_MOBILE } from "./constants";
+import { DESKTOP_COLUMN_KEYS, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
 
 export function fuzzySearch(data, search, key, isMobile) {
   if(isMobile) {
@@ -8,7 +8,12 @@ export function fuzzySearch(data, search, key, isMobile) {
   } else {
     key = !!key ? [key] : DESKTOP_COLUMN_KEYS;
   }
-  const options = {
+  const options = (key[0] === "Date" && key.length ===1) ? {
+    isCaseSensitive: false,
+    ignoreLocation: true,
+    threshold: 0,
+    keys: key
+  } : {
     isCaseSensitive: false,
     ignoreLocation: true,
     threshold: 0.1,
@@ -27,19 +32,40 @@ export function fuzzySearch(data, search, key, isMobile) {
 }
 
 export function sort(data, column, order) {
-  if(order=="asc") {
-    data = data.sort((a, b)=> {
-      return column=="Date" ? new Date(a[column]) - new Date(b[column]) : d3.ascending(a[column], b[column]);
-    });
-  }
-  else if(order=="desc") {
-    data = data.sort((a, b)=> {
-      return column=="Date" ? new Date(b[column]) - new Date(a[column]) : d3.descending(a[column], b[column]);
-    });
+  if(order=="asc" || order=="desc") {
+    if(column=="Date") {
+      data = data.sort((a, b)=> { 
+        return sortByDate(a[column], b[column], order);
+      });
+    }
+    else if(NUMERIC_COLUMNS.includes(column)) {
+      data = data.sort((a, b)=> { 
+        return sortByNumber(a[column], b[column], order);
+      });
+    }
+    else {
+      data = data.sort((a, b)=> { 
+        return sortByText(a[column], b[column], order);
+      });
+    }
   }
   else {
     return data;
   }
+}
+
+function sortByDate(columnA, columnB, order) {
+  return order=="asc" ? new Date(columnA) - new Date(columnB) : new Date(columnB) - new Date(columnA);
+}
+
+function sortByNumber(columnA, columnB, order) {
+  columnA = !!Number(columnA) ? Number(columnA) : -1;
+  columnB = !!Number(columnB) ? Number(columnB) : -1;
+  return order=="asc" ? d3.descending(columnA, columnB) : d3.ascending(columnA, columnB);
+}
+
+function sortByText(columnA, columnB, order) {
+  return order=="asc" ? d3.ascending(columnA, columnB) : d3.descending(columnA, columnB);
 }
 
 export function parseSheetsResponse(response) {

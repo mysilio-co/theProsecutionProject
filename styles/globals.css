@@ -62,6 +62,10 @@
   .w-96 {
     width: 24rem;
   }
+  
+  .w-120 {
+    width: 30rem;
+  }
 
   @media screen and (max-width: 768px) {
     .mobile-w-28 {

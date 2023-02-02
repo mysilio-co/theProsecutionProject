@@ -141,7 +141,7 @@ export const TABLE_WIDTH_MAP = {
   "Combat veteran": "w-36",
   "Service Classification": "w-44",
   "Citizenship status": "w-52",
-  "Short narrative": "w-96",
+  "Short narrative": "w-120",
   "Name of coder(s)": "w-64",
   "Source description": "w-96",
   "Audited": "w-52",
@@ -185,6 +185,15 @@ export const DESKTOP_EXPRESS_COLUMN_KEYS = [
 
 export const DESKTOP_EXPRESS_COLUMN_IDS = [
     "A", "E", "S", "U", "Y", "AG", "AT"
+]
+
+export const NUMERIC_COLUMNS = [
+    "Length of prison sentence",
+    "# killed",
+    "# injured",
+    "Life sentence",
+    "Death sentence",
+    "Age"
 ]
 
 export const DESKTOP_COLUMN_KEYS = [
