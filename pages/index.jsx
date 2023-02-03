@@ -214,7 +214,7 @@ export default function DataExplorer() {
           </a>
         </div>
       </div>
-      <div className="flex-1 px-2 pt-3 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+      <div className="flex-1 px-2 pt-3 pb-12 md:pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="mx-5">
           <a href="mailto:michael@theprosecutionproject.org" target="_blank">
             <img
