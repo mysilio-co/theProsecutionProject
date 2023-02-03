@@ -186,7 +186,7 @@ export default function DataExplorer() {
         )}
       </Disclosure>
       {/* Adding filter dropdowns will be next step */}
-      <FilterDropdowns data={data} />
+      <FilterDropdowns values={dropdownValues} router={router} />
       <DataTable
         title={selectedTab}
         data={filteredData}

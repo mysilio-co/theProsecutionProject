@@ -1,5 +1,6 @@
-import {React, useState, Fragment} from 'react';
+import {React, useState, Fragment, useEffect} from 'react';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
+import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
 import {
   MagnifyingGlassIcon,
   CheckIcon,
@@ -11,17 +12,24 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dropdown({label, options}) {
-  const [selectedKey, setSelectedKey] = useState(options[0])
+export default function Dropdown({label, options, router}) {
+  const [selectedKey, setSelectedKey] = useState([]);
+
+  useEffect(()=>{
+    // if(!isDisabled) {
+        selectedKey.length<1 ? removeQueryParam(label, router) : addQueryParam(label, selectedKey.join(', '), router);
+    // }
+  },[selectedKey])
+
   return (
-    <Listbox value={selectedKey} onChange={setSelectedKey}>
+    <Listbox value={selectedKey} onChange={setSelectedKey} multiple>
       {({ open }) => (
         <>
           <Listbox.Label className="block text-sm pl-4 pr-2 font-medium text-gray-400">{label}</Listbox.Label>
           <div className="relative mt-1">
-            <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-40 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-40 text-left shadow-sm focus:border-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800">
               <span className="flex items-center">
-                <span className="ml-3 block truncate">{selectedKey}</span>
+                <span className="ml-3 block truncate">{selectedKey.join(', ')}</span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                 <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -41,7 +49,8 @@ export default function Dropdown({label, options}) {
                     key={idx}
                     className={({ active }) =>
                       classNames(
-                        active ? 'text-white bg-indigo-600' : 'text-gray-900',
+                        selectedKey.includes(key) ? 'text-white bg-gray-800' : 
+                        active ? 'text-white bg-gray-500' : 'text-gray-900',
                         'relative cursor-default select-none py-2 pl-3 pr-9 text-sm'
                       )
                     }
@@ -60,7 +69,7 @@ export default function Dropdown({label, options}) {
                         {selectedKey ? (
                           <span
                             className={classNames(
-                              active ? 'text-white' : 'text-indigo-600',
+                              active ? 'text-white' : 'bg-gray-800',
                               'absolute inset-y-0 right-0 flex items-center pr-4'
                             )}
                           >
