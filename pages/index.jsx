@@ -11,6 +11,7 @@ import { fuzzySearch, sort, findFirstOccurenceOfYear } from "../scripts/data-han
 // import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam } from "../scripts/router-handling";
+import { generateListDropdowns } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
 import ErrorMessage from "../components/error-message";
 import ResultsPerPage from "../components/results-per-page.jsx";
@@ -33,6 +34,8 @@ export default function DataExplorer() {
   const tabs = Object.keys(TAB_NAMES);
   const router = useRouter();
   const query = router.query;
+  const selectedTab = query.tab || tabs[0];
+  let dropdownValues = [];
   let hasError = false;
   let data = null;
   let filteredData = null;
@@ -57,7 +60,9 @@ export default function DataExplorer() {
     const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
     const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
     updateHasError(pendingError|| nonGeneralError);
-    return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
+    const finalData = isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
+    dropdownValues = generateListDropdowns(finalData);
+    return finalData;
   }
 
   function getChunksOfSheet(sheet, viewType, year, tab) {
@@ -111,12 +116,13 @@ export default function DataExplorer() {
     }
   }, [router.isReady]);
 
-  const selectedTab = query.tab || tabs[0];
+
   const search = query.search || "";
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
   data = getSheetData(selectedTab, viewType);
 
   if(!!data) {
+    console.log(dropdownValues);
     isLoading = false;
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
     if(!!query.sortBy && !!query.order) {
@@ -180,10 +186,7 @@ export default function DataExplorer() {
         )}
       </Disclosure>
       {/* Adding filter dropdowns will be next step */}
-      {/* <FilterDropdowns
-        data={data}
-        cleanedData={cleanedData}
-        /> */}
+      <FilterDropdowns data={data} />
       <DataTable
         title={selectedTab}
         data={filteredData}
