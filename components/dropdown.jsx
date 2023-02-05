@@ -12,13 +12,20 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dropdown({label, options, router}) {
+export default function Dropdown({label, options, router, isLoading, hasError}) {
   const [selectedKey, setSelectedKey] = useState([]);
+  const isDisabled = isLoading && !hasError;
 
   useEffect(()=>{
-    // if(!isDisabled) {
+    if(!isDisabled && router.query[label]) {
+        setSelectedKey(router.query[label].split(', '));
+    }
+  },[isDisabled])
+
+  useEffect(()=>{
+    if(!isDisabled) {
         selectedKey.length<1 ? removeQueryParam(label, router) : addQueryParam(label, selectedKey.join(', '), router);
-    // }
+    }
   },[selectedKey])
 
   return (

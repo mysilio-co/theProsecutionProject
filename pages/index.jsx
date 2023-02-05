@@ -7,10 +7,10 @@ import FilterDropdowns from '../components/filter.jsx';
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown } from "../scripts/data-handling.js";
 // import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam } from "../scripts/router-handling";
+import { addQueryParam, retrieveDropdownParams } from "../scripts/router-handling";
 import { generateListDropdowns } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
 import ErrorMessage from "../components/error-message";
@@ -93,6 +93,7 @@ export default function DataExplorer() {
       const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
+      const dropdownValues = retrieveDropdownParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
         query.sortBy = sortBy; 
@@ -107,11 +108,15 @@ export default function DataExplorer() {
       if(showAll) {
         query.showAll = showAll;
       }
-      router.replace({ 
-        pathname: '',
-        query: query }, 
+      if(dropdownValues.length>0) {
+        dropdownValues.forEach(dropdown => {
+          query[dropdown.name] = dropdown.value;
+        })
+      }
+      router.replace(
+        { pathname: '', query: query }, 
         undefined, 
-        {shallow: true}
+        { shallow: true }
       );
     }
   }, [router.isReady]);
@@ -122,9 +127,9 @@ export default function DataExplorer() {
   data = getSheetData(selectedTab, viewType);
 
   if(!!data) {
-    console.log(dropdownValues);
     isLoading = false;
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
+    filterByDropdown(data, query);
     if(!!query.sortBy && !!query.order) {
       sort(data, query.sortBy, query.order);
     } if(!!query.currentPage && !!query.numShown) {
@@ -186,7 +191,12 @@ export default function DataExplorer() {
         )}
       </Disclosure>
       {/* Adding filter dropdowns will be next step */}
-      <FilterDropdowns values={dropdownValues} router={router} />
+      <FilterDropdowns 
+        values={dropdownValues} 
+        router={router} 
+        isLoading={isLoading}
+        hasError={hasError}
+      />
       <DataTable
         title={selectedTab}
         data={filteredData}

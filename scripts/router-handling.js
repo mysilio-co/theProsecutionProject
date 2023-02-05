@@ -1,3 +1,5 @@
+import { DROPDOWN_KEYS } from "./constants";
+
 export function removeQueryParam(param, router) {
     const { pathname, query } = router;
     const params = new URLSearchParams(query);
@@ -57,6 +59,19 @@ export function setSortingParams(clickedColumn, router) {
         newOrder = currentOrder=="asc" ? "desc" : currentOrder=="desc" ? "" : "asc";
     }
     newOrder == "" ? (removeMultipleQueryParams(["sortBy", "order"], router)) : 
-        addMultipleQueryParams(new Map([["sortBy", clickedColumn], ["order", newOrder]]), router);
-    
+        addMultipleQueryParams(new Map([["sortBy", clickedColumn], ["order", newOrder]]), router);   
+}
+
+export function retrieveDropdownParams(query) {
+    let queryParams = [];
+    DROPDOWN_KEYS.forEach(key => {
+        if(key in query) {
+            const paramObject = {
+                name: key,
+                value: query[key]
+            };
+            queryParams.push(paramObject);
+        }
+    })
+    return queryParams;
 }
