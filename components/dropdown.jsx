@@ -23,6 +23,9 @@ export default function Dropdown({label, options, router, isLoading, hasError}) 
     }
   },[isDisabled])
 
+  // This is triggered on first load of dropdown when selectedKey is []
+  // removing the query param and impacting the filtering
+  // firstRun makes it so this is not an issue
   useEffect(()=>{
     if(!isDisabled && !firstRun) {
       selectedKey.length<1 ? removeQueryParam(label, router) : addQueryParam(label, selectedKey.join(', '), router);
@@ -32,7 +35,7 @@ export default function Dropdown({label, options, router, isLoading, hasError}) 
 
 
   return (
-    <Listbox value={selectedKey} onChange={setSelectedKey} multiple>
+    <Listbox value={selectedKey} onChange={setSelectedKey} multiple className="z-0">
       {({ open }) => (
         <>
           <Listbox.Label className="block text-sm pl-4 pr-2 font-medium text-gray-400">{label}</Listbox.Label>

@@ -64,7 +64,6 @@ export function filterByDropdown(data, queryParams) {
         filterParams[key] = queryParams[key].split(', ');
       }
     })    
-    console.log(queryParams);
     // Filter data by checking if a row contains at least one match in all dropdowns selected
     filteredData = data.filter(row => {
       let matchCount = 0;

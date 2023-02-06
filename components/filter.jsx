@@ -3,8 +3,6 @@ import { generateListDropdowns } from '../scripts/filter';
 
 export default function FilterDropdowns({values, router}) {
     return (
-      // <div></div>
-      
       <form>
         <div className="">
         {
