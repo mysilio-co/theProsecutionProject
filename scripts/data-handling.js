@@ -57,14 +57,27 @@ export function sort(data, column, order) {
 export function filterByDropdown(data, queryParams) {
   if(queryParams) {
     let filteredData = [];
+    let filterParams = {};
+    // Extract filter values from query params
     DROPDOWN_KEYS.forEach(key => {
       if(queryParams[key]) {
-        filteredData.push(data.filter(row => queryParams[key].split(', ').includes(row[key])));
+        filterParams[key] = queryParams[key].split(', ');
       }
     })    
-    console.log(filteredData);
+    console.log(queryParams);
+    // Filter data by checking if a row contains at least one match in all dropdowns selected
+    filteredData = data.filter(row => {
+      let matchCount = 0;
+      Object.keys(filterParams).forEach(key=> {
+        if(filterParams[key].includes(row[key])) {
+          matchCount++;
+        }
+      })
+      return matchCount == Object.keys(filterParams).length;
+    });
+    data = filteredData;
   }
-  
+  return data;
 }
 
 function sortByDate(columnA, columnB, order) {

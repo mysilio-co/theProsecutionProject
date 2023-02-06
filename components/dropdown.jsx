@@ -15,18 +15,21 @@ function classNames(...classes) {
 export default function Dropdown({label, options, router, isLoading, hasError}) {
   const [selectedKey, setSelectedKey] = useState([]);
   const isDisabled = isLoading && !hasError;
+  const [firstRun, setFirstRun] = useState(true);
 
   useEffect(()=>{
     if(!isDisabled && router.query[label]) {
-        setSelectedKey(router.query[label].split(', '));
+      setSelectedKey(router.query[label].split(', '));
     }
   },[isDisabled])
 
   useEffect(()=>{
-    if(!isDisabled) {
-        selectedKey.length<1 ? removeQueryParam(label, router) : addQueryParam(label, selectedKey.join(', '), router);
+    if(!isDisabled && !firstRun) {
+      selectedKey.length<1 ? removeQueryParam(label, router) : addQueryParam(label, selectedKey.join(', '), router);
     }
+    setFirstRun(false);
   },[selectedKey])
+
 
   return (
     <Listbox value={selectedKey} onChange={setSelectedKey} multiple>

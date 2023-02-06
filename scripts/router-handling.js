@@ -63,15 +63,11 @@ export function setSortingParams(clickedColumn, router) {
 }
 
 export function retrieveDropdownParams(query) {
-    let queryParams = [];
+    let paramObject = {};
     DROPDOWN_KEYS.forEach(key => {
         if(key in query) {
-            const paramObject = {
-                name: key,
-                value: query[key]
-            };
-            queryParams.push(paramObject);
+            paramObject[key] = query[key];
         }
     })
-    return queryParams;
+    return paramObject;
 }

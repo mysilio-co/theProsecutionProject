@@ -60,9 +60,7 @@ export default function DataExplorer() {
     const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
     const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
     updateHasError(pendingError|| nonGeneralError);
-    const finalData = isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
-    dropdownValues = generateListDropdowns(finalData);
-    return finalData;
+    return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
   }
 
   function getChunksOfSheet(sheet, viewType, year, tab) {
@@ -108,11 +106,7 @@ export default function DataExplorer() {
       if(showAll) {
         query.showAll = showAll;
       }
-      if(dropdownValues.length>0) {
-        dropdownValues.forEach(dropdown => {
-          query[dropdown.name] = dropdown.value;
-        })
-      }
+      query = { ...query, ...dropdownValues};
       router.replace(
         { pathname: '', query: query }, 
         undefined, 
@@ -126,10 +120,11 @@ export default function DataExplorer() {
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
   data = getSheetData(selectedTab, viewType);
 
-  if(!!data) {
+  if(data) {
     isLoading = false;
+    dropdownValues = generateListDropdowns(data);
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
-    filterByDropdown(data, query);
+    data = filterByDropdown(data, query);
     if(!!query.sortBy && !!query.order) {
       sort(data, query.sortBy, query.order);
     } if(!!query.currentPage && !!query.numShown) {
