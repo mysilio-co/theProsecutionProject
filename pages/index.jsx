@@ -13,8 +13,8 @@ import SearchBy from "../components/search-by";
 import { addQueryParam, retrieveDropdownParams } from "../scripts/router-handling";
 import { generateListDropdowns } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
-import ErrorMessage from "../components/error-message";
 import ResultsPerPage from "../components/results-per-page.jsx";
+import ShowDropdownCheckbox from "../components/show-dropdown-checkbox";
 import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
 
 function classNames(...classes) {
@@ -91,6 +91,7 @@ export default function DataExplorer() {
       const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
+      const showDropdown = router.query.showDropdown=="true" ? "true" : null;
       const dropdownValues = retrieveDropdownParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
@@ -105,6 +106,9 @@ export default function DataExplorer() {
       }
       if(showAll) {
         query.showAll = showAll;
+      }
+      if(showDropdown) {
+        query.showDropdown = showDropdown;
       }
       query = { ...query, ...dropdownValues};
       router.replace(
@@ -185,13 +189,12 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      {/* Adding filter dropdowns will be next step */}
-      <FilterDropdowns 
+      { query.showDropdown ? <FilterDropdowns 
         values={dropdownValues} 
         router={router} 
         isLoading={isLoading}
         hasError={hasError}
-      />
+      /> : "" }
       <DataTable
         title={selectedTab}
         data={filteredData}

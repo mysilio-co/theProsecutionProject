@@ -97,7 +97,7 @@ export const SCROLL_BAR_COLUMN_KEYS = [
 
 export const TABLE_WIDTH_MAP = {
   "Date": "mobile-w-28 w-28",
-  "Date descriptor": "w-40",
+  "Date Descriptor": "w-40",
   "Case ID": "w-52",
   "Group identifier": "w-40",
   "Full legal name": "mobile-w-40 w-52",
@@ -117,7 +117,7 @@ export const TABLE_WIDTH_MAP = {
   "Ideological affiliation": "mobile-w-48 w-72",
   "Affiliation with FTO": "w-36",
   "Group affiliation": "mobile-w-52 w-72",
-  "Hate Crime": "w-36",
+  "Hate crime": "w-36",
   "LEO Informant": "w-36",
   "Previous similar crime": "w-36",
   "Criminal method": "w-72",
