@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import * as d3 from "d3";
 
 import useSWR from "swr";
-import FilterDropdowns from '../components/filter.jsx';
+
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
@@ -14,7 +14,6 @@ import { addQueryParam, retrieveDropdownParams } from "../scripts/router-handlin
 import { generateListDropdowns } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import ShowDropdownCheckbox from "../components/show-dropdown-checkbox";
 import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
 
 function classNames(...classes) {
@@ -189,12 +188,12 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      { query.showDropdown ? <FilterDropdowns 
+      {/* <FilterDropdowns 
         values={dropdownValues} 
         router={router} 
         isLoading={isLoading}
         hasError={hasError}
-      /> : "" }
+      /> */}
       <DataTable
         title={selectedTab}
         data={filteredData}
@@ -202,7 +201,9 @@ export default function DataExplorer() {
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
+        showDropdown={query.showDropdown}
         hasError={hasError}
+        dropdownValues={dropdownValues}
       />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">

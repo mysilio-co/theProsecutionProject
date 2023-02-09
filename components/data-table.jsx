@@ -4,18 +4,19 @@ import {
     ChevronUpDownIcon
   } from "@heroicons/react/20/solid";
 
+  import FilterDropdowns from '../components/filter.jsx';
   import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./show-all-checkbox";
   import ShowDropdownCheckbox from "./show-dropdown-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
-import ErrorMessage from "./error-message";
+  import ErrorMessage from "./error-message";
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
-export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError }) {
+export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showDropdown, dropdownValues }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     const isDisabled = isLoading && !hasError;
@@ -53,6 +54,12 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             </div>
           </div>
         </div>
+        { showDropdown ? <FilterDropdowns 
+          values={dropdownValues} 
+          router={router} 
+          isLoading={isLoading}
+          hasError={hasError}
+        /> : "" }
         {hasError ? 
         <ErrorMessage/>
         : 
