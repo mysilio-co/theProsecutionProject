@@ -90,7 +90,7 @@ export default function DataExplorer() {
       const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
-      const showDropdown = router.query.showDropdown=="true" ? "true" : null;
+      const showFilter = router.query.showFilter=="true" ? "true" : null;
       const dropdownValues = retrieveDropdownParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
@@ -106,8 +106,8 @@ export default function DataExplorer() {
       if(showAll) {
         query.showAll = showAll;
       }
-      if(showDropdown) {
-        query.showDropdown = showDropdown;
+      if(showFilter) {
+        query.showFilter = showFilter;
       }
       query = { ...query, ...dropdownValues};
       router.replace(
@@ -188,12 +188,6 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      {/* <FilterDropdowns 
-        values={dropdownValues} 
-        router={router} 
-        isLoading={isLoading}
-        hasError={hasError}
-      /> */}
       <DataTable
         title={selectedTab}
         data={filteredData}
@@ -201,7 +195,7 @@ export default function DataExplorer() {
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
-        showDropdown={query.showDropdown}
+        showFilter={query.showFilter}
         hasError={hasError}
         dropdownValues={dropdownValues}
       />
