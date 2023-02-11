@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
-import { DESKTOP_COLUMN_KEYS, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
+import { DESKTOP_COLUMN_KEYS, DROPDOWN_KEYS, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
 
 export function fuzzySearch(data, search, key, isMobile) {
   if(isMobile) {
@@ -52,6 +52,31 @@ export function sort(data, column, order) {
   else {
     return data;
   }
+}
+
+export function filterByDropdown(data, queryParams) {
+  if(queryParams) {
+    let filteredData = [];
+    let filterParams = {};
+    // Extract filter values from query params
+    DROPDOWN_KEYS.forEach(key => {
+      if(queryParams[key]) {
+        filterParams[key] = queryParams[key].split(', ');
+      }
+    })    
+    // Filter data by checking if a row contains at least one match in all dropdowns selected
+    filteredData = data.filter(row => {
+      let matchCount = 0;
+      Object.keys(filterParams).forEach(key=> {
+        if(filterParams[key].includes(row[key])) {
+          matchCount++;
+        }
+      })
+      return matchCount == Object.keys(filterParams).length;
+    });
+    data = filteredData;
+  }
+  return data;
 }
 
 function sortByDate(columnA, columnB, order) {

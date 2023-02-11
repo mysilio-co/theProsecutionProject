@@ -3,16 +3,16 @@ import { useRouter } from "next/router";
 import * as d3 from "d3";
 
 import useSWR from "swr";
-import FilterDropdowns from '../components/filter.jsx';
+
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown } from "../scripts/data-handling.js";
 // import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam } from "../scripts/router-handling";
+import { addQueryParam, retrieveDropdownParams } from "../scripts/router-handling";
+import { generateListDropdowns } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
-import ErrorMessage from "../components/error-message";
 import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
 
@@ -33,6 +33,8 @@ export default function DataExplorer() {
   const tabs = Object.keys(TAB_NAMES);
   const router = useRouter();
   const query = router.query;
+  const selectedTab = query.tab || tabs[0];
+  let dropdownValues = [];
   let hasError = false;
   let data = null;
   let filteredData = null;
@@ -88,6 +90,8 @@ export default function DataExplorer() {
       const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
+      const showDropdown = router.query.showDropdown=="true" ? "true" : null;
+      const dropdownValues = retrieveDropdownParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
         query.sortBy = sortBy; 
@@ -102,23 +106,28 @@ export default function DataExplorer() {
       if(showAll) {
         query.showAll = showAll;
       }
-      router.replace({ 
-        pathname: '',
-        query: query }, 
+      if(showDropdown) {
+        query.showDropdown = showDropdown;
+      }
+      query = { ...query, ...dropdownValues};
+      router.replace(
+        { pathname: '', query: query }, 
         undefined, 
-        {shallow: true}
+        { shallow: true }
       );
     }
   }, [router.isReady]);
 
-  const selectedTab = query.tab || tabs[0];
+
   const search = query.search || "";
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
   data = getSheetData(selectedTab, viewType);
 
-  if(!!data) {
+  if(data) {
     isLoading = false;
+    dropdownValues = generateListDropdowns(data);
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
+    data = filterByDropdown(data, query);
     if(!!query.sortBy && !!query.order) {
       sort(data, query.sortBy, query.order);
     } if(!!query.currentPage && !!query.numShown) {
@@ -179,11 +188,12 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      {/* Adding filter dropdowns will be next step */}
-      {/* <FilterDropdowns
-        data={data}
-        cleanedData={cleanedData}
-        /> */}
+      {/* <FilterDropdowns 
+        values={dropdownValues} 
+        router={router} 
+        isLoading={isLoading}
+        hasError={hasError}
+      /> */}
       <DataTable
         title={selectedTab}
         data={filteredData}
@@ -191,7 +201,9 @@ export default function DataExplorer() {
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
+        showDropdown={query.showDropdown}
         hasError={hasError}
+        dropdownValues={dropdownValues}
       />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
