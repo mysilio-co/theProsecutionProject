@@ -4,13 +4,14 @@ import {
     ChevronUpDownIcon
   } from "@heroicons/react/20/solid";
 
-  import FilterDropdowns from '../components/filter.jsx';
+  import FilterDropdowns from './filter-dropdowns.jsx';
   import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./show-all-checkbox";
   import ShowFilterCheckbox from "./show-filter-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
+import DateFilter from "./date-filter.jsx";
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -70,6 +71,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
           isLoading={isLoading}
           hasError={hasError}
         /> : "" }
+        <DateFilter />
         {hasError ? 
         <ErrorMessage/>
         : 
