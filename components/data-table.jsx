@@ -11,7 +11,7 @@ import {
   import ShowFilterCheckbox from "./show-filter-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
-import DateFilter from "./date-filter.jsx";
+  import DateFilter from "./date-filter.jsx";
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -71,7 +71,10 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
           isLoading={isLoading}
           hasError={hasError}
         /> : "" }
-        <DateFilter />
+        <DateFilter 
+          router={router} 
+          isLoading={isLoading}
+          hasError={hasError}/>
         {hasError ? 
         <ErrorMessage/>
         : 

@@ -90,6 +90,8 @@ export default function DataExplorer() {
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
       const showFilter = router.query.showFilter=="true" ? "true" : null;
+      const from = Date.parse(router.query.from) ? router.query.from : null;
+      const to = Date.parse(router.query.to) ? router.query.to : null;
       const dropdownValues = retrieveDropdownParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
@@ -107,6 +109,12 @@ export default function DataExplorer() {
       }
       if(showFilter) {
         query.showFilter = showFilter;
+      }
+      if(from) {
+        query.from = from;
+      }
+      if(to) {
+        query.to = to;
       }
       query = { ...query, ...dropdownValues};
       router.replace(

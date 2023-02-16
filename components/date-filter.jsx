@@ -3,39 +3,66 @@ import { forwardRef, useEffect, useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { format } from 'date-fns'
 import 'react-datepicker/dist/react-datepicker.css'
+import { addAndRemoveMultipleQueryParams, addMultipleQueryParams, removeQueryParam } from "../scripts/router-handling";
 
 
-export default function DateFilter() {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+export default function DateFilter({router, isLoading, hasError}) {
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
+    const isDisabled = isLoading && !hasError;
 
-    useEffect(() => {
-        if (startDate > endDate) setStartDate(endDate)
-    }, [endDate])
+    useEffect(()=>{
+        if(!isDisabled && router.query.from) {
+            setStartDate(new Date(router.query.from));
+        }
+    },[isDisabled])
 
-    useEffect(() => {
-        if (startDate > endDate) setEndDate(startDate)
-    }, [startDate])
+    useEffect(()=>{
+        if(!isDisabled && router.query.to) {
+            setEndDate(new Date(router.query.to));
+        }
+    },[isDisabled])
+
+    useEffect(()=>{
+        if (endDate && startDate && (startDate > endDate)) {
+            setEndDate(startDate)
+        } 
+    },[startDate])
+
+    useEffect(()=>{
+        if (startDate && endDate && (startDate > endDate)) {
+            setStartDate(endDate)
+        }
+    },[endDate])
+
+    useEffect(()=>{
+        if(!isDisabled) {
+            let addQueryMap = new Map([]);
+            let removeQueryList = [];
+            startDate ? addQueryMap.set("from", startDate.toLocaleDateString()) : removeQueryList.push("from");
+            endDate ? addQueryMap.set("to", endDate.toLocaleDateString()) : removeQueryList.push("to");
+            addAndRemoveMultipleQueryParams(addQueryMap, removeQueryList, router);
+        }
+    }, [startDate, endDate])
+
+    useEffect(()=>{
+        if(!isDisabled && !router.query.from) {
+            setStartDate("");
+        }
+    },[router.query.from])
+
+    useEffect(()=>{
+        if(!isDisabled && !router.query.to) {
+            setEndDate("");
+        }
+    },[router.query.to])
+
     return (
-        // <div>
-        //     <label className="block text-sm pr-2 font-medium text-gray-400">From</label>
-        //     <DatePicker 
-        //         selected={startDate} 
-        //         isClearable 
-        //         placeholderText="Start date"
-        //         onChange={(date) => setStartDate(date)} />
-        //     <label className="block text-sm pr-2 font-medium text-gray-400">To</label>
-        //     <DatePicker 
-        //         selected={endDate} 
-        //         isClearable 
-        //         placeholderText="End date"
-        //         onChange={(date) => setEndDate(date)} />
-        // </div> );
-
         <div className="flex flex-col min-h-screen bg-gray-100">
             <div className="flex items-center justify-center max-w-2xl py-20 mx-20 space-x-4">
                 <span className="font-medium text-gray-900">Custom Components:</span>
                 <div className="relative w-40">
+                    <label className="block text-sm pr-2 font-medium text-gray-400">From</label>
                     <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
@@ -45,8 +72,7 @@ export default function DateFilter() {
                         nextMonthButtonLabel=">"
                         previousMonthButtonLabel="<"
                         popperClassName="react-datepicker-left"
-                        customInput={<ButtonInput />}
-                        isClearable
+                        placeholderText="Start Date"
                         renderCustomHeader={({
                             date,
                             decreaseMonth,
@@ -58,7 +84,6 @@ export default function DateFilter() {
                                 <span className="text-lg text-gray-700">
                                     {format(date, 'MMMM yyyy')}
                                 </span>
-
                                 <div className="space-x-2">
                                     <button
                                         onClick={decreaseMonth}
@@ -89,6 +114,7 @@ export default function DateFilter() {
                     />
                 </div>
                 <div className="relative w-40">
+                    <label className="block text-sm pr-2 font-medium text-gray-400">To</label>
                     <DatePicker
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
@@ -98,7 +124,7 @@ export default function DateFilter() {
                         nextMonthButtonLabel=">"
                         previousMonthButtonLabel="<"
                         popperClassName="react-datepicker-right"
-                        customInput={<ButtonInput />}
+                        placeholderText="End Date"
                         renderCustomHeader={({
                             date,
                             decreaseMonth,
@@ -152,6 +178,6 @@ const ButtonInput = forwardRef(({ value, onClick }, ref) => (
         type="button"
         className='inline-flex justify-start w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500'
     >
-        {value ? format(new Date(value), 'dd MMMM yyyy') : 'Start Date'}
+        {value ? new Date(value).toLocaleDateString() : 'Select Date'}
     </button>
 ))

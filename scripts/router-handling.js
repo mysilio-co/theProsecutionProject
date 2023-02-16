@@ -48,6 +48,22 @@ export function addMultipleQueryParams(queryMap, router) {
     );
 }
 
+export function addAndRemoveMultipleQueryParams(addMap, removeList, router) {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query);
+    addMap.forEach((value, key)=> {
+        params.set(key, value);
+    })
+    removeList.forEach((param)=> {
+        params.delete(param);
+    })
+    router.replace(
+        { pathname, query: params.toString() },
+        undefined, 
+        { shallow: true }
+    );
+}
+
 export function setSortingParams(clickedColumn, router) {
     const currentOrder = router.query.order;
     const currentColumn = router.query.sortBy;
