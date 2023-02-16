@@ -58,10 +58,10 @@ export default function DateFilter({router, isLoading, hasError}) {
     },[router.query.to])
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100">
-            <div className="flex items-center justify-center max-w-2xl py-20 mx-20 space-x-4">
-                <span className="font-medium text-gray-900">Custom Components:</span>
-                <div className="relative w-40">
+        <div className="py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="relative px-4">
+                <div className="flex items-end">
+                    <div className="">
                     <label className="block text-sm pr-2 font-medium text-gray-400">From</label>
                     <DatePicker
                         selected={startDate}
@@ -112,59 +112,70 @@ export default function DateFilter({router, isLoading, hasError}) {
                             </div>
                         )}
                     />
+                    </div>
+                    <button onClick={()=>setStartDate("")} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 max-h-10 bg-gray-800 w-full hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
+                        Clear
+                    </button>
                 </div>
-                <div className="relative w-40">
-                    <label className="block text-sm pr-2 font-medium text-gray-400">To</label>
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        selectsEnd
-                        startDate={startDate}
-                        endDate={endDate}
-                        nextMonthButtonLabel=">"
-                        previousMonthButtonLabel="<"
-                        popperClassName="react-datepicker-right"
-                        placeholderText="End Date"
-                        renderCustomHeader={({
-                            date,
-                            decreaseMonth,
-                            increaseMonth,
-                            prevMonthButtonDisabled,
-                            nextMonthButtonDisabled,
-                        }) => (
-                            <div className="flex items-center justify-between px-2 py-2">
-                                <span className="text-lg text-gray-700">
-                                    {format(date, 'MMMM yyyy')}
-                                </span>
+            </div>
+            <div className="relative px-4">
+                <div className="flex items-end">
+                    <div className="">
+                        <label className="block text-sm pr-2 font-medium text-gray-400">To</label>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            nextMonthButtonLabel=">"
+                            previousMonthButtonLabel="<"
+                            popperClassName="react-datepicker-right"
+                            placeholderText="End Date"
+                            renderCustomHeader={({
+                                date,
+                                decreaseMonth,
+                                increaseMonth,
+                                prevMonthButtonDisabled,
+                                nextMonthButtonDisabled,
+                            }) => (
+                                <div className="flex items-center justify-between px-2 py-2">
+                                    <span className="text-lg text-gray-700">
+                                        {format(date, 'MMMM yyyy')}
+                                    </span>
 
-                                <div className="space-x-2">
-                                    <button
-                                        onClick={decreaseMonth}
-                                        disabled={prevMonthButtonDisabled}
-                                        type="button"
-                                        className={`
-                                            ${prevMonthButtonDisabled && 'cursor-not-allowed opacity-50'}
-                                            inline-flex p-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500
-                                        `}
-                                    >
-                                        <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
-                                    </button>
+                                    <div className="space-x-2">
+                                        <button
+                                            onClick={decreaseMonth}
+                                            disabled={prevMonthButtonDisabled}
+                                            type="button"
+                                            className={`
+                                                ${prevMonthButtonDisabled && 'cursor-not-allowed opacity-50'}
+                                                inline-flex p-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500
+                                            `}
+                                        >
+                                            <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
+                                        </button>
 
-                                    <button
-                                        onClick={increaseMonth}
-                                        disabled={nextMonthButtonDisabled}
-                                        type="button"
-                                        className={`
-                                            ${nextMonthButtonDisabled && 'cursor-not-allowed opacity-50'}
-                                            inline-flex p-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500
-                                        `}
-                                    >
-                                        <ChevronRightIcon className="w-5 h-5 text-gray-600" />
-                                    </button>
+                                        <button
+                                            onClick={increaseMonth}
+                                            disabled={nextMonthButtonDisabled}
+                                            type="button"
+                                            className={`
+                                                ${nextMonthButtonDisabled && 'cursor-not-allowed opacity-50'}
+                                                inline-flex p-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-blue-500
+                                            `}
+                                        >
+                                            <ChevronRightIcon className="w-5 h-5 text-gray-600" />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    />
+                            )}
+                        />
+                    </div>
+                    <button onClick={()=>setEndDate()} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full max-h-10 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
+                        Clear
+                    </button>
                 </div>
             </div>
         </div>

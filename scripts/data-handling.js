@@ -20,7 +20,6 @@ export function fuzzySearch(data, search, key, isMobile) {
     keys: key
   };
   if(!!data) {
-    // data = data.filter(row => row.Date.length!=0);
     if (!!search) {
       const fuse = new Fuse(data, options).search(search);
       const cleanedData = Array.from(fuse, row => row.item);
@@ -77,6 +76,15 @@ export function filterByDropdown(data, queryParams) {
     data = filteredData;
   }
   return data;
+}
+
+export function filterByDate(data, fromQuery, toQuery) {
+  const from = fromQuery ? new Date(fromQuery) : new Date("01/01/0001");
+  const to = toQuery ? new Date(toQuery) : new Date("01/01/3000");
+  return data.filter(row=> {
+    const date = new Date(row["Date"]);
+    return date>=from && date<=to ? true : false;
+  })
 }
 
 function sortByDate(columnA, columnB, order) {

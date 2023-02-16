@@ -7,7 +7,7 @@ import useSWR from "swr";
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate } from "../scripts/data-handling.js";
 // import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam, retrieveDropdownParams } from "../scripts/router-handling";
@@ -135,6 +135,7 @@ export default function DataExplorer() {
     dropdownValues = generateListDropdowns(data);
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
     data = filterByDropdown(data, query);
+    data = filterByDate(data, query.from, query.to);
     if(!!query.sortBy && !!query.order) {
       sort(data, query.sortBy, query.order);
     } if(!!query.currentPage && !!query.numShown) {
