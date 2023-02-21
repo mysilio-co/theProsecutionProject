@@ -1,6 +1,6 @@
 import {React, useState, Fragment, useEffect} from 'react';
 import { Disclosure, Listbox, Transition } from "@headlessui/react";
-import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
+import { addQueryParam, removeQueryParam } from "../../scripts/router-handling";
 import {
   MagnifyingGlassIcon,
   CheckIcon,
@@ -15,7 +15,7 @@ function classNames(...classes) {
 export default function Dropdown({label, options, router, isLoading, hasError}) {
   const [selectedKey, setSelectedKey] = useState([]);
   const isDisabled = isLoading && !hasError;
-  const [firstRun, setFirstRun] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(()=>{
     if(!isDisabled && router.query[label]) {
@@ -25,12 +25,12 @@ export default function Dropdown({label, options, router, isLoading, hasError}) 
 
   // This is triggered on first load of dropdown when selectedKey is []
   // removing the query param and impacting the filtering
-  // firstRun makes it so this is not an issue
+  // initialLoad makes it so this is not an issue
   useEffect(()=>{
-    if(!isDisabled && !firstRun) {
+    if(!isDisabled && !initialLoad) {
       selectedKey.length<1 ? removeQueryParam(label, router) : addQueryParam(label, selectedKey.join(', '), router);
     }
-    setFirstRun(false);
+    setInitialLoad(false);
   },[selectedKey])
 
 

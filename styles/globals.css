@@ -28,6 +28,13 @@
   }
 }
 
+  .rs-slider-progress-bar {
+    background-color: #2563eb !important;
+  }
+
+  .react-datepicker-popper {
+    z-index: 5 !important;
+  }
 
   .w-28 {
     width: 7rem;

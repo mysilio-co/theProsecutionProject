@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { format } from 'date-fns'
 import 'react-datepicker/dist/react-datepicker.css'
-import { addAndRemoveMultipleQueryParams, addMultipleQueryParams, removeQueryParam } from "../scripts/router-handling";
+import { addAndRemoveMultipleQueryParams, addMultipleQueryParams, removeQueryParam } from "../../scripts/router-handling";
 
 
 export default function DateFilter({router, isLoading, hasError}) {

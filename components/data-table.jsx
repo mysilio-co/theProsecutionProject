@@ -4,20 +4,19 @@ import {
     ChevronUpDownIcon
   } from "@heroicons/react/20/solid";
 
-  import FilterDropdowns from './filter-dropdowns.jsx';
+  import FilterDropdowns from './filters/filter-dropdowns.jsx';
   import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
-  import ShowAllCheckbox from "./show-all-checkbox";
-  import ShowFilterCheckbox from "./show-filter-checkbox";
+  import ShowAllCheckbox from "./filters/show-all-checkbox";
+  import ShowFilterCheckbox from "./filters/show-filter-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
-  import DateFilter from "./date-filter.jsx";
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
-export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilter, dropdownValues }) {
+export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilter, dropdownValues, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     const isDisabled = isLoading && !hasError;
@@ -56,8 +55,8 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                 <p className="text-lg font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
+                {showFilterButton()}
                 {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError}/>: ""}
-                <ShowFilterCheckbox router={router} isLoading={isLoading} hasError={hasError}/>
               </div>
               <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
                 Reset Search
@@ -65,16 +64,6 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             </div>
           </div>
         </div>
-        { showFilter ? <FilterDropdowns 
-          values={dropdownValues} 
-          router={router} 
-          isLoading={isLoading}
-          hasError={hasError}
-        /> : "" }
-        <DateFilter 
-          router={router} 
-          isLoading={isLoading}
-          hasError={hasError}/>
         {hasError ? 
         <ErrorMessage/>
         : 
@@ -98,7 +87,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                             className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-3 pr-2 text-left text-xs md:text-sm font-semibold text-gray-900")}
                             key={h}
                           >
-                            <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex">
+                            <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex text-gray-800 hover:text-gray-800 hover:no-underline">
                               <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + " px-1 rounded"}>{h}</p>
                               {router.query.sortBy!=h ? (
                                 <span className="ml-2 flex items-center rounded text-gray-400 group-hover:visible group-focus:visible">
@@ -135,9 +124,9 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                           key={idx}
                           className={classNames(idx % 2 === 0 ? undefined : "bg-gray-200", "flex hover:bg-stone-100 items-center")}
                         >
-                          <td className="w-14 pl-4 py-3 md:py-2 text-xs md:text-sm text-gray-500">{currentIndex+idx}</td>
+                          <td className="w-14 pl-4 py-3 md:py-2 text-xs md:text-sm text-gray-600">{currentIndex+idx}</td>
                           {headers.map((h) => (
-                            <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) ? "whitespace-nowrap overflow-x-auto " : undefined, "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-500")} 
+                            <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) ? "whitespace-nowrap overflow-x-auto " : undefined, "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-600")} 
                                 key={h}>
                               {row[h]}
                             </td>

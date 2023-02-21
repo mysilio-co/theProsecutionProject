@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
+import { addQueryParam, removeQueryParam } from "../../scripts/router-handling";
 
 export default function ShowAllCheckbox({router, isLoading, hasError}) {
     const [showAll, setShowAll] = useState(false);
