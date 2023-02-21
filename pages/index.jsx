@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import * as d3 from "d3";
 import DateFilter from "../components/filters/date-filter.jsx";
@@ -21,6 +21,7 @@ import FilterRanges from "../components/filters/filter-ranges.jsx";
 import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
 import FAQModalContents from "../components/modals/faq-modal-contents.jsx";
 import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
+import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -43,12 +44,23 @@ export default function DataExplorer() {
   let dropdownValues = [];
   let rangeValues = [];
   let hasError = false;
+  let untouchedData = null;
   let data = null;
   let filteredData = null;
   let isLoading = true;
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  function showFilterButton() {
+    return (
+      <button onClick={()=>{setShowModal(true); setCurrentModal(
+        <FilterModalContents data={untouchedData} setShowModal={setShowModal} router={router} isLoading={isLoading} hasError={hasError}/>)
+      }} className="mt-4 md:mt-0 md:ml-8 lg:ml-8 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+        Filter Data
+      </button>
+    )
+  }
 
   function updateMobileState() {
     setIsMobile(window.innerWidth<768 ? true : false);
@@ -100,6 +112,7 @@ export default function DataExplorer() {
       const to = Date.parse(router.query.to) ? router.query.to : null;
       const dropdownValues = retrieveDropdownParams(router.query);
       const numericValues = retrieveNumericParams(router.query);
+      const ref = React.createRef();
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
         query.sortBy = sortBy; 
@@ -135,13 +148,11 @@ export default function DataExplorer() {
 
   const search = query.search || "";
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
-  data = getSheetData(selectedTab, viewType);
+  untouchedData = getSheetData(selectedTab, viewType);
 
-  if(!!data) {
+  if(!!untouchedData) {
     isLoading = false;
-    dropdownValues = generateListDropdowns(data);
-    rangeValues = generateNumericRanges(data);
-    data = fuzzySearch(data, query.search, query.searchBy, isMobile);
+    data = fuzzySearch(untouchedData, query.search, query.searchBy, isMobile);
     data = filterByDropdown(data, query);
     data = filterByDate(data, query.from, query.to);
     data = filterByRange(data, query);
@@ -217,16 +228,6 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      <DateFilter 
-          router={router} 
-          isLoading={isLoading}
-          hasError={hasError}/>
-      <FilterRanges 
-        values={rangeValues}
-        router={router}
-        isLoading={isLoading}
-        hasError={hasError}
-      />
       <DataTable
         title={selectedTab}
         data={filteredData}
@@ -237,6 +238,7 @@ export default function DataExplorer() {
         showFilter={query.showFilter}
         hasError={hasError}
         dropdownValues={dropdownValues}
+        showFilterButton={showFilterButton}
       />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">

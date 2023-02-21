@@ -16,7 +16,7 @@ import {
     return classes.filter(Boolean).join(" ");
   }
 
-export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilter, dropdownValues }) {
+export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilter, dropdownValues, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     const isDisabled = isLoading && !hasError;
@@ -55,8 +55,8 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                 <p className="text-lg font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
+                {showFilterButton()}
                 {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError}/>: ""}
-                <ShowFilterCheckbox router={router} isLoading={isLoading} hasError={hasError}/>
               </div>
               <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
                 Reset Search
@@ -64,12 +64,6 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             </div>
           </div>
         </div>
-        { showFilter ? <FilterDropdowns 
-          values={dropdownValues} 
-          router={router} 
-          isLoading={isLoading}
-          hasError={hasError}
-        /> : "" }
         {hasError ? 
         <ErrorMessage/>
         : 
