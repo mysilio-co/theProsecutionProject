@@ -41,20 +41,18 @@ export default function DataExplorer() {
   const router = useRouter();
   const query = router.query;
   const selectedTab = query.tab || tabs[0];
-  let dropdownValues = [];
-  let rangeValues = [];
   let hasError = false;
+  let isLoading = true;
   let untouchedData = null;
   let data = null;
   let filteredData = null;
-  let isLoading = true;
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
   function showFilterButton() {
     return (
-      <button onClick={()=>{setShowModal(true); setCurrentModal(
+      <button disabled={isLoading && !hasError} onClick={()=>{setShowModal(true); setCurrentModal(
         <FilterModalContents data={untouchedData} setShowModal={setShowModal} router={router} isLoading={isLoading} hasError={hasError}/>)
       }} className="mt-4 md:mt-0 md:ml-8 lg:ml-8 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
         Filter Data
@@ -237,7 +235,6 @@ export default function DataExplorer() {
         isMobile={isMobile}
         showFilter={query.showFilter}
         hasError={hasError}
-        dropdownValues={dropdownValues}
         showFilterButton={showFilterButton}
       />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
