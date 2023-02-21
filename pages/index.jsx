@@ -1,21 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import * as d3 from "d3";
+import DateFilter from "../components/filters/date-filter.jsx";
+import NumericFilter from "../components/filters/numeric-filter.jsx";
 
 import useSWR from "swr";
 
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange } from "../scripts/data-handling.js";
 // import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam, retrieveDropdownParams } from "../scripts/router-handling";
-import { generateListDropdowns } from '../scripts/filter';
+import { addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
+import { generateListDropdowns, generateNumericRanges } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
-import DownloadModal from "../components/download-modal.jsx";
+import Modal from "../components/modals/modal.jsx";
+import FilterRanges from "../components/filters/filter-ranges.jsx";
+import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -36,10 +40,12 @@ export default function DataExplorer() {
   const query = router.query;
   const selectedTab = query.tab || tabs[0];
   let dropdownValues = [];
+  let rangeValues = [];
   let hasError = false;
   let data = null;
   let filteredData = null;
   let isLoading = true;
+  const [showModal, setShowModal] = useState(false)
   const [isMobile, setIsMobile] = useState(false);
 
   function updateMobileState() {
@@ -93,6 +99,7 @@ export default function DataExplorer() {
       const from = Date.parse(router.query.from) ? router.query.from : null;
       const to = Date.parse(router.query.to) ? router.query.to : null;
       const dropdownValues = retrieveDropdownParams(router.query);
+      const numericValues = retrieveNumericParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
         query.sortBy = sortBy; 
@@ -117,6 +124,7 @@ export default function DataExplorer() {
         query.to = to;
       }
       query = { ...query, ...dropdownValues};
+      query = { ...query, ...numericValues};
       router.replace(
         { pathname: '', query: query }, 
         undefined, 
@@ -130,12 +138,14 @@ export default function DataExplorer() {
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
   data = getSheetData(selectedTab, viewType);
 
-  if(data) {
+  if(!!data) {
     isLoading = false;
     dropdownValues = generateListDropdowns(data);
+    rangeValues = generateNumericRanges(data);
     data = fuzzySearch(data, query.search, query.searchBy, isMobile);
     data = filterByDropdown(data, query);
     data = filterByDate(data, query.from, query.to);
+    data = filterByRange(data, query);
     if(!!query.sortBy && !!query.order) {
       sort(data, query.sortBy, query.order);
     } if(!!query.currentPage && !!query.numShown) {
@@ -182,9 +192,9 @@ export default function DataExplorer() {
                       key={tab}
                       className={classNames(
                         tab === selectedTab
-                          ? "bg-gray-900 text-white"
+                          ? "bg-gray-900 text-white hover:text-white"
                           : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "rounded-md py-2 px-3 inline-flex items-center text-sm font-medium"
+                        "rounded-md py-2 px-3 inline-flex items-center text-sm font-medium hover:no-underline"
                       )}
                       aria-current={tab === selectedTab ? "page" : undefined}
                     >
@@ -197,7 +207,16 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      
+      <DateFilter 
+          router={router} 
+          isLoading={isLoading}
+          hasError={hasError}/>
+      <FilterRanges 
+        values={rangeValues}
+        router={router}
+        isLoading={isLoading}
+        hasError={hasError}
+      />
       <DataTable
         title={selectedTab}
         data={filteredData}
@@ -212,7 +231,9 @@ export default function DataExplorer() {
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
           <ResultsPerPage router={router} length={!!data ? data.length : 0} isLoading={isLoading} hasError={hasError}/>
-          <DownloadModal data={data}/>
+          <Modal data={data} showModal={showModal} setShowModal={setShowModal} buttonLabel={"Download Data"}
+            innerComponent={<DownloadModalContents data={data} setShowModal={setShowModal}/>} 
+          />
         </div>
       </div>
       <div className="flex-1 px-2 pt-6 pb-3 flex items-center justify-center sm:inset-0 bg-gray-800">

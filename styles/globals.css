@@ -28,6 +28,13 @@
   }
 }
 
+  .rs-slider-progress-bar {
+    background-color: #2563eb !important;
+  }
+
+  .rs-slider-handle, .rs-slider-handle::before {
+    /* border: #1F2937 !important; */
+  }
 
   .w-28 {
     width: 7rem;

@@ -1,4 +1,4 @@
-import { DROPDOWN_KEYS } from "./constants";
+import { DROPDOWN_KEYS, NUMERIC_COLUMNS } from "./constants";
 
 export function generateListDropdowns(data) {
     let dropdowns = [];
@@ -11,9 +11,29 @@ export function generateListDropdowns(data) {
     return dropdowns;
 }
 
+export function generateNumericRanges(data) {
+    let dropdowns = [];
+    for(let col of NUMERIC_COLUMNS) {
+        const values = getNumericColumnValuesByKey(data, col);
+        const min = Math.floor(Math.min(...values));
+        const max = Math.ceil(Math.max(...values));
+        dropdowns.push({key : col, value: [min, max]});
+    }
+    return dropdowns;
+}
+
 function getListOptionsByKey(data, key) {
-    if(!!data) {
+    if(data) {
         return [... new Set(data.map(function(d) { return d[key]; }).filter(n => n).sort())];
+    }
+    else {
+        return [];
+    }
+}
+
+function getNumericColumnValuesByKey(data, key) {
+    if(data) {
+        return [... new Set(data.map(function(d) { return Number(d[key]); }).filter(n => n || n==0))];
     }
     else {
         return [];

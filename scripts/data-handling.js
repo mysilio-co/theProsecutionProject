@@ -78,13 +78,43 @@ export function filterByDropdown(data, queryParams) {
   return data;
 }
 
+export function filterByRange(data, queryParams) {
+  if(queryParams) {
+    let filteredData = [];
+    let filterParams = {};
+    // Extract filter values from query params
+    NUMERIC_COLUMNS.forEach(key => {
+      if(queryParams[key]) {
+        filterParams[key] = queryParams[key].split(',');
+      }
+    })    
+    filteredData = data.filter(row => {
+      let matchCount = 0;
+      Object.keys(filterParams).forEach(key=> {
+        const rowValue = Number(row[key]);
+        if((rowValue || rowValue==0) && rowValue>=filterParams[key][0] && rowValue<=filterParams[key][1]) {
+          matchCount++;
+        }
+      })
+      return matchCount == Object.keys(filterParams).length;
+    });
+    data = filteredData;
+  }
+  return data;
+}
+
 export function filterByDate(data, fromQuery, toQuery) {
-  const from = fromQuery ? new Date(fromQuery) : new Date("01/01/0001");
-  const to = toQuery ? new Date(toQuery) : new Date("01/01/3000");
-  return data.filter(row=> {
-    const date = new Date(row["Date"]);
-    return date>=from && date<=to ? true : false;
-  })
+  if(!fromQuery && !toQuery) {
+    return data;
+  }
+  else {
+    const from = fromQuery ? new Date(fromQuery) : new Date("01/01/0001");
+    const to = toQuery ? new Date(toQuery) : new Date("01/01/3000");
+    return data.filter(row=> {
+      const date = new Date(row["Date"]);
+      return date>=from && date<=to ? true : false;
+    })
+  }
 }
 
 function sortByDate(columnA, columnB, order) {
