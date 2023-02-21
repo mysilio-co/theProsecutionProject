@@ -10,7 +10,6 @@ import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
 import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange } from "../scripts/data-handling.js";
-// import { getChunksOfSheet } from "../scripts/sheets.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
 import { generateListDropdowns, generateNumericRanges } from '../scripts/filter';
@@ -20,6 +19,8 @@ import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS,
 import Modal from "../components/modals/modal.jsx";
 import FilterRanges from "../components/filters/filter-ranges.jsx";
 import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
+import FAQModalContents from "../components/modals/faq-modal-contents.jsx";
+import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -45,7 +46,8 @@ export default function DataExplorer() {
   let data = null;
   let filteredData = null;
   let isLoading = true;
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const [currentModal, setCurrentModal] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
   function updateMobileState() {
@@ -55,8 +57,6 @@ export default function DataExplorer() {
   function updateHasError(errorFormula) {
     hasError = hasError || errorFormula;
   }
-
-
 
   function getSheetData(tab, viewType) {
     const isGeneral = tab==="General" ? true : false;
@@ -133,7 +133,6 @@ export default function DataExplorer() {
     }
   }, [router.isReady]);
 
-
   const search = query.search || "";
   const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
   data = getSheetData(selectedTab, viewType);
@@ -161,6 +160,9 @@ export default function DataExplorer() {
         
         {({ open }) => (
           <>
+            <Modal data={data} showModal={showModal} setShowModal={setShowModal}
+              innerComponent={currentModal} 
+            />
             <div className="max-w-7xl mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
               <div className="relative md:h-16 flex flex-col md:flex-row">
                 <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-20 lg:mr-40">
@@ -172,11 +174,19 @@ export default function DataExplorer() {
                     />
                   </div>
                 </div>
-                <div className="flex py-2 md:py-0 items-center md:mr-20 lg:mr-30">
-                  <BasicSearch router={router} search={search}/>
-                </div>
-                <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
+                <div className="flex items-center">
+                  <div className="flex py-2 md:py-0 items-center md:mr-20 lg:mr-30">
+                    <BasicSearch router={router} search={search}/>
+                  </div>
+                  <div className="flex py-2 pb-5 md:py-0 items-center">
+                    <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
+                  </div>
+                  <button onClick={()=>{setShowModal(true); setCurrentModal(<FAQModalContents setShowModal={setShowModal}/>)}} className="mt-8 h-10 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+                    FAQ
+                  </button>
+                  <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 h-10 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+                    Contact Us
+                  </button>
                 </div>
               </div>
               <nav
@@ -231,9 +241,9 @@ export default function DataExplorer() {
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
           <ResultsPerPage router={router} length={!!data ? data.length : 0} isLoading={isLoading} hasError={hasError}/>
-          <Modal data={data} showModal={showModal} setShowModal={setShowModal} buttonLabel={"Download Data"}
-            innerComponent={<DownloadModalContents data={data} setShowModal={setShowModal}/>} 
-          />
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={data} setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            Download Data
+          </button>
         </div>
       </div>
       <div className="flex-1 px-2 pt-6 pb-3 flex items-center justify-center sm:inset-0 bg-gray-800">
