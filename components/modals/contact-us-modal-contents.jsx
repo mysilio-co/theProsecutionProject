@@ -7,8 +7,8 @@ export default function ContactUsModalContents ({setShowModal}) {
     }
 
   return (
-        <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6 md:w-5/6">
-            <div className="bg-white pt-0 pb-4 sm:pb-4">
+        <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+         <div className="bg-white pt-0 pb-4 sm:pb-4">
             <div className="sm:flex sm:items-start">
                 <div className="mt-0 text-center sm:text-left">
                     <Dialog.Title as="h3" className="p-4 bg-gray-800 text-lg font-medium leading-6 text-white">

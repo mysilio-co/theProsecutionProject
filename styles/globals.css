@@ -32,8 +32,8 @@
     background-color: #2563eb !important;
   }
 
-  .rs-slider-handle, .rs-slider-handle::before {
-    /* border: #1F2937 !important; */
+  .react-datepicker-popper {
+    z-index: 5 !important;
   }
 
   .w-28 {
