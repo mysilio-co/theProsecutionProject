@@ -113,7 +113,7 @@ export default function DateFilter({router, isLoading, hasError}) {
                         )}
                     />
                     </div>
-                    <button onClick={()=>setStartDate("")} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 max-h-10 bg-gray-800 w-full hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
+                    <button onClick={()=>setStartDate("")} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 max-h-10 bg-gray-800 w-full hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
                         Clear
                     </button>
                 </div>
@@ -173,7 +173,7 @@ export default function DateFilter({router, isLoading, hasError}) {
                             )}
                         />
                     </div>
-                    <button onClick={()=>setEndDate()} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full max-h-10 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
+                    <button onClick={()=>setEndDate()} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full max-h-10 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
                         Clear
                     </button>
                 </div>
