@@ -8,14 +8,11 @@ import {
     ChevronUpIcon
   } from "@heroicons/react/20/solid";
 import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../scripts/common";
 
 export default function SearchBy({router, isMobile, isAllColumns, isLoading, hasError}) {
     // const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : !isAllColumns ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
-    const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
+    const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS;
     const [searchBy, setSearchBy] = useState(searchByKeys[0]);
     const isDisabled = isLoading && !hasError;
     useEffect(()=>{

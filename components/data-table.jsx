@@ -11,10 +11,7 @@ import {
   import ShowFilterCheckbox from "./filters/show-filter-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
-
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
+import { classNames } from "../scripts/common.js";
 
 export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilter, dropdownValues, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);

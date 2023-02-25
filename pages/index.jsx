@@ -12,20 +12,16 @@ import { Disclosure } from "@headlessui/react";
 import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
 import { addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
-import { generateListDropdowns, generateNumericRanges } from '../scripts/filter';
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS, SEARCH_BY_KEYS } from "../scripts/constants.js";
 import Modal from "../components/modals/modal.jsx";
-import FilterRanges from "../components/filters/filter-ranges.jsx";
 import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
 import FAQModalContents from "../components/modals/faq-modal-contents.jsx";
 import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
 import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../scripts/common.js";
+import { generateListDropdowns, generateNumericRanges } from "../scripts/filter.js";
 
 const fetcher = async (url) => await fetch(url).then((res) => {
   if (!res.ok) {
@@ -42,10 +38,12 @@ export default function DataExplorer() {
   const query = router.query;
   const selectedTab = query.tab || tabs[0];
   let hasError = false;
-  let isLoading = true;
   let untouchedData = null;
-  let data = null;
   let filteredData = null;
+  let slicedData = null;
+  let rangeValues = [];
+  let dropdownValues = [];
+  const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -53,7 +51,7 @@ export default function DataExplorer() {
   function showFilterButton() {
     return (
       <button disabled={isLoading && !hasError} onClick={()=>{setShowModal(true); setCurrentModal(
-        <FilterModalContents data={untouchedData} setShowModal={setShowModal} router={router} isLoading={isLoading} hasError={hasError}/>)
+        <FilterModalContents rangeValues={rangeValues} dropdownValues={dropdownValues} setShowModal={setShowModal} isLoading={isLoading} hasError={hasError}/>)
       }} className="mt-4 md:mt-0 md:ml-8 lg:ml-8 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
         Filter Data
       </button>
@@ -95,6 +93,17 @@ export default function DataExplorer() {
     updateMobileState();
   }, []);
 
+  useEffect(() => {
+    untouchedData ? setIsLoading(false) : setIsLoading(true);
+  }, [dropdownValues]);
+
+  useEffect(() => {
+    if(!isLoading) {
+      console.log('test')
+    }
+  }, [isLoading, selectedTab]);
+
+
   useEffect(()=>{
     if(router.isReady) {
       const tab = router.query.tab in TAB_NAMES ? router.query.tab : Object.keys(TAB_NAMES)[0];
@@ -102,7 +111,7 @@ export default function DataExplorer() {
       const sortBy = DESKTOP_COLUMN_KEYS.includes(router.query.sortBy) ? router.query.sortBy : null;
       const order = ORDER_BY_KEYS.includes(router.query.order) ? router.query.order : null;
       const search = router.query.search ? router.query.search : null;
-      const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS_EXPRESS;
+      const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS;
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
       const showFilter = router.query.showFilter=="true" ? "true" : null;
@@ -149,17 +158,18 @@ export default function DataExplorer() {
   untouchedData = getSheetData(selectedTab, viewType);
 
   if(!!untouchedData) {
-    isLoading = false;
-    data = fuzzySearch(untouchedData, query.search, query.searchBy, isMobile);
-    data = filterByDropdown(data, query);
-    data = filterByDate(data, query.from, query.to);
-    data = filterByRange(data, query);
+    dropdownValues = generateListDropdowns(untouchedData);
+    rangeValues = generateNumericRanges(untouchedData);
+    filteredData = fuzzySearch(untouchedData, query.search, query.searchBy, isMobile);
+    filteredData = filterByDropdown(filteredData, query);
+    filteredData = filterByDate(filteredData, query.from, query.to);
+    filteredData = filterByRange(filteredData, query);
     if(!!query.sortBy && !!query.order) {
-      sort(data, query.sortBy, query.order);
+      sort(filteredData, query.sortBy, query.order);
     } if(!!query.currentPage && !!query.numShown) {
-      filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
+      slicedData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
     } else {
-      filteredData = data;
+      slicedData = filteredData;
     }
   }
 
@@ -169,7 +179,7 @@ export default function DataExplorer() {
         
         {({ open }) => (
           <>
-            <Modal data={data} showModal={showModal} setShowModal={setShowModal}
+            <Modal showModal={showModal} setShowModal={setShowModal}
               innerComponent={currentModal} 
             />
             <div className="max-w-7xl mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
@@ -228,8 +238,8 @@ export default function DataExplorer() {
       </Disclosure>
       <DataTable
         title={selectedTab}
-        data={filteredData}
-        length={!!data ? data.length : 0}
+        data={slicedData}
+        length={!!filteredData ? filteredData.length : 0}
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
@@ -239,8 +249,8 @@ export default function DataExplorer() {
       />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
-          <ResultsPerPage router={router} length={!!data ? data.length : 0} isLoading={isLoading} hasError={hasError}/>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={data} setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+          <ResultsPerPage router={router} length={!!filteredData ? filteredData.length : 0} isLoading={isLoading} hasError={hasError}/>
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             Download Data
           </button>
         </div>
@@ -285,7 +295,6 @@ export default function DataExplorer() {
           </a>
         </div>
       </div>
-      
     </>
   );
 }

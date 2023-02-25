@@ -4,33 +4,27 @@ import DateFilter from '../filters/date-filter';
 import FilterRanges from '../filters/filter-ranges';
 import { generateListDropdowns, generateNumericRanges } from '../../scripts/filter';
 import FilterDropdowns from '../filters/filter-dropdowns';
+import { useRouter } from 'next/router';
 
-export default function FilterModalContents ({data, router, isLoading, hasError, setShowModal}) {
+export default function FilterModalContents ({dropdownValues, rangeValues, isLoading, hasError, setShowModal}) {
 
     const contentRef = useRef();
     const titleRef = useRef();
     const closeButtonRef = useRef();
     const isVisible = useOnScreen(contentRef);
-    let dropdownValues = [];
-    let rangeValues = [];
+    const router = useRouter();
 
     useEffect(() => {
         titleRef.current.scrollIntoView(false);
         closeButtonRef.current.focus();
-        
     }, [isVisible]);
-
-    if(data) {
-        dropdownValues = generateListDropdowns(data);
-        rangeValues = generateNumericRanges(data);
-    }
         
     function setModalVisibility(showModalValue) {
         setShowModal(showModalValue);
     }
 
     return (
-        <Dialog.Panel ref={contentRef} className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6 md:w-11/12">
+        <Dialog.Panel ref={contentRef} className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6 max-w-11/12">
             <div className="bg-white pt-0 pb-4 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                     <div className="mt-0 text-center sm:text-left">

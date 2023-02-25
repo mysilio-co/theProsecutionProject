@@ -2,12 +2,14 @@ import { RangeSlider, InputGroup, InputNumber } from 'rsuite';
 import {React, useState, useEffect} from 'react';
 import 'rsuite/dist/rsuite.min.css';
 import { addQueryParam, removeQueryParam } from '../../scripts/router-handling';
+import { classNames } from '../../scripts/common';
 
 export default function NumericFilter({label, min, max, router, isLoading, hasError}) {
     const [value, setValue] = useState([min, max]);
     const [enabled, setEnabled] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
     const isDisabled = isLoading && !hasError;
+    let noSelection = value[0] === value[1];
 
     useEffect(()=>{
         if(!isDisabled && router.query[label]) {
@@ -15,7 +17,7 @@ export default function NumericFilter({label, min, max, router, isLoading, hasEr
             setEnabled(true);
         }
         setInitialLoad(false);
-      },[isDisabled])
+    },[isDisabled])
 
     useEffect(()=>{
         if(!isDisabled && !initialLoad) {
@@ -23,36 +25,29 @@ export default function NumericFilter({label, min, max, router, isLoading, hasEr
         }
     },[value, enabled])
 
-    // useEffect(()=>{
-    //     if(!isDisabled) {
-    //         enabled ? addQueryParam(label, value, router) : removeQueryParam(label, router);
-    //     }
-    // },[enabled])
-
-    // useEffect(()=>{
-    //     if(!isDisabled && enabled) {
-    //         addQueryParam(label, value, router);
-    //     }
-    // },[value])
-
   return (
     <div>
         <label className="block text-sm pr-2 font-medium text-gray-400">{label}</label>
-        <div className="flex items-center">
+        <div className="flex items-center w-full">
             <div className="flex items-center mr-6">
-                <label className="inline-flex relative items-center cursor-pointer">
-                <input type="checkbox" value="" checked={enabled} className="sr-only peer" disabled = {isDisabled}
+                <label className={classNames(
+                        noSelection
+                          ? "cursor-no-drop"
+                          : "cursor-pointer",
+                        "inline-flex relative items-center"
+                )}>
+                <input type="checkbox" value="" checked={enabled} className="sr-only peer" disabled = {isDisabled || noSelection}
                     onChange={(e) => {e.target.checked ? setEnabled(true) : setEnabled(false)}} />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                {/* <span className="ml-3 text-sm font-sm text-gray-900">Show all columns</span> */}
                 </label>
             </div>
-            <div className="basis-1/4 mr-6">
+            <div className="basis-1/2 mr-6">
                 <RangeSlider
                     progress
                     value={value}
                     min={min}
                     max={max}
+                    step={max-min<20 ? 1 : Math.floor(max/20)}
                     className="pink"
                     disabled={!enabled || isDisabled}
                     onChange={value => {
@@ -60,7 +55,7 @@ export default function NumericFilter({label, min, max, router, isLoading, hasEr
                     }}
                 />
             </div>
-            <div className="basis-1/4">
+            <div className="basis-1/3">
                 <InputGroup>
                 <InputNumber
                     min={min}

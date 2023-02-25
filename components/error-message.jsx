@@ -1,9 +1,3 @@
-
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
-
 export default function ErrorMessage() {
     return (
       <div className="container mx-auto w-5/6 md:w-1/2 bg-gray-800 py-6 my-6 rounded-lg">

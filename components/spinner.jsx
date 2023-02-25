@@ -1,6 +1,4 @@
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../scripts/common";
 
 export default function Spinner({display}) {
     return (

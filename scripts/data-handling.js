@@ -91,7 +91,7 @@ export function filterByRange(data, queryParams) {
     filteredData = data.filter(row => {
       let matchCount = 0;
       Object.keys(filterParams).forEach(key=> {
-        const rowValue = Number(row[key]);
+        const rowValue = Number(row[key]?.replaceAll(',',''));
         if((rowValue || rowValue==0) && rowValue>=filterParams[key][0] && rowValue<=filterParams[key][1]) {
           matchCount++;
         }
@@ -122,8 +122,14 @@ function sortByDate(columnA, columnB, order) {
 }
 
 function sortByNumber(columnA, columnB, order) {
-  columnA = !!Number(columnA) ? Number(columnA) : -1;
-  columnB = !!Number(columnB) ? Number(columnB) : -1;
+  columnA = Number(columnA.replaceAll(',', ''));
+  columnB = Number(columnB.replaceAll(',', ''));
+  if(!columnA) {
+    columnA = -1;
+  }
+  if(!columnB) {
+    columnB = -1;
+  }
   return order=="asc" ? d3.descending(columnA, columnB) : d3.ascending(columnA, columnB);
 }
 

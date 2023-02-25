@@ -33,7 +33,7 @@ function getListOptionsByKey(data, key) {
 
 function getNumericColumnValuesByKey(data, key) {
     if(data) {
-        return [... new Set(data.map(function(d) { return Number(d[key]); }).filter(n => n || n==0))];
+        return [... new Set(data.map(function(d) { return d[key] ? Number(d[key].replaceAll(',','')) : null; }).filter(n => n || n==0))];
     }
     else {
         return [];

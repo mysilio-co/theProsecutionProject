@@ -7,10 +7,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon
 } from "@heroicons/react/20/solid";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from '../../scripts/common';
 
 export default function Dropdown({label, options, router, isLoading, hasError}) {
   const [selectedKey, setSelectedKey] = useState([]);

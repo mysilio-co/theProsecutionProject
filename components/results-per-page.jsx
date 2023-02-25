@@ -8,10 +8,7 @@ import {
     ChevronUpIcon
   } from "@heroicons/react/20/solid";
 import { addMultipleQueryParams, addQueryParam, removeQueryParam } from "../scripts/router-handling";
-
-function classNames(...classes) {
-return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../scripts/common";
 
 export default function ResultsPerPage({router, length, isLoading, hasError}) {
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE_KEYS[0]);

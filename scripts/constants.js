@@ -15,7 +15,7 @@ export const TAB_NAMES = {
 
 export const DROPDOWN_KEYS = [
     "Date descriptor",
-    "Co-offenders",
+    "Co-offender",
     "Reason for inclusion",
     "Jurisdiction",
     "Location: state",
@@ -24,9 +24,9 @@ export const DROPDOWN_KEYS = [
     "Ideological target",
     "Ideological affiliation",
     "Affiliation with FTO",
-    "Hate Crime",
-    "LEO Informant",
-    "Previous similar crime",
+    "Hate crime",
+    "LEO informant",
+    "Previous similar method",
     "Criminal method",
     "Additional criminal method",
     "Completion of crime",
@@ -54,15 +54,16 @@ export const SEARCH_BY_KEYS_EXPRESS = [
 
 export const SEARCH_BY_KEYS = [
     "Any",
-    "Charges",
-    "Plea",
     "Group affiliation",
+    "Charges",
+    "Additional details",
+    "Short narrative",
+    "Location: country",
+    "Location: city",
     "Full legal name",
     "Other names/aliases",
-    "Name of case",
-    "Location: country",
-    "Location: state",
-    "Location: city"
+    "Service classification",
+    "Name of case"
 ]
 
 export const SEARCH_BY_KEYS_MOBILE = [
@@ -95,6 +96,35 @@ export const SCROLL_BAR_COLUMN_KEYS = [
     "Source description"
 ]
 
+export const LEFTIST_AFFILIATIONS = [
+    "Leftist: eco-animal focused",
+    "Leftist: government-focused",
+    "Leftist: identity-focused",
+    "Leftist: unspecified"
+]
+
+export const RIGHTIST_AFFILIATIONS = [
+    "Rightist: government-focused",
+    "Rightist: identity-focused",
+    "Rightist: abortion-focused",
+    "Rightist: identity focused",
+    "Rightist: unspecified"
+]
+
+export const NATIONALIST_SEPARATIST_AFFILIATIONS = [
+    "Nationalist-separatist"
+]
+
+export const SALAFI_JIHADIST_AFFILIATIONS = [
+    "Salafi/Jihadist/Islamist"
+]
+
+export const OTHER_AFFILIATIONS = [
+    "Other",
+    "Unclear",
+    "No affiliation/not a factor"
+]
+
 export const TABLE_WIDTH_MAP = {
   "Date": "mobile-w-28 w-28",
   "Date Descriptor": "w-40",
@@ -104,7 +134,7 @@ export const TABLE_WIDTH_MAP = {
   "First name": "w-40",
   "Family name": "w-40",
   "Other names/aliases": "w-64",
-  "Co-offenders": "w-40",
+  "Co-offender": "w-40",
   "Reason for inclusion": "w-96",
   "Name of case": "w-72",
   "Jurisdiction": "w-36",
@@ -118,8 +148,8 @@ export const TABLE_WIDTH_MAP = {
   "Affiliation with FTO": "w-36",
   "Group affiliation": "mobile-w-52 w-72",
   "Hate crime": "w-36",
-  "LEO Informant": "w-36",
-  "Previous similar crime": "w-36",
+  "LEO informant": "w-36",
+  "Previous similar method": "w-36",
   "Criminal method": "w-72",
   "Additional criminal method": "w-72",
   "Completion of crime": "w-64",
@@ -205,7 +235,7 @@ export const DESKTOP_COLUMN_KEYS = [
     "First name",
     "Family name",
     "Other names/aliases",
-    "Co-offenders",
+    "Co-offender",
     "Reason for inclusion",
     "Name of case",
     "Jurisdiction",
@@ -218,9 +248,9 @@ export const DESKTOP_COLUMN_KEYS = [
     "Ideological affiliation",
     "Affiliation with FTO",
     "Group affiliation",
-    "Hate Crime",
-    "LEO Informant",
-    "Previous similar crime",
+    "Hate crime",
+    "LEO informant",
+    "Previous similar method",
     "Criminal method",
     "Additional criminal method",
     "Completion of crime",
