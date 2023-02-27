@@ -30,6 +30,12 @@ export default function Dropdown({label, options, router, isLoading, hasError}) 
     setInitialLoad(false);
   },[selectedKey])
 
+  useEffect(()=>{
+    if(!isDisabled && router.query[label]) {
+      setSelectedKey(router.query[label].split(', '));
+    }
+  },[router.query[label]])
+
 
   return (
     <div className="px-4 pt-2">

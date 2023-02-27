@@ -47,7 +47,7 @@ export default function NumericFilter({label, min, max, router, isLoading, hasEr
                     value={value}
                     min={min}
                     max={max}
-                    step={max-min<20 ? 1 : Math.floor(max/20)}
+                    // step={max-min<20 ? 1 : Math.floor(max/20)}
                     className="pink"
                     disabled={!enabled || isDisabled}
                     onChange={value => {

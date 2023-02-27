@@ -39,7 +39,12 @@ export function addMultipleQueryParams(queryMap, router) {
     const { pathname, query } = router;
     const params = new URLSearchParams(query);
     queryMap.forEach((value, key)=> {
-        params.set(key, value);
+        if(value) {
+            params.set(key, value);
+        }
+        else {
+            params.delete(key);
+        }
     })
     router.replace(
         { pathname, query: params.toString() },

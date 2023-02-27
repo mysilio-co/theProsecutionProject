@@ -1,5 +1,5 @@
 import Dropdown from './dropdown.jsx';
-import { generateListDropdowns } from '../../scripts/filter';
+import { generateListDropdowns } from '../../scripts/filter-components';
 
 export default function FilterDropdowns({values, router}) {
     return (

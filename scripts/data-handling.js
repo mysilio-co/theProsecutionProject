@@ -1,6 +1,7 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
 import { DESKTOP_COLUMN_KEYS, DROPDOWN_KEYS, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
+import { removeMultipleQueryParams } from "./router-handling";
 
 export function fuzzySearch(data, search, key, isMobile) {
   if(isMobile) {
@@ -115,6 +116,49 @@ export function filterByDate(data, fromQuery, toQuery) {
       return date>=from && date<=to ? true : false;
     })
   }
+}
+
+export function removeMismatchedDropdown(router, dropdownValues) {
+  let columnsToBeUpdated = new Map();
+  if(router.query && dropdownValues.length!=0) {
+    // Extract filter values from query params
+    DROPDOWN_KEYS.forEach(key => {
+      if(router.query[key]) {
+        const routerValue = router.query[key].split(', ');
+        const dropdownValue = Object.values(dropdownValues.find(dropdownValue=>Object.keys(dropdownValue)==key))[0];
+        const intersection = dropdownValue.filter(value => routerValue.includes(value));
+        if(intersection.length != routerValue.length) {
+          columnsToBeUpdated.set(key, intersection.join(', '));
+        }
+      }
+    })
+  }
+  return columnsToBeUpdated;
+}
+
+export function removeMismatchedRange(router, rangeValues) {
+  let columnsToBeUpdated = new Map();
+  if(router.query) {
+    // Extract filter values from query params
+    NUMERIC_COLUMNS.forEach(key => {
+      if(router.query[key]) {
+        const routerValue = router.query[key].split(',').map(Number);
+        const rangeValue = rangeValues.find(rangeValue=>rangeValue.key==key).value;
+        // if min from router is smaller than min from rangeValue or if max is greater than max
+        if(rangeValue[0]==rangeValue[1]) {
+          columnsToBeUpdated.set(key, null);
+        }
+        else if(routerValue[0]<rangeValue[0] || routerValue[1]>rangeValue[1] ||
+          routerValue[0]>rangeValue[1] || routerValue[1]<rangeValue[0]) {
+          const newValue = [];
+          newValue.push(routerValue[0]<rangeValue[0] || routerValue[0]>rangeValue[1] ? rangeValue[0] : routerValue[0]);
+          newValue.push(routerValue[1]>rangeValue[1] || routerValue[1]<rangeValue[0] ? rangeValue[1] : routerValue[1]);
+          columnsToBeUpdated.set(key, newValue);
+        }
+      }
+    })
+  }
+  return columnsToBeUpdated;
 }
 
 function sortByDate(columnA, columnB, order) {

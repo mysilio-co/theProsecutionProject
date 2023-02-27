@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import * as d3 from "d3";
-import DateFilter from "../components/filters/date-filter.jsx";
-import NumericFilter from "../components/filters/numeric-filter.jsx";
 
 import useSWR from "swr";
 
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange, removeMismatchedDropdown, removeMismatchedRange } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
+import { addMultipleQueryParams, addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS, SEARCH_BY_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS, SEARCH_BY_KEYS, DROPDOWN_KEYS } from "../scripts/constants.js";
 import Modal from "../components/modals/modal.jsx";
 import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
 import FAQModalContents from "../components/modals/faq-modal-contents.jsx";
 import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
 import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
 import { classNames } from "../scripts/common.js";
-import { generateListDropdowns, generateNumericRanges } from "../scripts/filter.js";
+import { generateListDropdowns, generateNumericRanges } from "../scripts/filter-components.js";
 
 const fetcher = async (url) => await fetch(url).then((res) => {
   if (!res.ok) {
@@ -89,17 +86,22 @@ export default function DataExplorer() {
     return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
   
+  // determines if the screen is below mobile width on page load
   useEffect(() => {
     updateMobileState();
   }, []);
 
+  // determines if there is currently data loading
   useEffect(() => {
     untouchedData ? setIsLoading(false) : setIsLoading(true);
   }, [dropdownValues]);
 
+  // removes any dropdown/numeric range values that aren't applicable to current tab on tab change
   useEffect(() => {
     if(!isLoading) {
-      console.log('test')
+      const dropdownValuesToBeUpdated = removeMismatchedDropdown(router, dropdownValues);
+      const rangeValuesToBeUpdated = removeMismatchedRange(router, rangeValues);
+      addMultipleQueryParams(new Map([...dropdownValuesToBeUpdated, ...rangeValuesToBeUpdated]), router);
     }
   }, [isLoading, selectedTab]);
 
