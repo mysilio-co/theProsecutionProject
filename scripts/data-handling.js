@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
-import { DESKTOP_COLUMN_KEYS, DROPDOWN_KEYS, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
+import { DESKTOP_COLUMN_KEYS, DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
 import { removeMultipleQueryParams } from "./router-handling";
 
 export function fuzzySearch(data, search, key, isMobile) {
@@ -63,13 +63,20 @@ export function filterByDropdown(data, queryParams) {
       if(queryParams[key]) {
         filterParams[key] = queryParams[key].split(', ');
       }
-    })    
+    })
     // Filter data by checking if a row contains at least one match in all dropdowns selected
     filteredData = data.filter(row => {
       let matchCount = 0;
       Object.keys(filterParams).forEach(key=> {
-        if(filterParams[key].includes(row[key])) {
-          matchCount++;
+        if(key!=IDEOLOGICAL_GROUPING) {
+          if(filterParams[key].includes(row[key])) {
+            matchCount++;
+          }
+        }
+        else {
+          if(filterByIdeologicalGrouping(filterParams[key], row["Ideological affiliation"])) {
+            matchCount++;
+          }
         }
       })
       return matchCount == Object.keys(filterParams).length;
@@ -118,12 +125,22 @@ export function filterByDate(data, fromQuery, toQuery) {
   }
 }
 
+function filterByIdeologicalGrouping(filterValues, rowValue) {
+  let retValue = false;
+  filterValues.forEach(filterValue=> {
+    if(IDEOLOGICAL_GROUPING_FILTER_VALUES[filterValue].includes(rowValue)) {
+      retValue = true;
+    }
+  })
+  return retValue;
+}
+
 export function removeMismatchedDropdown(router, dropdownValues) {
   let columnsToBeUpdated = new Map();
   if(router.query && dropdownValues.length!=0) {
     // Extract filter values from query params
     DROPDOWN_KEYS.forEach(key => {
-      if(router.query[key]) {
+      if(router.query[key] && dropdownValues.find(dropdownValue=>Object.keys(dropdownValue)==key)) {
         const routerValue = router.query[key].split(', ');
         const dropdownValue = Object.values(dropdownValues.find(dropdownValue=>Object.keys(dropdownValue)==key))[0];
         const intersection = dropdownValue.filter(value => routerValue.includes(value));
@@ -138,7 +155,7 @@ export function removeMismatchedDropdown(router, dropdownValues) {
 
 export function removeMismatchedRange(router, rangeValues) {
   let columnsToBeUpdated = new Map();
-  if(router.query) {
+  if(router.query && rangeValues.length!=0) {
     // Extract filter values from query params
     NUMERIC_COLUMNS.forEach(key => {
       if(router.query[key]) {

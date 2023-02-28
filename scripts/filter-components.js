@@ -1,4 +1,4 @@
-import { DROPDOWN_KEYS, NUMERIC_COLUMNS } from "./constants";
+import { DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_DROPDOWN_VALUES, NUMERIC_COLUMNS } from "./constants";
 
 export function generateListDropdowns(data) {
     let dropdowns = [];
@@ -8,6 +8,7 @@ export function generateListDropdowns(data) {
             dropdowns.push({[col]:listOptions});
         }
     }
+    dropdowns.push({ "Ideological Grouping" : IDEOLOGICAL_GROUPING_DROPDOWN_VALUES});
     return dropdowns;
 }
 

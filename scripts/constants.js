@@ -13,6 +13,8 @@ export const TAB_NAMES = {
     "Pending cases"
 ]
 
+export const IDEOLOGICAL_GROUPING = "Ideological Grouping"
+
 export const DROPDOWN_KEYS = [
     "Date descriptor",
     "Co-offender",
@@ -22,6 +24,7 @@ export const DROPDOWN_KEYS = [
     "People vs. property",
     "Physical target",
     "Ideological target",
+    IDEOLOGICAL_GROUPING,
     "Ideological affiliation",
     "Affiliation with FTO",
     "Hate crime",
@@ -96,6 +99,14 @@ export const SCROLL_BAR_COLUMN_KEYS = [
     "Source description"
 ]
 
+export const IDEOLOGICAL_GROUPING_DROPDOWN_VALUES = [
+    "Leftist",
+    "Rightist",
+    "Nationalist Separatist",
+    "Salafi-Jihadist",
+    "Other"
+]
+
 export const LEFTIST_AFFILIATIONS = [
     "Leftist: eco-animal focused",
     "Leftist: government-focused",
@@ -125,10 +136,18 @@ export const OTHER_AFFILIATIONS = [
     "No affiliation/not a factor"
 ]
 
+export const IDEOLOGICAL_GROUPING_FILTER_VALUES = {
+    "Leftist" : LEFTIST_AFFILIATIONS,
+    "Rightist" : RIGHTIST_AFFILIATIONS,
+    "Nationalist Separatist" : NATIONALIST_SEPARATIST_AFFILIATIONS,
+    "Salafi-Jihadist" : SALAFI_JIHADIST_AFFILIATIONS,
+    "Other" : OTHER_AFFILIATIONS
+}
+
 export const TABLE_WIDTH_MAP = {
   "Date": "mobile-w-28 w-28",
-  "Date Descriptor": "w-40",
-  "Case ID": "w-52",
+  "Date descriptor": "w-40",
+  "Case ID": "w-64",
   "Group identifier": "w-40",
   "Full legal name": "mobile-w-40 w-52",
   "First name": "w-40",
@@ -169,7 +188,7 @@ export const TABLE_WIDTH_MAP = {
   "Religion": "w-36",
   "Veteran status": "w-36",
   "Combat veteran": "w-36",
-  "Service Classification": "w-44",
+  "Service classification": "w-44",
   "Citizenship status": "w-52",
   "Short narrative": "w-120",
   "Name of coder(s)": "w-64",
