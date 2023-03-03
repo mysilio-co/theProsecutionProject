@@ -2,6 +2,7 @@ import Head from 'next/head'
 import '../styles/globals.css'
 
 import 'tailwindcss/tailwind.css'
+const _ = require('lodash');
 
 function MyApp({ Component, pageProps }) {
   return <>

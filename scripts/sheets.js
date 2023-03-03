@@ -47,31 +47,15 @@ export async function getSingleSheetData(query) {
   return ret;
 }
 
-export function generateSheetsQuery(tabs, columnKeys, start, end) {
+export function generateSheetsQuery(tabs, start, end) {
   let query = [];
   const startsAwayFromTop = !!start && start!='1';
-  if(!columnKeys || columnKeys.length===0) {
-    tabs.forEach(tab => {
-      if(startsAwayFromTop) {
-        query.push(tab+'!A1:AT1');
-      }
-      query.push(tab+'!A'+start+':AT'+end);
-    })
-  }
-  else {
+  tabs.forEach(tab => {
     if(startsAwayFromTop) {
-      tabs.forEach(tab => {
-        columnKeys.forEach(key => {
-          query.push(tab+'!'+key+'1:'+key+'1');
-        })
-      })
+      query.push(tab+'!A1:AT1');
     }
-    tabs.forEach(tab => {
-      columnKeys.forEach(key => {
-        query.push(tab+'!'+key+start+':'+key+end);
-      })
-    })
-  }
+    query.push(tab+'!A'+start+':AT'+end);
+  })
   return query;
 }
 

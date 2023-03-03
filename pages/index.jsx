@@ -6,7 +6,7 @@ import useSWR from "swr";
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange, removeMismatchedDropdown, removeMismatchedRange } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange, removeMismatchedDropdown, removeMismatchedRange, filterByColumn } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
 import { addMultipleQueryParams, addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
@@ -63,16 +63,16 @@ export default function DataExplorer() {
     hasError = hasError || errorFormula;
   }
 
-  function getSheetData(tab, viewType) {
+  function getSheetData(tab) {
     const isGeneral = tab==="General" ? true : false;
-    const fouo = getChunksOfSheet('U//FOUO', viewType, '2010', tab);
-    const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases&range='+viewType : null, fetcher);
-    const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab]+'&range='+viewType : null, fetcher);
+    const fouo = getChunksOfSheet('U//FOUO', '2010', tab);
+    const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases' : null, fetcher);
+    const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab] : null, fetcher);
     updateHasError(pendingError|| nonGeneralError);
     return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
   }
 
-  function getChunksOfSheet(sheet, viewType, year, tab) {
+  function getChunksOfSheet(sheet, year, tab) {
     //shouldCall is used to determine if the call should be made using nextJS conditional fetching
     //if false, cascades down and prevents the sheets calls from being made
     const shouldCall = tab==="General" ? true : false;
@@ -80,8 +80,8 @@ export default function DataExplorer() {
     updateHasError(dateColumnError);
     const locationOfYear = dateColumn && !hasError ? findFirstOccurenceOfYear(dateColumn, year) : null;
     const lengthOfSheet = dateColumn ? dateColumn.length : null;
-    const { data: firstHalf, error: firstHalfError } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
-    const { data: secondHalf, error: secondHalfError } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&range='+viewType+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
+    const { data: firstHalf, error: firstHalfError } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
+    const { data: secondHalf, error: secondHalfError } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
     updateHasError(firstHalfError || secondHalfError);
     return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
@@ -95,6 +95,11 @@ export default function DataExplorer() {
   useEffect(() => {
     untouchedData ? setIsLoading(false) : setIsLoading(true);
   }, [dropdownValues]);
+
+  // tracks whether or not showAll is selected
+  useEffect(() => {
+    
+  }, [query.showAll]);
 
   // removes any dropdown/numeric range values that aren't applicable to current tab on tab change
   useEffect(() => {
@@ -156,13 +161,14 @@ export default function DataExplorer() {
   }, [router.isReady]);
 
   const search = query.search || "";
-  const viewType = isMobile ? "mobile" : query.showAll ? "desktop" : "express";
-  untouchedData = getSheetData(selectedTab, viewType);
+  untouchedData = getSheetData(selectedTab);
+  console.log(untouchedData);
 
   if(!!untouchedData) {
     dropdownValues = generateListDropdowns(untouchedData);
     rangeValues = generateNumericRanges(untouchedData);
-    filteredData = fuzzySearch(untouchedData, query.search, query.searchBy, isMobile);
+    filteredData = filterByColumn(untouchedData, query.showAll);
+    filteredData = fuzzySearch(filteredData, query.search, query.searchBy, isMobile);
     filteredData = filterByDropdown(filteredData, query);
     filteredData = filterByDate(filteredData, query.from, query.to);
     filteredData = filterByRange(filteredData, query);

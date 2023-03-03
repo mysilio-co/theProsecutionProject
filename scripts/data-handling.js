@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
-import { DESKTOP_COLUMN_KEYS, DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
+import { DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED, DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
 import { removeMultipleQueryParams } from "./router-handling";
 
 export function fuzzySearch(data, search, key, isMobile) {
@@ -29,6 +29,22 @@ export function fuzzySearch(data, search, key, isMobile) {
     }
   }
   return data;
+}
+
+// https://stackoverflow.com/a/39072935
+export function filterByColumn(data, showAll) {
+  if(showAll) {
+    return data;
+  }
+  else {
+    let dataCopy = _.cloneDeep(data);
+    console.log(dataCopy);
+    //https://stackoverflow.com/a/12482991
+    dataCopy.forEach(function(row, index) {
+      dataCopy[index] = _.omit(row, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED);
+    }, dataCopy);
+    return dataCopy;
+  }
 }
 
 export function sort(data, column, order) {
