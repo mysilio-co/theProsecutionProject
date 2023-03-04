@@ -8,12 +8,11 @@ import {
   import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./filters/show-all-checkbox";
-  import ShowFilterCheckbox from "./filters/show-filter-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
 import { classNames } from "../scripts/common.js";
 
-export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilter, dropdownValues, showFilterButton }) {
+export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     const isDisabled = isLoading && !hasError;

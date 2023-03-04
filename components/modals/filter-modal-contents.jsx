@@ -34,9 +34,7 @@ export default function FilterModalContents ({dropdownValues, rangeValues, isLoa
                         <div className="mt-2 p-4">
                             <div>
                             <DateFilter
-                                router={router} 
-                                isLoading={isLoading}
-                                hasError={hasError}/>
+                                router={router} />
                             </div>
                             <div>
                             <FilterDropdowns 

@@ -6,7 +6,7 @@ import useSWR from "swr";
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange, removeMismatchedDropdown, removeMismatchedRange, filterByColumn } from "../scripts/data-handling.js";
+import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange, removeMismatchedDropdown, removeMismatchedRange, filterByColumn, runAllFilters } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
 import { addMultipleQueryParams, addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
@@ -36,10 +36,10 @@ export default function DataExplorer() {
   const selectedTab = query.tab || tabs[0];
   let hasError = false;
   let untouchedData = null;
-  let filteredData = null;
-  let slicedData = null;
-  let rangeValues = [];
-  let dropdownValues = [];
+  const [rangeValues, setRangeValues] = useState([]);
+  const [dropdownValues, setDropdownValues] = useState([]);
+  let displayData = [];
+  const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
@@ -68,7 +68,7 @@ export default function DataExplorer() {
     const fouo = getChunksOfSheet('U//FOUO', '2010', tab);
     const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases' : null, fetcher);
     const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab] : null, fetcher);
-    updateHasError(pendingError|| nonGeneralError);
+    updateHasError(pendingError || nonGeneralError);
     return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
   }
 
@@ -91,15 +91,22 @@ export default function DataExplorer() {
     updateMobileState();
   }, []);
 
-  // determines if there is currently data loading
+  // filter data when any filter values are updated
   useEffect(() => {
-    untouchedData ? setIsLoading(false) : setIsLoading(true);
-  }, [dropdownValues]);
+    if(untouchedData) {
+      setDropdownValues(generateListDropdowns(untouchedData));
+      setRangeValues(generateNumericRanges(untouchedData));
+      setFilteredData(runAllFilters(untouchedData, query, isMobile));
+    }
+  }, [isLoading, query]);
 
-  // tracks whether or not showAll is selected
+  // filter data when any filter values are updated
   useEffect(() => {
-    
-  }, [query.showAll]);
+    if(!untouchedData) {
+      setIsLoading(true);
+      setFilteredData([]);
+    }
+  }, [selectedTab]);
 
   // removes any dropdown/numeric range values that aren't applicable to current tab on tab change
   useEffect(() => {
@@ -162,23 +169,13 @@ export default function DataExplorer() {
 
   const search = query.search || "";
   untouchedData = getSheetData(selectedTab);
-  console.log(untouchedData);
-
-  if(!!untouchedData) {
-    dropdownValues = generateListDropdowns(untouchedData);
-    rangeValues = generateNumericRanges(untouchedData);
-    filteredData = filterByColumn(untouchedData, query.showAll);
-    filteredData = fuzzySearch(filteredData, query.search, query.searchBy, isMobile);
-    filteredData = filterByDropdown(filteredData, query);
-    filteredData = filterByDate(filteredData, query.from, query.to);
-    filteredData = filterByRange(filteredData, query);
-    if(!!query.sortBy && !!query.order) {
-      sort(filteredData, query.sortBy, query.order);
-    } if(!!query.currentPage && !!query.numShown) {
-      slicedData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
-    } else {
-      slicedData = filteredData;
-    }
+  if(untouchedData && isLoading) {
+    setIsLoading(false);
+  }
+  if(filteredData && query.currentPage && query.numShown) {
+    displayData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
+  } else {
+    displayData = filteredData;
   }
 
   return (
@@ -246,7 +243,7 @@ export default function DataExplorer() {
       </Disclosure>
       <DataTable
         title={selectedTab}
-        data={slicedData}
+        data={displayData}
         length={!!filteredData ? filteredData.length : 0}
         router={router}
         isLoading={isLoading}

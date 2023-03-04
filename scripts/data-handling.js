@@ -3,6 +3,18 @@ import * as d3 from "d3";
 import { DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED, DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
 import { removeMultipleQueryParams } from "./router-handling";
 
+export function runAllFilters(data, query, isMobile) {
+  data = fuzzySearch(data, query.search, query.searchBy, isMobile);
+  data = filterByDropdown(data, query);
+  data = filterByDate(data, query.from, query.to);
+  data = filterByRange(data, query);
+  data = filterByColumn(data, query.showAll);
+  if(query.sortBy && query.order) {
+    data = sort(data, query.sortBy, query.order);
+  } 
+  return data;
+}
+
 export function fuzzySearch(data, search, key, isMobile) {
   if(isMobile) {
     key = !!key ? [key] : SEARCH_BY_KEYS_MOBILE;
@@ -33,12 +45,11 @@ export function fuzzySearch(data, search, key, isMobile) {
 
 // https://stackoverflow.com/a/39072935
 export function filterByColumn(data, showAll) {
-  if(showAll) {
+  if(showAll || !data) {
     return data;
   }
   else {
     let dataCopy = _.cloneDeep(data);
-    console.log(dataCopy);
     //https://stackoverflow.com/a/12482991
     dataCopy.forEach(function(row, index) {
       dataCopy[index] = _.omit(row, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED);
@@ -64,6 +75,7 @@ export function sort(data, column, order) {
         return sortByText(a[column], b[column], order);
       });
     }
+    return data;
   }
   else {
     return data;
@@ -71,7 +83,7 @@ export function sort(data, column, order) {
 }
 
 export function filterByDropdown(data, queryParams) {
-  if(queryParams) {
+  if(data && queryParams) {
     let filteredData = [];
     let filterParams = {};
     // Extract filter values from query params
@@ -103,7 +115,7 @@ export function filterByDropdown(data, queryParams) {
 }
 
 export function filterByRange(data, queryParams) {
-  if(queryParams) {
+  if(data && queryParams) {
     let filteredData = [];
     let filterParams = {};
     // Extract filter values from query params

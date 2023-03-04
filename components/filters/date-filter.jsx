@@ -6,22 +6,20 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { addAndRemoveMultipleQueryParams, addMultipleQueryParams, removeQueryParam } from "../../scripts/router-handling";
 
 
-export default function DateFilter({router, isLoading, hasError}) {
+export default function DateFilter({router}) {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
-    const isDisabled = isLoading && !hasError;
+    const [initialLoad, setInitialLoad] = useState(true);
 
     useEffect(()=>{
-        if(!isDisabled && router.query.from) {
+        if(router.query.from) {
             setStartDate(new Date(router.query.from));
         }
-    },[isDisabled])
-
-    useEffect(()=>{
-        if(!isDisabled && router.query.to) {
+        if(router.query.to) {
             setEndDate(new Date(router.query.to));
         }
-    },[isDisabled])
+        setInitialLoad(false);
+    },[])
 
     useEffect(()=>{
         if (endDate && startDate && (startDate > endDate)) {
@@ -36,7 +34,7 @@ export default function DateFilter({router, isLoading, hasError}) {
     },[endDate])
 
     useEffect(()=>{
-        if(!isDisabled) {
+        if(!initialLoad) {
             let addQueryMap = new Map([]);
             let removeQueryList = [];
             startDate ? addQueryMap.set("from", startDate.toLocaleDateString()) : removeQueryList.push("from");
@@ -46,13 +44,13 @@ export default function DateFilter({router, isLoading, hasError}) {
     }, [startDate, endDate])
 
     useEffect(()=>{
-        if(!isDisabled && !router.query.from) {
+        if(router.query && !router.query.from) {
             setStartDate("");
         }
     },[router.query.from])
 
     useEffect(()=>{
-        if(!isDisabled && !router.query.to) {
+        if(router.query && !router.query.to) {
             setEndDate("");
         }
     },[router.query.to])
