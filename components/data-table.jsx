@@ -47,13 +47,14 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
               Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
             </p>
             <div className="md:flex md:justify-between items-center mt-6">
-              <div className="flex">
+              <div className="flex items-center">
                 <p className="text-lg font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
-                {showFilterButton()}
+                {!isMobile ? showFilterButton(): ""}
                 {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError}/>: ""}
               </div>
+              {isMobile ? showFilterButton(): ""}
               <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
                 Reset Search
               </button>

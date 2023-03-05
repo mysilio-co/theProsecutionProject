@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { format } from 'date-fns'
 import 'react-datepicker/dist/react-datepicker.css'
-import { addAndRemoveMultipleQueryParams, addMultipleQueryParams, removeQueryParam } from "../../scripts/router-handling";
+import { addAndRemoveMultipleQueryParams } from "../../scripts/router-handling";
 
 
 export default function DateFilter({router}) {
@@ -57,10 +57,10 @@ export default function DateFilter({router}) {
 
     return (
         <div className="py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <div className="relative px-4">
+            <div className="relative pb-4 md:pb-0 px-4">
                 <div className="flex items-end">
                     <div className="">
-                    <label className="block text-sm pr-2 font-medium text-gray-400">From</label>
+                    <label className="block text-start text-sm pr-2 font-medium text-gray-400">From</label>
                     <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
@@ -111,7 +111,7 @@ export default function DateFilter({router}) {
                         )}
                     />
                     </div>
-                    <button onClick={()=>setStartDate("")} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 max-h-10 bg-gray-800 w-full hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
+                    <button onClick={()=>setStartDate("")} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 max-h-10 bg-gray-800 w-full hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 ml-2 rounded">
                         Clear
                     </button>
                 </div>
@@ -119,7 +119,7 @@ export default function DateFilter({router}) {
             <div className="relative px-4">
                 <div className="flex items-end">
                     <div className="">
-                        <label className="block text-sm pr-2 font-medium text-gray-400">To</label>
+                        <label className="block text-start text-sm pr-2 font-medium text-gray-400">To</label>
                         <DatePicker
                             selected={endDate}
                             onChange={(date) => setEndDate(date)}
@@ -171,7 +171,7 @@ export default function DateFilter({router}) {
                             )}
                         />
                     </div>
-                    <button onClick={()=>setEndDate()} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full max-h-10 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 rounded">
+                    <button onClick={()=>setEndDate()} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full max-h-10 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 ml-2 rounded">
                         Clear
                     </button>
                 </div>
