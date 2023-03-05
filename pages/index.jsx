@@ -55,8 +55,19 @@ export default function DataExplorer() {
     )
   }
 
-  function updateMobileState() {
-    setIsMobile(window.innerWidth<768 ? true : false);
+  function updateIsMobileState() {
+    if(typeof window !== "undefined") {
+      const isMobileWidth = window.innerWidth<768;
+      if(isMobileWidth != isMobile) {
+        setIsMobile(isMobileWidth);
+      }
+    }
+  }
+
+  function updateIsLoadingState() {
+    if(untouchedData && isLoading) {
+      setIsLoading(false);
+    }
   }
 
   function updateHasError(errorFormula) {
@@ -85,11 +96,6 @@ export default function DataExplorer() {
     updateHasError(firstHalfError || secondHalfError);
     return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
-  
-  // determines if the screen is below mobile width on page load
-  useEffect(() => {
-    updateMobileState();
-  }, []);
 
   // filter data when any filter values are updated
   useEffect(() => {
@@ -169,9 +175,9 @@ export default function DataExplorer() {
 
   const search = query.search || "";
   untouchedData = getSheetData(selectedTab);
-  if(untouchedData && isLoading) {
-    setIsLoading(false);
-  }
+  updateIsLoadingState();
+  updateIsMobileState();
+
   if(filteredData && query.currentPage && query.numShown) {
     displayData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
   } else {
