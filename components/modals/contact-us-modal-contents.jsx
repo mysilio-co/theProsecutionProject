@@ -15,16 +15,37 @@ export default function ContactUsModalContents ({setShowModal}) {
                         Contact Us
                     </Dialog.Title>
                     <div className="mt-2 p-4">
-                        <p className="text-sm text-gray-500">
-                        Some text here about the correct way to cite us, I'm not at all sure what the copy should look like so I'll leave that up to that professionals. 
-                        Can also include that it's downloaded in CSV format with a quick description of what that means.
-                        </p>
-                        <p className="my-3 text-sm text-gray-500 italic">
-                        This is the, correct citation, format
+                        <h3>Want to get in touch?</h3>
+                        <p className="pt-3 text-sm text-gray-500">
+                            Documents, media requests and other inquiries should be sent to us via the project Director, <a href="mailto:michael@theprosecutionproject.org">Dr. Michael Loadenthal (michael@theprosecutionproject.org)</a>
                         </p>
                         <p className="my-3 text-sm text-gray-500">
-                        Clicking "I Accept" means you acknowledge this or something like that
+                            If you are interested in acquiring tPP’s data, please visit our <a href="https://theprosecutionproject.org/data-requests/" target="_blank">Data Requests</a> page for more information.
                         </p>
+                        <p className="my-3 text-sm text-gray-500">
+                            If you are interested in joining the tPP team, please visit our <a href="https://theprosecutionproject.org/want-to-join-our-team/" target="_blank">Join Our Team</a> page and fill out the application!
+                        </p>
+                        <h4 className='pt-3'>Hit us up on Social Media!</h4>
+                        <div className="flex-1 px-2 pt-3 flex items-center justify-center md:justify-start sm:inset-0">
+                            <div className="mr-5">
+                                <a href="https://twitter.com/ProsecutionProj" target="_blank">
+                                    <img
+                                    className="block h-10"
+                                    src="/twitter_color.png"
+                                    alt="twitter logo"
+                                    />
+                                </a>
+                                </div>
+                                <div className="mx-5">
+                                <a href="https://www.linkedin.com/company/the-prosecution-project/" target="_blank">
+                                    <img
+                                    className="block h-10"
+                                    src="/linkedin_color.png"
+                                    alt="linkedin logo"
+                                    />
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

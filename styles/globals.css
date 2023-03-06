@@ -36,6 +36,14 @@
     z-index: 5 !important;
   }
 
+  .react-datepicker__input-container > input {
+    width: 100% !important;
+  }
+
+  .h-42px {
+    height: 42px;
+  }
+
   .w-28 {
     width: 7rem;
   }

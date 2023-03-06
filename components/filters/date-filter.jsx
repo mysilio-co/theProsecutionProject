@@ -56,28 +56,28 @@ export default function DateFilter({router}) {
     },[router.query.to])
 
     return (
-        <div className="py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="py-5 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             <div className="relative pb-4 md:pb-0 px-4">
                 <div className="flex items-end">
-                    <div className="">
-                    <label className="block text-start text-sm pr-2 font-medium text-gray-400">From</label>
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        selectsStart
-                        startDate={startDate}
-                        endDate={endDate}
-                        nextMonthButtonLabel=">"
-                        previousMonthButtonLabel="<"
-                        popperClassName="react-datepicker-left"
-                        placeholderText="Start Date"
-                        renderCustomHeader={({
-                            date,
-                            decreaseMonth,
-                            increaseMonth,
-                            prevMonthButtonDisabled,
-                            nextMonthButtonDisabled,
-                        }) => (
+                    <div className="basis-2/3 lg:basis-1/2">
+                        <label className="block text-start text-sm pr-2 font-medium text-gray-400">From</label>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            nextMonthButtonLabel=">"
+                            previousMonthButtonLabel="<"
+                            popperClassName="react-datepicker-left"
+                            placeholderText="Start Date"
+                            renderCustomHeader={({
+                                date,
+                                decreaseMonth,
+                                increaseMonth,
+                                prevMonthButtonDisabled,
+                                nextMonthButtonDisabled,
+                            }) => (
                             <div className="flex items-center justify-between px-2 py-2">
                                 <span className="text-lg text-gray-700">
                                     {format(date, 'MMMM yyyy')}
@@ -111,14 +111,14 @@ export default function DateFilter({router}) {
                         )}
                     />
                     </div>
-                    <button onClick={()=>setStartDate("")} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 max-h-10 bg-gray-800 w-full hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 ml-2 rounded">
+                    <button onClick={()=>setStartDate("")} className="mt-4 md:mt-0 h-42px bg-gray-800 basis-1/3 w-full hover:bg-gray-500 active:bg-gray-700 text-white text-base py-2 px-4 ml-2 rounded">
                         Clear
                     </button>
                 </div>
             </div>
             <div className="relative px-4">
                 <div className="flex items-end">
-                    <div className="">
+                    <div className="basis-2/3 lg:basis-1/2">
                         <label className="block text-start text-sm pr-2 font-medium text-gray-400">To</label>
                         <DatePicker
                             selected={endDate}
@@ -171,7 +171,7 @@ export default function DateFilter({router}) {
                             )}
                         />
                     </div>
-                    <button onClick={()=>setEndDate()} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full max-h-10 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white py-2 px-4 ml-2 rounded">
+                    <button onClick={()=>setEndDate()} className="mt-4 md:mt-0 basis-1/3 w-full h-42px bg-gray-800 hover:bg-gray-500 active:bg-gray-700 text-white text-base py-2 px-4 ml-2 rounded">
                         Clear
                     </button>
                 </div>

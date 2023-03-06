@@ -211,8 +211,8 @@ function sortByDate(columnA, columnB, order) {
 }
 
 function sortByNumber(columnA, columnB, order) {
-  columnA = Number(columnA.replaceAll(',', ''));
-  columnB = Number(columnB.replaceAll(',', ''));
+  columnA = Number(columnA?.replaceAll(',', ''));
+  columnB = Number(columnB?.replaceAll(',', ''));
   if(!columnA) {
     columnA = -1;
   }
