@@ -41,7 +41,7 @@ export default function DownloadModalContents({data, setShowModal}) {
             </div>
             </div>
             <div className="bg-gray-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <a href={createExportUrl()} download={createFileName()} className='ml-3 no-underline hover:no-underline focus:no-underline'>
+            <a href={createExportUrl()} download={createFileName()} className='ml-0 sm:ml-3 no-underline hover:no-underline focus:no-underline'>
             <button
                 type="button"
                 className="inline-flex w-full justify-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm"

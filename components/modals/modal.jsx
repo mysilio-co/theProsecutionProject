@@ -24,7 +24,7 @@ export default function Modal({innerComponent, showModal, setShowModal}) {
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto my-10">
-            <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0 mx-0 md:mx-20 xl:mx-30">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"

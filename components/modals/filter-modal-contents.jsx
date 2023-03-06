@@ -24,7 +24,7 @@ export default function FilterModalContents ({dropdownValues, rangeValues, isLoa
     }
 
     return (
-        <Dialog.Panel ref={contentRef} className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6 max-w-11/12">
+        <Dialog.Panel ref={contentRef} className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6">
             <div className="bg-white pt-0 pb-4 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                     <div className="mt-0 text-center sm:text-left">
@@ -32,19 +32,26 @@ export default function FilterModalContents ({dropdownValues, rangeValues, isLoa
                             Filter Data
                         </Dialog.Title>
                         <div className="mt-2 p-4">
-                            <div>
-                            <DateFilter
-                                router={router} />
+                            <div className="">
+                                <h4 className="mx-4">Filter By Date</h4>
+                                <p className="mx-4">Filter data by the date in which the incident occurred. The "From" box ensures the incident will have occurred on or after the date specified and the "To" box ensures it will be on or before the date specified. Dates can be selected by clicking the desired date on the calendar popup or typed out in MM/DD/YYYY format and can be removed by clicking the "Clear" button.</p>
+                                <DateFilter
+                                    router={router} />
                             </div>
-                            <div>
-                            <FilterDropdowns 
-                                values={dropdownValues} 
-                                router={router} 
-                                isLoading={isLoading}
-                                hasError={hasError}
-                                /> 
+                            <div className="mt-8">
+                                <h4 className="mx-4">Filter By Dropdown</h4>
+                                <p className="mx-4">Filter data by the variable specified. Click the variable you would like to filter on and select the values you want to be shown. Multiple values can be selected and values can be deselected by clicking on them a second time.</p>
+                                <FilterDropdowns
+                                    values={dropdownValues} 
+                                    router={router} 
+                                    isLoading={isLoading}
+                                    hasError={hasError}
+                                    /> 
                             </div>
-                            <div>
+                            <div className="mt-12">
+                                <h4 className="mx-4">Filter By Range</h4>
+                                <p className="mx-4">Filter data by the value of a numeric variable. Click the toggle associated with the variable to activate it. Values can be selected by dragging the slider (desktop only), typing the number into the text box, or clicking the arrows next to the text box to increase/decrease.</p>
+                                <p className="mx-4">NOTE: Activating a variable will automatically remove any data that has an empty value for the selected variable.</p>
                             <FilterRanges
                                 values={rangeValues}
                                 router={router}
