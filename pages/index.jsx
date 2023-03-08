@@ -193,9 +193,9 @@ export default function DataExplorer() {
             <Modal showModal={showModal} setShowModal={setShowModal}
               innerComponent={currentModal} 
             />
-            <div className="max-w-7xl mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
+            <div className="max-w-7xl flex-row justify-center mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
               <div className="relative md:h-16 flex flex-col md:flex-row">
-                <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-20 lg:mr-40">
+                <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-10 lg:mr-20">
                   <div className="flex-shrink-0 flex items-center">
                     <img
                       className="block h-12 md:h-8 w-auto"
@@ -205,14 +205,14 @@ export default function DataExplorer() {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <div className="flex py-2 md:py-0 items-center md:mr-20 lg:mr-30">
+                  <div className="flex py-2 md:py-0 items-center md:mr-5 lg:mr-10">
                     <BasicSearch router={router} search={search}/>
                   </div>
                   <div className="flex py-2 pb-5 md:py-0 items-center">
                     <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
                   </div>
                   <button onClick={()=>{setShowModal(true); setCurrentModal(<FAQModalContents setShowModal={setShowModal}/>)}} className="mt-8 h-10 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-                    FAQ
+                    How To Use
                   </button>
                   <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 h-10 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
                     Contact Us

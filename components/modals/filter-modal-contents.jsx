@@ -40,7 +40,7 @@ export default function FilterModalContents ({dropdownValues, rangeValues, isLoa
                             </div>
                             <div className="mt-8">
                                 <h4 className="mx-4 text-start pb-2">Filter By Dropdown</h4>
-                                <p className="mx-4 text-start">Filter data by the variable specified. Click the variable you would like to filter on and select the values you want to be shown. Multiple values can be selected and values can be deselected by clicking on them a second time.</p>
+                                <p className="mx-4 text-start">Filter data by the variable specified. Click the variable you would like to filter on and select the values you want to be shown. Multiple values can be selected and values can be deselected by clicking on them a second time. Variables are sorted alphabetically.</p>
                                 <FilterDropdowns
                                     values={dropdownValues} 
                                     router={router} 

@@ -4,18 +4,25 @@ import {
     ChevronUpDownIcon
   } from "@heroicons/react/20/solid";
 
-  import FilterDropdowns from './filters/filter-dropdowns.jsx';
-  import { addQueryParam, removeQueryParam, setSortingParams } from "../scripts/router-handling";
+  import {
+    QuestionMarkCircleIcon
+  } from "@heroicons/react/24/outline";
+
+  import { setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./filters/show-all-checkbox";
   import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
 import { classNames } from "../scripts/common.js";
+import { useState } from "react";
+import { CODEBOOK } from "../scripts/codebook";
 
 export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     const isDisabled = isLoading && !hasError;
+    const [showColumnDescription, setShowColumnDescription] = useState(false);
+    const [columnDescription, setColumnDescription] = useState("");
     
     function resetUrl() {
       const tab = router.query.tab ? router.query.tab : Object.keys(TAB_NAMES)[0];
@@ -48,6 +55,9 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             </p>
             <div className="md:flex md:justify-between items-center mt-6">
               <div className="flex items-center">
+              <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0'), "absolute bg-white text-sm text-gray-700 border border-gray-400 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
+                {columnDescription + ": " + CODEBOOK[columnDescription]}
+              </p>
                 <p className="text-lg font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
@@ -79,13 +89,22 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                       </th>
                       {headers &&
                         headers.map((h) => (
+                          
                           <th
                             scope="col"
-                            className={classNames(TABLE_WIDTH_MAP[h], "py-3.5 pl-3 pr-2 text-left text-xs md:text-sm font-semibold text-gray-900")}
+                            className={classNames(TABLE_WIDTH_MAP[h], (router.query.sortBy===h ? 'bg-slate-200' : ''), "py-3.5 pl-3 pr-2 text-left text-xs md:text-sm font-semibold text-gray-900")}
                             key={h}
                           >
                             <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex text-gray-800 hover:text-gray-800 hover:no-underline">
-                              <p className={(router.query.sortBy===h ? 'bg-slate-400' : '') + " px-1 rounded"}>{h}</p>
+                            <span className="flex items-center rounded text-gray-400 group-hover:visible group-focus:visible"
+                                onMouseOver={()=>{ setColumnDescription(h); setShowColumnDescription(true); }}
+                                onMouseLeave={()=>{ setShowColumnDescription(false); }}>
+                                <QuestionMarkCircleIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </span>
+                              <p className={"px-1 rounded"}>{h}</p>
                               {router.query.sortBy!=h ? (
                                 <span className="ml-2 flex items-center rounded text-gray-400 group-hover:visible group-focus:visible">
                                   <ChevronUpDownIcon

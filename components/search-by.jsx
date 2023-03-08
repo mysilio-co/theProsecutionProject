@@ -39,7 +39,7 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading, has
         <Listbox value={ searchBy} onChange={setSearchBy} disabled={isDisabled}>
             {({ open }) => (
                 <>
-                <Listbox.Label className="block text-sm pl-0 md:pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
+                <Listbox.Label className="block text-sm w-24 pl-0 md:pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
                 <div className="relative mt-1">
                     <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-40 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     <span className="flex items-center">
