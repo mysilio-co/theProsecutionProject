@@ -34,8 +34,8 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading, has
     },[router.query.searchBy])
     
     return (
-        <div className="relative z-10 flex-1 px-2 flex items-center justify-center sm:inset-0">
-        <div className="w-full sm:max-w-xs md:inline-flex md:items-center md:justify-center">
+        <div className="relative w-full z-10 flex-1 px-2 flex items-center justify-center sm:inset-0">
+        <div className="w-full md:inline-flex md:items-center md:justify-center">
         <Listbox value={ searchBy} onChange={setSearchBy} disabled={isDisabled}>
             {({ open }) => (
                 <>

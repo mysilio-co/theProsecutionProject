@@ -100,7 +100,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                                 onMouseOver={()=>{ setColumnDescription(h); setShowColumnDescription(true); }}
                                 onMouseLeave={()=>{ setShowColumnDescription(false); }}>
                                 <QuestionMarkCircleIcon
-                                  className="h-5 w-5"
+                                  className={classNames(isMobile ? "hidden" : "block", "h-5 w-5")}
                                   aria-hidden="true"
                                 />
                               </span>

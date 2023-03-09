@@ -204,19 +204,13 @@ export default function DataExplorer() {
                     />
                   </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex-row md:flex items-center">
                   <div className="flex py-2 md:py-0 items-center md:mr-5 lg:mr-10">
                     <BasicSearch router={router} search={search}/>
                   </div>
                   <div className="flex py-2 pb-5 md:py-0 items-center">
                     <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
                   </div>
-                  <button onClick={()=>{setShowModal(true); setCurrentModal(<FAQModalContents setShowModal={setShowModal}/>)}} className="mt-8 h-10 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-                    How To Use
-                  </button>
-                  <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 h-10 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-                    Contact Us
-                  </button>
                 </div>
               </div>
               <nav
@@ -264,6 +258,12 @@ export default function DataExplorer() {
           <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             Download Data
           </button>
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<FAQModalContents setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            How To Use
+          </button>
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            Contact Us
+          </button>
         </div>
       </div>
       <div className="flex-1 px-2 pt-6 pb-3 flex items-center justify-center sm:inset-0 bg-gray-800">
@@ -277,7 +277,7 @@ export default function DataExplorer() {
           </a>
         </div>
       </div>
-      <div className="flex-1 px-2 pt-12 md:pt-3 pb-12 md:pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+      {/* <div className="flex-1 px-2 pt-12 md:pt-3 pb-12 md:pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="mx-5">
           <a href="mailto:michael@theprosecutionproject.org" target="_blank">
             <img
@@ -305,7 +305,7 @@ export default function DataExplorer() {
             />
           </a>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

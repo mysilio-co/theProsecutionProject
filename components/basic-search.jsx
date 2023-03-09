@@ -11,7 +11,7 @@ function updateSearchQueryParam(e, router) {
 export default function BasicSearch({router, search}) {
     return (
         <div className="relative z-0 flex-1 px-2 flex items-center justify-center lg:justify-start sm:inset-0">
-            <div className="w-full">
+            <div className="w-full md:w-96">
                 <label htmlFor="search" className="sr-only">
                 Search
                 </label>
