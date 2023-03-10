@@ -14,7 +14,7 @@ import ResultsPerPage from "../components/results-per-page.jsx";
 import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS, SEARCH_BY_KEYS, DROPDOWN_KEYS } from "../scripts/constants.js";
 import Modal from "../components/modals/modal.jsx";
 import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
-import FAQModalContents from "../components/modals/faq-modal-contents.jsx";
+import HowToModalContents from "../components/modals/how-to-modal-contents.jsx";
 import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
 import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
 import { classNames } from "../scripts/common.js";
@@ -255,13 +255,13 @@ export default function DataExplorer() {
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
           <ResultsPerPage router={router} length={!!filteredData ? filteredData.length : 0} isLoading={isLoading} hasError={hasError}/>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             Download Data
           </button>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<FAQModalContents setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             How To Use
           </button>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             Contact Us
           </button>
         </div>

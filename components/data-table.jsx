@@ -55,10 +55,10 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             </p>
             <div className="md:flex md:justify-between items-center mt-6">
               <div className="flex items-center">
-              <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
+              <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute left-8 right-8 bg-white font-semibold text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
                 {columnDescription + ": " + CODEBOOK[columnDescription]}
               </p>
-                <p className="text-lg font-semibold text-gray-700">
+                <p className="text-lg m-0 font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
                 {!isMobile ? showFilterButton(): ""}

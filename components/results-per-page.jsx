@@ -114,7 +114,7 @@ export default function ResultsPerPage({router, length, isLoading, hasError}) {
                     </Listbox.Options>
                     </Transition>
                 </div>
-                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-16 font-medium text-gray-400"> of {maxPages==0 ? 1 : maxPages}</Listbox.Label>
+                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-4 lg:pr-12 xl:pr-16 font-medium text-gray-400"> of {maxPages==0 ? 1 : maxPages}</Listbox.Label>
                 </>
             )}
         </Listbox>

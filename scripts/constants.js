@@ -13,6 +13,13 @@ export const TAB_NAMES = {
     "Pending cases"
 ]
 
+export const HOW_TO_TABS = [
+    "Functions",
+    "Quickstart",
+    "In Depth",
+    "Codebook"
+]
+
 export const IDEOLOGICAL_GROUPING = "Ideological Grouping"
 
 export const DROPDOWN_KEYS = [
