@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 import { Dialog } from '@headlessui/react'
 import DateFilter from '../filters/date-filter';
 import FilterRanges from '../filters/filter-ranges';
-import { generateListDropdowns, generateNumericRanges } from '../../scripts/filter-components';
 import FilterDropdowns from '../filters/filter-dropdowns';
 import { useRouter } from 'next/router';
 

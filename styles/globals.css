@@ -40,6 +40,10 @@
     width: 100% !important;
   }
 
+  .w-80vw {
+    width: 80vw;
+  }
+
   .h-42px {
     height: 42px;
   }

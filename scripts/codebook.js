@@ -7,3 +7,8 @@ export const CODEBOOK = {
     "Length of prison sentence":"How many months was the defendant sentenced to serve in prison?",
     "Short narrative":"Short narrative of the case which provides the reader with enough information that they can understand why the case is included, what transpired, and the basic facts of the defendant’s prosecution."
 }
+
+export const CODEBOOK_SORTING = [
+    "Order Shown",
+    "Alphabetical"
+]
