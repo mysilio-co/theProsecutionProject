@@ -22,7 +22,6 @@ export default function Modal({innerComponent, showModal, setShowModal}) {
           >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </Transition.Child>
-
           <div className="fixed inset-0 z-10 overflow-y-auto my-10">
             <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0 mx-0 md:mx-20 xl:mx-30">
               <Transition.Child
@@ -33,6 +32,7 @@ export default function Modal({innerComponent, showModal, setShowModal}) {
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                className="w-full"
               >
               <div>
                 {innerComponent}

@@ -12,3 +12,10 @@ export const CODEBOOK_SORTING = [
     "Order Shown",
     "Alphabetical"
 ]
+
+class CodebookEntry {
+    constructor(description, examples) {
+        this.description = description;
+        this.examples = examples;
+    }
+}
