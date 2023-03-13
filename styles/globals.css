@@ -48,6 +48,10 @@
     height: 42px;
   }
 
+  .w-screen {
+    width: 100vw;
+  }
+
   .w-28 {
     width: 7rem;
   }
@@ -89,6 +93,10 @@
   }
 
   @media screen and (max-width: 768px) {
+    .mobile-w-screen {
+      width: 100vw;
+    }
+
     .mobile-w-28 {
       width: 7rem;
     }

@@ -197,7 +197,7 @@ export const TABLE_WIDTH_MAP = {
   "Combat veteran": "w-36",
   "Service classification": "w-44",
   "Citizenship status": "w-52",
-  "Short narrative": "w-120",
+  "Short narrative": "mobile-w-screen w-120",
   "Name of coder(s)": "w-64",
   "Source description": "w-96",
   "Audited": "w-52",

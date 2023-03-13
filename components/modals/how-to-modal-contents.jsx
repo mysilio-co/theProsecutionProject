@@ -26,7 +26,7 @@ export default function HowToModalContents ({setShowModal}) {
         <Dialog.Panel ref={contentRef} className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8">
             <div className="bg-white pt-0">
                 <div className="sm:flex sm:items-start">
-                    <div className="mt-0 text-center sm:text-left">
+                    <div className="mt-0 text-center sm:text-left w-full">
                         <Dialog.Title ref={titleRef} as="h3" className="p-4 bg-gray-800 text-lg font-medium leading-6 text-white">
                             How To Use
                         </Dialog.Title>
