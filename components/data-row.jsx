@@ -25,7 +25,7 @@ export default function DataRow({row, headers, currentIndex, idx}) {
                 }
 
             )}
-            <td className="w-8 pl-1 py-3 md:py-2 text-xs md:text-sm text-gray-600">
+            <td className="w-8 pl-1 mr-2 py-3 md:py-2 text-xs md:text-sm text-gray-600">
                 {collapseNarrative ? 
                 <PlusCircleIcon 
                 onClick={()=>setCollapseNarrative(false)}
