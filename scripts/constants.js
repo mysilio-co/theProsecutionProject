@@ -99,7 +99,6 @@ export const ORDER_BY_KEYS = [
 
 export const SCROLL_BAR_COLUMN_KEYS = [
     "Charges",
-    "Short narrative", 
     "Additional details",
     "Case ID",
     "Group identifier",

@@ -5,7 +5,9 @@ import {
   } from "@heroicons/react/20/solid";
 
   import {
-    QuestionMarkCircleIcon
+    QuestionMarkCircleIcon,
+    PlusCircleIcon,
+    MinusCircleIcon
   } from "@heroicons/react/24/outline";
 
   import { setSortingParams } from "../scripts/router-handling";
@@ -16,6 +18,7 @@ import {
 import { classNames } from "../scripts/common.js";
 import { useState } from "react";
 import { CODEBOOK } from "../scripts/codebook";
+import DataRow from "./data-row";
 
 export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);
@@ -136,19 +139,8 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {data &&
                       data.map((row, idx) => (
-                        <tr
-                          key={idx}
-                          className={classNames(idx % 2 === 0 ? undefined : "bg-gray-200", "flex hover:bg-stone-100 items-center")}
-                        >
-                          <td className="w-14 pl-4 py-3 md:py-2 text-xs md:text-sm text-gray-600">{currentIndex+idx}</td>
-                          {headers.map((h) => (
-                            <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) ? "whitespace-nowrap overflow-x-auto " : undefined, "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-600")} 
-                                key={h}>
-                              {row[h]}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
+                        <DataRow row={row} headers={headers} currentIndex={currentIndex} idx={idx}/>
+                    ))}
                   </tbody>
                 </table>
                 <Spinner display={isLoading}></Spinner>
