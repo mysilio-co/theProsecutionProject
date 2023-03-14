@@ -1,10 +1,15 @@
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { classNames } from "../scripts/common";
 import { SCROLL_BAR_COLUMN_KEYS, TABLE_WIDTH_MAP } from "../scripts/constants";
 
-export default function DataRow({row, headers, currentIndex, idx}) {
+export default function DataRow({row, headers, router, currentIndex, idx}) {
     const [collapseNarrative, setCollapseNarrative] = useState(true);
+
+    useEffect(()=>{
+        setCollapseNarrative(true);
+    },[router.query])
+
     return (
         <tr
             key={currentIndex+idx}

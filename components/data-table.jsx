@@ -5,20 +5,18 @@ import {
   } from "@heroicons/react/20/solid";
 
   import {
-    QuestionMarkCircleIcon,
-    PlusCircleIcon,
-    MinusCircleIcon
+    QuestionMarkCircleIcon
   } from "@heroicons/react/24/outline";
 
   import { setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./filters/show-all-checkbox";
-  import { TABLE_WIDTH_MAP, SCROLL_BAR_COLUMN_KEYS, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
+  import { TABLE_WIDTH_MAP, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
-import { classNames } from "../scripts/common.js";
-import { useState } from "react";
-import { CODEBOOK } from "../scripts/codebook";
-import DataRow from "./data-row";
+  import { classNames } from "../scripts/common.js";
+  import { useState } from "react";
+  import { CODEBOOK } from "../scripts/codebook";
+  import DataRow from "./data-row";
 
 export default function DataTable({ title, data, length, router, isLoading, isMobile, hasError, showFilterButton }) {
     const headers = data && data[0] && Object.keys(data[0]);
@@ -139,7 +137,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {data &&
                       data.map((row, idx) => (
-                        <DataRow row={row} headers={headers} currentIndex={currentIndex} idx={idx}/>
+                        <DataRow row={row} headers={headers} router={router} currentIndex={currentIndex} idx={idx}/>
                     ))}
                   </tbody>
                 </table>

@@ -10,7 +10,7 @@ export const CODEBOOK = {
 
 export const CODEBOOK_SORTING = [
     "Order Shown",
-    "Alphabetical"
+    "A-Z"
 ]
 
 class CodebookEntry {
