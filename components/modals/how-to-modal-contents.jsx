@@ -7,7 +7,7 @@ import HowToQuickstart from './how-to-tabs/how-to-quickstart';
 import HowToDepth from './how-to-tabs/how-to-depth';
 import HowToCodebook from './how-to-tabs/how-to-codebook';
 
-export default function HowToModalContents ({setShowModal}) {
+export default function HowToModalContents ({setShowModal, router}) {
 
     const contentRef = useRef();
     const titleRef = useRef();
@@ -28,11 +28,11 @@ export default function HowToModalContents ({setShowModal}) {
                 <div className="sm:flex sm:items-start">
                     <div className="mt-0 text-center sm:text-left w-full">
                         <Dialog.Title ref={titleRef} as="h3" className="p-4 bg-gray-800 text-lg font-medium leading-6 text-white">
-                            How To Use
+                            User Manual
                         </Dialog.Title>
                         <div className="bg-gray-800 border-t border-gray-700">
                             <nav
-                                className="md:py-2 md:flex md:space-x-8"
+                                className="px-2 md:py-2 md:flex md:space-x-8"
                                 aria-label="Global"
                             >
                             {HOW_TO_TABS.map((tab) => (
@@ -57,8 +57,8 @@ export default function HowToModalContents ({setShowModal}) {
                             </nav>
                         </div>
                         {selectedTab==="Functions" ? <HowToFunctions/> : ""}
-                        {selectedTab==="Quickstart" ? <HowToQuickstart/> : ""}
-                        {selectedTab==="In Depth" ? <HowToDepth/> : ""}
+                        {selectedTab==="Quickstart" ? <HowToQuickstart router={router}/> : ""}
+                        {/* {selectedTab==="In Depth" ? <HowToDepth/> : ""} */}
                         {selectedTab==="Codebook" ? <HowToCodebook/> : ""}
                         <div className="bg-gray-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                             <button

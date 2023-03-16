@@ -127,7 +127,7 @@ export function filterByRange(data, queryParams) {
     filteredData = data.filter(row => {
       let matchCount = 0;
       Object.keys(filterParams).forEach(key=> {
-        const rowValue = Number(row[key]?.replaceAll(',',''));
+        const rowValue = row[key] ? Number(row[key]?.replaceAll(',','')) : undefined;
         if((rowValue || rowValue==0) && rowValue>=filterParams[key][0] && rowValue<=filterParams[key][1]) {
           matchCount++;
         }

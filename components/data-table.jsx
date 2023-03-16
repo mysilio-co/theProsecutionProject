@@ -24,6 +24,8 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
     const isDisabled = isLoading && !hasError;
     const [showColumnDescription, setShowColumnDescription] = useState(false);
     const [columnDescription, setColumnDescription] = useState("");
+    const [showViewDescription, setShowViewDescription] = useState(false);
+
     
     function resetUrl() {
       const tab = router.query.tab ? router.query.tab : Object.keys(TAB_NAMES)[0];
@@ -56,14 +58,17 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             </p>
             <div className="md:flex md:justify-between items-center mt-6">
               <div className="flex items-center">
-              <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute left-8 right-8 bg-white font-semibold text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
-                {columnDescription + ": " + CODEBOOK[columnDescription]}<br/><br/>Learn more by visiting the Codebook tab in the How To Use modal at the bottom of the page
+              <p className={classNames((showViewDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute -translate-y-20 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
+                Only the 7 most important variables are shown initially to make viewing easier. Activate the toggle to show all variables.<br/>Note: This option is not available on mobile.
+              </p>
+              <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute -translate-y-10 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
+                <span className="font-semibold">{columnDescription}</span>{": " + CODEBOOK[columnDescription]}<br/>Learn more by visiting the Codebook tab in the User Manual modal at the bottom of the page
               </p>
                 <p className="text-lg m-0 font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
                 {!isMobile ? showFilterButton(): ""}
-                {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError}/>: ""}
+                {!isMobile ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError} setShowViewDescription={setShowViewDescription} /> : ""}
               </div>
               {isMobile ? showFilterButton(): ""}
               <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
@@ -96,8 +101,8 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
                             className={classNames(TABLE_WIDTH_MAP[h], (router.query.sortBy===h ? 'bg-slate-200' : ''), "py-3.5 pl-3 pr-2 text-left text-xs md:text-sm font-semibold text-gray-900")}
                             key={h}
                           >
-                            <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex text-gray-800 hover:text-gray-800 hover:no-underline">
-                            <span className="flex items-center rounded text-gray-400 group-hover:visible group-focus:visible"
+                            <a onClick={() => {setSortingParams(h, router);}} className="group cursor-pointer inline-flex items-center text-gray-800 hover:text-gray-800 hover:no-underline">
+                              <span className="flex items-center rounded text-gray-400 group-hover:visible group-focus:visible"
                                 onMouseOver={()=>{ setColumnDescription(h); setShowColumnDescription(true); }}
                                 onMouseLeave={()=>{ setShowColumnDescription(false); }}>
                                 <QuestionMarkCircleIcon

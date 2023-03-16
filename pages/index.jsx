@@ -258,8 +258,8 @@ export default function DataExplorer() {
           <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             Download Data
           </button>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-            How To Use
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal} router={router}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            User Manual
           </button>
           <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
             Contact Us

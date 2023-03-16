@@ -9,7 +9,7 @@ export const CODEBOOK = {
 }
 
 export const CODEBOOK_SORTING = [
-    "Order Shown",
+    "Table View",
     "A-Z"
 ]
 

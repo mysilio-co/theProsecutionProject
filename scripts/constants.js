@@ -16,7 +16,6 @@ export const TAB_NAMES = {
 export const HOW_TO_TABS = [
     "Functions",
     "Quickstart",
-    "In Depth",
     "Codebook"
 ]
 

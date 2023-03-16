@@ -20,6 +20,7 @@ export default function HowToCodebook() {
     return (
         <div>
             <Listbox value={selected} onChange={setSelected}>
+                <p className="mt-4 mx-6 text-start">This modal reflects the qualitative coding rules for The Prosecution Project (tPP). The Codebook outlines the variables that constitute tPP and defines the possible values for these variables.The Codebook is maintained by Dr. Michael Loadenthal and members of tPP Leadership Team (tPPLT). More information about the purpose of the project and case inclusion criteria can be found in the tPP Manual.</p>
                 <div className="mt-4 w-40 mx-6 text-start">
                     <div className="w-40">
                         <Listbox.Label className="">Sort by:</Listbox.Label>
