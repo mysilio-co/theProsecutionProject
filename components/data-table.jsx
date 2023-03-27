@@ -1,7 +1,9 @@
 import {
     ChevronDownIcon,
     ChevronUpIcon,
-    ChevronUpDownIcon
+    ChevronUpDownIcon,
+    ArrowLeftCircleIcon,
+    ArrowRightCircleIcon,
   } from "@heroicons/react/20/solid";
 
   import {
@@ -14,7 +16,7 @@ import {
   import { TABLE_WIDTH_MAP, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
   import { classNames } from "../scripts/common.js";
-  import { useState } from "react";
+  import { useRef, useState } from "react";
   import { CODEBOOK } from "../scripts/codebook";
   import DataRow from "./data-row";
 
@@ -25,7 +27,11 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
     const [showColumnDescription, setShowColumnDescription] = useState(false);
     const [columnDescription, setColumnDescription] = useState("");
     const [showViewDescription, setShowViewDescription] = useState(false);
-
+    const scrollContainer = useRef();
+    const leftArrow = useRef();
+    const rightArrow = useRef();
+    const [scrollbarLeft, setScrollbarLeft] = useState(true);
+    const [scrollbarRight, setScrollbarRight] = useState(false);
     
     function resetUrl() {
       const tab = router.query.tab ? router.query.tab : Object.keys(TAB_NAMES)[0];
@@ -80,8 +86,27 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
         {hasError ? 
         <ErrorMessage/>
         : 
-        <div className="mt-3 flex flex-col">
-          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="relative mt-3 flex flex-col">
+          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((scrollbarLeft || isDisabled ? 'opacity-0 cursor-default' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -left-3 md:-left-6 lg:-left-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
+            scrollContainer.current.scrollLeft = 0;
+          }}/>
+          <ArrowRightCircleIcon ref={rightArrow} className={classNames((scrollbarRight || isDisabled  ? 'opacity-0 cursor-default' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -right-3 md:-right-6 lg:-right-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
+            scrollContainer.current.scrollLeft = scrollContainer.current.scrollWidth;
+          }}/>
+          <div ref={scrollContainer} className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8" onScroll={() => {
+            if(scrollContainer.current.scrollLeft == 0) {
+              setScrollbarLeft(true);
+              setScrollbarRight(false);
+            }
+            else if(scrollContainer.current.scrollWidth == scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth) {
+              setScrollbarRight(true);
+              setScrollbarLeft(false);
+            }
+            else {
+              setScrollbarLeft(false);
+              setScrollbarRight(false);
+            }
+          }}>
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
