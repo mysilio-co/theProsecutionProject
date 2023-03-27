@@ -98,7 +98,7 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
               setScrollbarLeft(true);
               setScrollbarRight(false);
             }
-            else if(scrollContainer.current.scrollWidth >= scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth) {
+            else if(scrollContainer.current.scrollWidth <= scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth) {
               setScrollbarRight(true);
               setScrollbarLeft(false);
             }
