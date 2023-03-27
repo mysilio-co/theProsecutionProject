@@ -87,10 +87,10 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
         <ErrorMessage/>
         : 
         <div className="relative mt-3 flex flex-col">
-          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((scrollbarLeft || isDisabled ? 'opacity-0 cursor-default' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -left-3 md:-left-6 lg:-left-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
+          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((scrollbarLeft || isDisabled ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -left-3 md:-left-6 lg:-left-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
             scrollContainer.current.scrollLeft = 0;
           }}/>
-          <ArrowRightCircleIcon ref={rightArrow} className={classNames((scrollbarRight || isDisabled  ? 'opacity-0 cursor-default' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -right-3 md:-right-6 lg:-right-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
+          <ArrowRightCircleIcon ref={rightArrow} className={classNames((scrollbarRight || isDisabled  ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -right-3 md:-right-6 lg:-right-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
             scrollContainer.current.scrollLeft = scrollContainer.current.scrollWidth;
           }}/>
           <div ref={scrollContainer} className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8" onScroll={() => {
