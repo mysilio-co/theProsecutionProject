@@ -194,14 +194,16 @@ export default function DataExplorer() {
               innerComponent={currentModal} 
             />
             <div className="max-w-7xl flex-row justify-center mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
-              <div className="relative md:h-16 flex flex-col md:flex-row">
+              <div className="relative md:h-16 flex flex-col md:flex-row justify-center">
                 <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-10 lg:mr-20">
                   <div className="flex-shrink-0 flex items-center">
+                  <a href="https://theprosecutionproject.org/" target="_blank">
                     <img
-                      className="block h-12 md:h-8 w-auto"
+                      className="block h-12 md:h-10 w-auto"
                       src="https://theprosecutionproject.org/wp-content/uploads/2020/08/tPP-4.png"
                       alt="The Prosecution Project"
                     />
+                  </a>
                   </div>
                 </div>
                 <div className="flex-row md:flex items-center">
@@ -214,7 +216,7 @@ export default function DataExplorer() {
                 </div>
               </div>
               <nav
-                className="md:py-2 md:flex md:space-x-8"
+                className="md:py-2 md:flex md:space-x-8 justify-center"
                 aria-label="Global"
               >
                 {tabs.map((tab) => (
