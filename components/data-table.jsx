@@ -94,11 +94,11 @@ export default function DataTable({ title, data, length, router, isLoading, isMo
             scrollContainer.current.scrollLeft = scrollContainer.current.scrollWidth;
           }}/>
           <div ref={scrollContainer} className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8" onScroll={() => {
-            if(scrollContainer.current.scrollLeft == 0) {
+            if(scrollContainer.current.scrollLeft <= 0) {
               setScrollbarLeft(true);
               setScrollbarRight(false);
             }
-            else if(scrollContainer.current.scrollWidth == scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth) {
+            else if(scrollContainer.current.scrollWidth >= scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth) {
               setScrollbarRight(true);
               setScrollbarLeft(false);
             }
