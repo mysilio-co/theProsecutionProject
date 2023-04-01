@@ -59,7 +59,7 @@ export default function Footer({isMobile, isInitiallyLoaded}) {
                         </a>
                     </div>
                 </div>
-                <div className="flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+                <div className="flex-1 px-2 pt-6 pb-12 flex items-center justify-center sm:inset-0 bg-gray-800">
                     <div className="mx-5">
                         <a href="mailto:michael@theprosecutionproject.org" target="_blank">
                             <img
