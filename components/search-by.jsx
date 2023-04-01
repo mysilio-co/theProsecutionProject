@@ -8,28 +8,38 @@ import {
     ChevronUpIcon
   } from "@heroicons/react/20/solid";
 import { addQueryParam, removeQueryParam } from "../scripts/router-handling";
+import { classNames } from "../scripts/common";
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
-
-export default function SearchBy({router, isMobile, isAllColumns}) {
-    const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : !isAllColumns ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
+export default function SearchBy({router, isMobile, isAllColumns, isLoading, hasError}) {
+    // const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : !isAllColumns ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
+    const searchByKeys = isMobile ? SEARCH_BY_KEYS_EXPRESS : SEARCH_BY_KEYS;
     const [searchBy, setSearchBy] = useState(searchByKeys[0]);
+    const isDisabled = isLoading && !hasError;
+    useEffect(()=>{
+        if(!isDisabled && router.query.searchBy) {
+            setSearchBy(router.query.searchBy);
+        }
+    },[isDisabled])
 
     useEffect(()=>{
-        searchBy==="Any" ? 
-            removeQueryParam("searchBy", router) : 
-            addQueryParam("searchBy", searchBy, router);
+        if(!isDisabled) {
+            searchBy==="Any" ? removeQueryParam("searchBy", router) : addQueryParam("searchBy", searchBy, router);
+        }
     },[searchBy])
+
+    useEffect(()=>{
+        if(!isDisabled && !router.query.searchBy) {
+            setSearchBy("Any");
+        }
+    },[router.query.searchBy])
     
     return (
-        <div className="relative z-0 flex-1 px-2 flex items-center justify-center sm:inset-0">
-        <div className="w-full sm:max-w-xs md:inline-flex md:items-center md:justify-center">
-        <Listbox value={searchBy} onChange={setSearchBy}>
+        <div className="relative w-full z-10 flex-1 px-2 flex items-center justify-center sm:inset-0">
+        <div className="w-full md:inline-flex md:items-center md:justify-center">
+        <Listbox value={ searchBy} onChange={setSearchBy} disabled={isDisabled}>
             {({ open }) => (
                 <>
-                <Listbox.Label className="block text-sm pl-0 md:pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
+                <Listbox.Label className="block text-sm w-24 pl-0 md:pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
                 <div className="relative mt-1">
                     <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-40 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     <span className="flex items-center">

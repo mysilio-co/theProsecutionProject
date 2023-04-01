@@ -1,137 +1,249 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import * as d3 from "d3";
 
 import useSWR from "swr";
-import FilterDropdowns from '../components/filter.jsx';
+
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort } from "../scripts/data-handling.js";
+import { findFirstOccurenceOfYear, removeMismatchedDropdown, removeMismatchedRange, runAllFilters } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
-import { addQueryParam } from "../scripts/router-handling";
+import { addMultipleQueryParams, addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, MOBILE_COLUMN_KEYS, DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_COLUMN_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS } from "../scripts/constants.js";
+import Modal from "../components/modals/modal.jsx";
+import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
+import HowToModalContents from "../components/modals/how-to-modal-contents.jsx";
+import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
+import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
+import { classNames } from "../scripts/common.js";
+import { generateListDropdowns, generateNumericRanges } from "../scripts/filter-components.js";
+import Footer from "../components/footer.jsx";
 
-const DataUrls = {
-  Pending:
-    "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20Pending%20cases.csv",
-  Completed: "https://tpp.v0.mysilio.me/public/data/Team%20Spreadsheet%202.0%20-%20U__FOUO.csv",
-};
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const csvFetcher = (url) =>
-  fetch(url)
-    .then((r) => r.text())
-    .then((t) => d3.csvParse(t));
+const fetcher = async (url) => await fetch(url).then((res) => {
+  if (!res.ok) {
+    const error = new Error('An error occurred while fetching the data.')
+    error.status = res.status
+    throw error
+  }
+  return res.json()}
+  );
 
 export default function DataExplorer() {
-  const tabs = Object.keys(DataUrls);
+  const tabs = Object.keys(TAB_NAMES);
   const router = useRouter();
   const query = router.query;
-  const [isMobile, setIsMobile] = useState(false);
-
-  function updateMobileState() {
-    setIsMobile(window.innerWidth<768 ? true : false);
-  }
-
-  function createExportUrl(data) {
-    return !!data ? URL.createObjectURL(new Blob([d3.csvFormat(data)], { type: "text/csv" })) : "#";
-  }
-  
-  useEffect(() => {
-    router.push({ 
-      pathname: '/',
-      query: { ...router.query, tab: tabs[0], currentPage: 1, numShown: RESULTS_PER_PAGE_KEYS[0] } }, 
-      undefined, 
-      {}
-    );
-    updateMobileState();
-  }, []);
-  const selected = query.tab || tabs[0];
-  const search = query.search || "";
-  let filteredData = null;
+  const selectedTab = query.tab || tabs[0];
+  let hasError = false;
+  let untouchedData = null;
+  const [rangeValues, setRangeValues] = useState([]);
+  const [dropdownValues, setDropdownValues] = useState([]);
   let displayData = [];
-  let isLoading = true;
+  const [filteredData, setFilteredData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [currentModal, setCurrentModal] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [newTabSelected, setNewTabSelected] = useState(false);
+  const forceUpdate = useForceUpdate();
 
-  let { data, isLoerror } = useSWR(DataUrls[selected], csvFetcher);
+  function showFilterButton() {
+    return (
+      <button disabled={isLoading && !hasError} onClick={()=>{setShowModal(true); setCurrentModal(
+        <FilterModalContents rangeValues={rangeValues} dropdownValues={dropdownValues} setShowModal={setShowModal} isLoading={isLoading} hasError={hasError}/>)
+      }} className="mt-4 md:mt-0 md:ml-8 lg:ml-8 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+        Filter Data
+      </button>
+    )
+  }
 
-  if(!!data) {
-    isLoading = false;
-    data = fuzzySearch(data, query.search, query.searchBy, isMobile);
-    if(!!query.sortBy && !!query.order) {
-      sort(data, query.sortBy, query.order);
-    } if(!!query.currentPage && !!query.numShown) {
-      filteredData = data.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
-    } else {
-      filteredData = data;
+  function useForceUpdate(){
+    const [value, setValue] = useState(0);
+    return () => setValue(value => value + 1);
+  }
+
+  function updateIsMobileState() {
+    if(typeof window !== "undefined") {
+      const isMobileWidth = window.innerWidth<768;
+      if(isMobileWidth != isMobile) {
+        setIsMobile(isMobileWidth);
+      }
     }
-    if(isMobile) {
-      filteredData.forEach(function(row) {
-        displayData.push(Object.fromEntries(Object.entries(row)
-        .filter(([key, value]) => MOBILE_COLUMN_KEYS.includes(key))));
-      })
-    } else {
-        if(!query.showAll) {
-          filteredData.forEach(function(row) {
-            displayData.push(Object.fromEntries(Object.entries(row)
-            .filter(([key, value]) => DESKTOP_EXPRESS_COLUMN_KEYS.includes(key))));
-          })
-        }
-        else {
-          filteredData.forEach(function(row) {
-            displayData.push(Object.fromEntries(Object.entries(row)
-            .filter(([key, value]) => DESKTOP_COLUMN_KEYS.includes(key))));
-          })
-        }
+  }
+
+  function updateIsLoadingState() {
+    if(untouchedData && isLoading) {
+      setIsLoading(false);
     }
+  }
+
+  function updateHasError(errorFormula) {
+    hasError = hasError || errorFormula;
+  }
+
+  function getSheetData(tab) {
+    const isGeneral = tab==="General" ? true : false;
+    const fouo = getChunksOfSheet('U//FOUO', '2010', tab);
+    const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases' : null, fetcher);
+    const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab] : null, fetcher);
+    updateHasError(pendingError || nonGeneralError);
+    return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
+  }
+
+  function getChunksOfSheet(sheet, year, tab) {
+    //shouldCall is used to determine if the call should be made using nextJS conditional fetching
+    //if false, cascades down and prevents the sheets calls from being made
+    const shouldCall = tab==="General" ? true : false;
+    const { data:dateColumn, error:dateColumnError } = useSWR(shouldCall ? '/api/sheets/getSheetDateColumn?sheet='+sheet : null, fetcher);
+    updateHasError(dateColumnError);
+    const locationOfYear = dateColumn && !hasError ? findFirstOccurenceOfYear(dateColumn, year) : null;
+    const lengthOfSheet = dateColumn ? dateColumn.length : null;
+    const { data: firstHalf, error: firstHalfError } = useSWR(locationOfYear && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&start='+1+'&end='+(locationOfYear-1) : null, fetcher);
+    const { data: secondHalf, error: secondHalfError } = useSWR(locationOfYear && lengthOfSheet && !hasError ? '/api/sheets/getSheets?sheet='+sheet+'&start='+(locationOfYear-1)+'&end='+lengthOfSheet : null, fetcher);
+    updateHasError(firstHalfError || secondHalfError);
+    return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
+  }
+
+  // filter data when any filter values are updated
+  useEffect(() => {
+    if(untouchedData) {
+      setDropdownValues(generateListDropdowns(untouchedData));
+      setRangeValues(generateNumericRanges(untouchedData));
+      setFilteredData(runAllFilters(untouchedData, query, isMobile));
+    }
+  }, [isLoading, query]);
+
+  // set isLoading to true if new tab selected that has yet to be loaded
+  useEffect(() => {
+    if(!untouchedData) {
+      setIsLoading(true);
+      setFilteredData([]);
+    }
+    setNewTabSelected(true);
+  }, [selectedTab]);
+
+  // sets range and dropdown filters to match current tab in case they contain values not currently availale
+  // selecting a new tab sets the newTabSelected to true and then this runs after data has been filtered
+  // and then sets this to newTabSelected to false
+  useEffect(() => {
+    if(newTabSelected) {
+      const dropdownValuesToBeUpdated = removeMismatchedDropdown(router, dropdownValues);
+      const rangeValuesToBeUpdated = removeMismatchedRange(router, rangeValues);
+      addMultipleQueryParams(new Map([...dropdownValuesToBeUpdated, ...rangeValuesToBeUpdated]), router);
+      setNewTabSelected(false);
+    }
+  }, [filteredData]);
+
+
+  useEffect(()=>{
+    if(router.isReady) {
+      const tab = router.query.tab in TAB_NAMES ? router.query.tab : Object.keys(TAB_NAMES)[0];
+      const numShown = RESULTS_PER_PAGE_KEYS.includes(router.query.numShown) ? router.query.numShown : RESULTS_PER_PAGE_KEYS[0];
+      const sortBy = DESKTOP_COLUMN_KEYS.includes(router.query.sortBy) ? router.query.sortBy : null;
+      const order = ORDER_BY_KEYS.includes(router.query.order) ? router.query.order : null;
+      const search = router.query.search ? router.query.search : null;
+      const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS;
+      const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
+      const showAll = router.query.showAll=="true" ? "true" : null;
+      const showFilter = router.query.showFilter=="true" ? "true" : null;
+      const from = Date.parse(router.query.from) ? router.query.from : null;
+      const to = Date.parse(router.query.to) ? router.query.to : null;
+      const dropdownValues = retrieveDropdownParams(router.query);
+      const numericValues = retrieveNumericParams(router.query);
+      let query = {tab: tab, currentPage: 1, numShown: numShown};
+      if(sortBy && order) { 
+        query.sortBy = sortBy; 
+        query.order = order;
+      }
+      if(search) { 
+        query.search = search; 
+      }
+      if(searchBy) { 
+        query.searchBy = searchBy;
+      }
+      if(showAll) {
+        query.showAll = showAll;
+      }
+      if(showFilter) {
+        query.showFilter = showFilter;
+      }
+      if(from) {
+        query.from = from;
+      }
+      if(to) {
+        query.to = to;
+      }
+      query = { ...query, ...dropdownValues};
+      query = { ...query, ...numericValues};
+      router.replace(
+        { pathname: '', query: query }, 
+        undefined, 
+        { shallow: true }
+      );
+    }
+  }, [router.isReady]);
+
+  const search = query.search || "";
+  untouchedData = getSheetData(selectedTab);
+  updateIsLoadingState();
+  updateIsMobileState();
+
+  if(filteredData && query.currentPage && query.numShown) {
+    displayData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
+  } else {
+    displayData = filteredData;
   }
 
   return (
     <>
       <Disclosure as="header" className="bg-gray-800">
+        
         {({ open }) => (
           <>
-            <div className="max-w-7xl mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
-              <div className="relative md:h-16 flex flex-col md:flex-row">
-                <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-20 lg:mr-40">
+            <Modal showModal={showModal} setShowModal={setShowModal}
+              innerComponent={currentModal} 
+            />
+            <div className="max-w-7xl flex-row justify-center mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8">
+              <div className="relative md:h-16 flex flex-col md:flex-row justify-center">
+                <div className="relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-10 lg:mr-20">
                   <div className="flex-shrink-0 flex items-center">
+                  <a href="https://theprosecutionproject.org/" target="_blank">
                     <img
-                      className="block h-12 md:h-8 w-auto"
+                      className="block h-12 md:h-10 w-auto"
                       src="https://theprosecutionproject.org/wp-content/uploads/2020/08/tPP-4.png"
                       alt="The Prosecution Project"
                     />
+                  </a>
                   </div>
                 </div>
-                <div className="flex py-2 md:py-0 items-center md:mr-20 lg:mr-30">
-                  <BasicSearch router={router} search={search}/>
-                </div>
-                <div className="flex py-2 pb-5 md:py-0 items-center">
-                  <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll}/>
+                <div className="flex-row md:flex items-center">
+                  <div className="flex py-2 md:py-0 items-center md:mr-5 lg:mr-10">
+                    <BasicSearch router={router} search={search}/>
+                  </div>
+                  <div className="flex py-2 pb-5 md:py-0 items-center">
+                    <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
+                  </div>
                 </div>
               </div>
               <nav
-                className="md:py-2 md:flex md:space-x-8"
+                className="md:py-2 md:flex md:space-x-8 justify-center"
                 aria-label="Global"
               >
                 {tabs.map((tab) => (
                   <button
                     key={tab}
-                    onClick={() => { addQueryParam("tab", tab, router)}}
+                    onClick={() => { addQueryParam("tab", tab, router);}}
                   >
                     <a
                       key={tab}
                       className={classNames(
-                        tab === selected
-                          ? "bg-gray-900 text-white"
+                        tab === selectedTab
+                          ? "bg-gray-900 text-white hover:text-white"
                           : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "rounded-md py-2 px-3 inline-flex items-center text-sm font-medium"
+                        "rounded-md py-2 px-3 inline-flex items-center text-sm font-medium hover:no-underline"
                       )}
-                      aria-current={tab === selected ? "page" : undefined}
+                      aria-current={tab === selectedTab ? "page" : undefined}
                     >
                       {tab}
                     </a>
@@ -142,37 +254,32 @@ export default function DataExplorer() {
           </>
         )}
       </Disclosure>
-      {/* Adding filter dropdowns will be next step */}
-      {/* <FilterDropdowns
-        data={data}
-        cleanedData={cleanedData}
-        /> */}
       <DataTable
-        title={selected}
+        title={selectedTab}
         data={displayData}
-        length={!!data ? data.length : 0}
+        length={!!filteredData ? filteredData.length : 0}
         router={router}
         isLoading={isLoading}
         isMobile={isMobile}
+        showFilter={query.showFilter}
+        hasError={hasError}
+        showFilterButton={showFilterButton}
       />
       <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
-          <ResultsPerPage router={router} length={!!data ? data.length : 0}/>
-          <a href={createExportUrl(data)} download="tpp-data.csv">
-            <button className="mt-8 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-3/4 bg-[#FC8F4D] hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-black py-2 px-4 rounded">
-              Export Data
-            </button>
-          </a>
+          <ResultsPerPage router={router} length={!!filteredData ? filteredData.length : 0} isLoading={isLoading} hasError={hasError}/>
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal} query={router.asPath}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            Download Data
+          </button>
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal} router={router}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            User Manual
+          </button>
+          <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            Request Data
+          </button>
         </div>
       </div>
-      <div className="relative z-0 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
-        <img
-          className="block h-24"
-          src="https://i0.wp.com/theprosecutionproject.org/wp-content/uploads/2020/08/Illustration-Hiking-Website-Email-Header-2.png?w=600&ssl=1"
-          alt="The Prosecution Project"
-        />
-      </div>
-
+      <Footer isMobile={isMobile}/>
     </>
   );
 }

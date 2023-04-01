@@ -8,30 +8,53 @@ import {
     ChevronUpIcon
   } from "@heroicons/react/20/solid";
 import { addMultipleQueryParams, addQueryParam, removeQueryParam } from "../scripts/router-handling";
+import { classNames } from "../scripts/common";
 
-function classNames(...classes) {
-return classes.filter(Boolean).join(" ");
-}
-
-export default function ResultsPerPage({router, length}) {
+export default function ResultsPerPage({router, length, isLoading, hasError}) {
     const [resultsPerPage, setResultsPerPage] = useState(RESULTS_PER_PAGE_KEYS[0]);
     const [currentPage, setCurrentPage] = useState(1);
     const maxPages = Math.ceil(length / parseInt(resultsPerPage));
+    const isDisabled = isLoading && !hasError;
+
     useEffect(()=>{
-        setCurrentPage(1);
+        if(!isDisabled && router.query.numShown) {
+            setResultsPerPage(router.query.numShown);
+        }
+    },[isDisabled])
+
+    useEffect(()=>{
+        if(!isDisabled) {
+            setCurrentPage(1);
+        }
     },[resultsPerPage])
 
     useEffect(()=>{
-        addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
+        if(!isDisabled) {
+            addMultipleQueryParams(new Map([["currentPage", currentPage], ["numShown", resultsPerPage]]), router);
+        }
     },[currentPage, resultsPerPage])
 
     useEffect(()=> {
-        setCurrentPage(1);
+        if(!isDisabled) {
+            setCurrentPage(1);
+        }
     },[router.query.search, router.query.searchBy, router.query.tab])
+
+    useEffect(()=>{
+        if(!isDisabled && router.query.numShown) {
+            setResultsPerPage(router.query.numShown);
+        }
+    },[router.query.numShown])
+
+    useEffect(()=>{
+        if(!isDisabled && router.query.currentPage) {
+            setCurrentPage(router.query.currentPage);
+        }
+    },[router.query.currentPage])
     
     return (
         <div className="md:flex items-center">
-        <Listbox value={currentPage} onChange={setCurrentPage}>
+        <Listbox value={currentPage} onChange={setCurrentPage} disabled={isDisabled}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400">Page </Listbox.Label>
@@ -91,11 +114,11 @@ export default function ResultsPerPage({router, length}) {
                     </Listbox.Options>
                     </Transition>
                 </div>
-                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-16 font-medium text-gray-400"> of {maxPages==0 ? 1 : maxPages}</Listbox.Label>
+                <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-4 lg:pr-12 xl:pr-16 font-medium text-gray-400"> of {maxPages==0 ? 1 : maxPages}</Listbox.Label>
                 </>
             )}
         </Listbox>
-        <Listbox value={resultsPerPage} onChange={setResultsPerPage}>
+        <Listbox value={resultsPerPage} onChange={setResultsPerPage} disabled={isDisabled}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0">Showing </Listbox.Label>

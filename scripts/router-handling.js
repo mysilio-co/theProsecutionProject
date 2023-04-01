@@ -1,3 +1,5 @@
+import { DROPDOWN_KEYS, NUMERIC_COLUMNS } from "./constants";
+
 export function removeQueryParam(param, router) {
     const { pathname, query } = router;
     const params = new URLSearchParams(query);
@@ -37,7 +39,28 @@ export function addMultipleQueryParams(queryMap, router) {
     const { pathname, query } = router;
     const params = new URLSearchParams(query);
     queryMap.forEach((value, key)=> {
+        if(value) {
+            params.set(key, value);
+        }
+        else {
+            params.delete(key);
+        }
+    })
+    router.replace(
+        { pathname, query: params.toString() },
+        undefined, 
+        { shallow: true }
+    );
+}
+
+export function addAndRemoveMultipleQueryParams(addMap, removeList, router) {
+    const { pathname, query } = router;
+    const params = new URLSearchParams(query);
+    addMap.forEach((value, key)=> {
         params.set(key, value);
+    })
+    removeList.forEach((param)=> {
+        params.delete(param);
     })
     router.replace(
         { pathname, query: params.toString() },
@@ -57,6 +80,25 @@ export function setSortingParams(clickedColumn, router) {
         newOrder = currentOrder=="asc" ? "desc" : currentOrder=="desc" ? "" : "asc";
     }
     newOrder == "" ? (removeMultipleQueryParams(["sortBy", "order"], router)) : 
-        addMultipleQueryParams(new Map([["sortBy", clickedColumn], ["order", newOrder]]), router);
-    
+        addMultipleQueryParams(new Map([["sortBy", clickedColumn], ["order", newOrder]]), router);   
+}
+
+export function retrieveDropdownParams(query) {
+    let paramObject = {};
+    DROPDOWN_KEYS.forEach(key => {
+        if(key in query) {
+            paramObject[key] = query[key];
+        }
+    })
+    return paramObject;
+}
+
+export function retrieveNumericParams(query) {
+    let paramObject = {};
+    NUMERIC_COLUMNS.forEach(key => {
+        if(key in query) {
+            paramObject[key] = query[key];
+        }
+    })
+    return paramObject;
 }

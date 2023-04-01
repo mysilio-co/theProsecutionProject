@@ -28,6 +28,29 @@
   }
 }
 
+  .rs-slider-progress-bar {
+    background-color: #2563eb !important;
+  }
+
+  .react-datepicker-popper {
+    z-index: 5 !important;
+  }
+
+  .react-datepicker__input-container > input {
+    width: 100% !important;
+  }
+
+  .w-80vw {
+    width: 80vw;
+  }
+
+  .h-42px {
+    height: 42px;
+  }
+
+  .w-screen {
+    width: 100vw;
+  }
 
   .w-28 {
     width: 7rem;
@@ -50,7 +73,9 @@
   .w-52 {
     width: 13rem;
   }
-
+  .w-56 {
+    width: 14rem;
+  }
   .w-64 {
     width: 16rem;
   }
@@ -62,8 +87,16 @@
   .w-96 {
     width: 24rem;
   }
+  
+  .w-120 {
+    width: 30rem;
+  }
 
   @media screen and (max-width: 768px) {
+    .mobile-w-screen {
+      width: 90vw;
+    }
+
     .mobile-w-28 {
       width: 7rem;
     }
