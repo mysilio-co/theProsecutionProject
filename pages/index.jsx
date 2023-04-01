@@ -6,12 +6,12 @@ import useSWR from "swr";
 import DataTable from "../components/data-table.jsx";
 import { Disclosure } from "@headlessui/react";
 
-import { fuzzySearch, sort, findFirstOccurenceOfYear, filterByDropdown, filterByDate, filterByRange, removeMismatchedDropdown, removeMismatchedRange, filterByColumn, runAllFilters } from "../scripts/data-handling.js";
+import { findFirstOccurenceOfYear, removeMismatchedDropdown, removeMismatchedRange, runAllFilters } from "../scripts/data-handling.js";
 import SearchBy from "../components/search-by";
 import { addMultipleQueryParams, addQueryParam, retrieveDropdownParams, retrieveNumericParams } from "../scripts/router-handling";
 import BasicSearch from "../components/basic-search";
 import ResultsPerPage from "../components/results-per-page.jsx";
-import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS_EXPRESS, SEARCH_BY_KEYS, DROPDOWN_KEYS } from "../scripts/constants.js";
+import { RESULTS_PER_PAGE_KEYS, TAB_NAMES, SEARCH_BY_KEYS_MOBILE, ORDER_BY_KEYS, DESKTOP_COLUMN_KEYS, SEARCH_BY_KEYS } from "../scripts/constants.js";
 import Modal from "../components/modals/modal.jsx";
 import DownloadModalContents from "../components/modals/download-modal-contents.jsx";
 import HowToModalContents from "../components/modals/how-to-modal-contents.jsx";
@@ -44,6 +44,8 @@ export default function DataExplorer() {
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [newTabSelected, setNewTabSelected] = useState(false);
+  const forceUpdate = useForceUpdate();
 
   function showFilterButton() {
     return (
@@ -53,6 +55,11 @@ export default function DataExplorer() {
         Filter Data
       </button>
     )
+  }
+
+  function useForceUpdate(){
+    const [value, setValue] = useState(0);
+    return () => setValue(value => value + 1);
   }
 
   function updateIsMobileState() {
@@ -106,22 +113,26 @@ export default function DataExplorer() {
     }
   }, [isLoading, query]);
 
-  // filter data when any filter values are updated
+  // set isLoading to true if new tab selected that has yet to be loaded
   useEffect(() => {
     if(!untouchedData) {
       setIsLoading(true);
       setFilteredData([]);
     }
+    setNewTabSelected(true);
   }, [selectedTab]);
 
-  // removes any dropdown/numeric range values that aren't applicable to current tab on tab change
+  // sets range and dropdown filters to match current tab in case they contain values not currently availale
+  // selecting a new tab sets the newTabSelected to true and then this runs after data has been filtered
+  // and then sets this to newTabSelected to false
   useEffect(() => {
-    if(!isLoading) {
+    if(newTabSelected) {
       const dropdownValuesToBeUpdated = removeMismatchedDropdown(router, dropdownValues);
       const rangeValuesToBeUpdated = removeMismatchedRange(router, rangeValues);
       addMultipleQueryParams(new Map([...dropdownValuesToBeUpdated, ...rangeValuesToBeUpdated]), router);
+      setNewTabSelected(false);
     }
-  }, [isLoading, selectedTab]);
+  }, [filteredData]);
 
 
   useEffect(()=>{
@@ -139,7 +150,6 @@ export default function DataExplorer() {
       const to = Date.parse(router.query.to) ? router.query.to : null;
       const dropdownValues = retrieveDropdownParams(router.query);
       const numericValues = retrieveNumericParams(router.query);
-      const ref = React.createRef();
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
         query.sortBy = sortBy; 
@@ -264,7 +274,7 @@ export default function DataExplorer() {
             User Manual
           </button>
           <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-            Contact Us
+            Request Data
           </button>
         </div>
       </div>
@@ -279,7 +289,7 @@ export default function DataExplorer() {
           </a>
         </div>
       </div>
-      {/* <div className="flex-1 px-2 pt-12 md:pt-3 pb-12 md:pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+      <div className="flex-1 px-2 pt-12 md:pt-3 pb-12 md:pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
         <div className="mx-5">
           <a href="mailto:michael@theprosecutionproject.org" target="_blank">
             <img
@@ -307,7 +317,7 @@ export default function DataExplorer() {
             />
           </a>
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

@@ -67,7 +67,7 @@ export default function DownloadModalContents({data, setShowModal, query}) {
                             Clicking "I Accept" means you acknowledge this or something like that
                         </p>
                         { formSubmitted ?
-                            <div className='my-3 flex items-center'>
+                            <div className='my-3 flex items-center justify-center md:justify-start'>
                                 <CheckCircleIcon className="w-6 stroke-gray-800 mr-2"/>
                                 <p className="text-sm text-gray-500">
                                     Data questionnaire has been submitted.

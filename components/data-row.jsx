@@ -23,7 +23,7 @@ export default function DataRow({row, headers, router, currentIndex, idx}) {
                         key={h}>
                     {row[h]}
                     </td> : 
-                    <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) && collapseNarrative ? "whitespace-nowrap overflow-x-auto " : undefined, "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-600")} 
+                    <td className={classNames(TABLE_WIDTH_MAP[h], SCROLL_BAR_COLUMN_KEYS.includes(h) && collapseNarrative ? "whitespace-nowrap overflow-x-auto " : undefined, "pl-4 pr-6 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words")} 
                         key={h}>
                     {row[h]}
                     </td>
