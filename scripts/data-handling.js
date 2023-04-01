@@ -1,7 +1,6 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
 import { DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED, DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
-import { removeMultipleQueryParams } from "./router-handling";
 
 export function runAllFilters(data, query, isMobile) {
   data = fuzzySearch(data, query.search, query.searchBy, isMobile);
@@ -213,7 +212,6 @@ function sortByDate(columnA, columnB, order) {
 function sortByNumber(columnA, columnB, order) {
   let numericColumnA = Number(columnA?.replaceAll(',', ''));
   let numericColumnB = Number(columnB?.replaceAll(',', ''));
-  // console.log(numericColumnA + "   " + numericColumnB);
   if(!numericColumnA) {
     if(columnA=="X") {
       numericColumnA = -4;
@@ -246,7 +244,7 @@ function sortByNumber(columnA, columnB, order) {
 }
 
 function sortByText(columnA, columnB, order) {
-  return order=="asc" ? d3.ascending(columnA.toUpperCase(), columnB.toUpperCase()) : d3.descending(columnA.toUpperCase(), columnB.toUpperCase());
+  return order=="asc" ? d3.ascending(columnA?.toUpperCase(), columnB?.toUpperCase()) : d3.descending(columnA?.toUpperCase(), columnB?.toUpperCase());
 }
 
 export function parseSheetsResponse(response) {

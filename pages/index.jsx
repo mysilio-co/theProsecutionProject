@@ -44,10 +44,11 @@ export default function DataExplorer() {
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 0);
+  let isMobile = width <= 768;
+  const [isInitiallyLoaded, setIsInitiallyLoaded] = useState(false);
   const [newTabSelected, setNewTabSelected] = useState(false);
-  const forceUpdate = useForceUpdate();
-
+  
   function showFilterButton() {
     return (
       <button disabled={isLoading && !hasError} onClick={()=>{setShowModal(true); setCurrentModal(
@@ -56,20 +57,6 @@ export default function DataExplorer() {
         Filter Data
       </button>
     )
-  }
-
-  function useForceUpdate(){
-    const [value, setValue] = useState(0);
-    return () => setValue(value => value + 1);
-  }
-
-  function updateIsMobileState() {
-    if(typeof window !== "undefined") {
-      const isMobileWidth = window.innerWidth<768;
-      if(isMobileWidth != isMobile) {
-        setIsMobile(isMobileWidth);
-      }
-    }
   }
 
   function updateIsLoadingState() {
@@ -104,6 +91,28 @@ export default function DataExplorer() {
     updateHasError(firstHalfError || secondHalfError);
     return firstHalf && secondHalf && !hasError ? firstHalf.concat(secondHalf) : null;
   }
+
+  function handleWindowSizeChange() {
+    if(typeof window !== "undefined") {
+      setWidth(window.innerWidth);
+    }
+  }
+
+  // adding event listener for screen resize and setting the initial load to be true
+  // we can attach this initial load variable to any formulas that use the width variable to re-render the formula
+  // after the window actually has a width
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    setIsInitiallyLoaded(true);
+    return () => {
+        window.removeEventListener('resize', handleWindowSizeChange);
+    }
+  }, []);
+
+    // filter data when any filter values are updated
+    useEffect(() => {
+      setWidth(window.innerWidth);
+    }, [isLoading]);
 
   // filter data when any filter values are updated
   useEffect(() => {
@@ -191,7 +200,6 @@ export default function DataExplorer() {
   const search = query.search || "";
   untouchedData = getSheetData(selectedTab);
   updateIsLoadingState();
-  updateIsMobileState();
 
   if(filteredData && query.currentPage && query.numShown) {
     displayData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
@@ -202,7 +210,6 @@ export default function DataExplorer() {
   return (
     <>
       <Disclosure as="header" className="bg-gray-800">
-        
         {({ open }) => (
           <>
             <Modal showModal={showModal} setShowModal={setShowModal}
@@ -264,6 +271,7 @@ export default function DataExplorer() {
         length={!!filteredData ? filteredData.length : 0}
         router={router}
         isLoading={isLoading}
+        isInitiallyLoaded={isInitiallyLoaded}
         isMobile={isMobile}
         showFilter={query.showFilter}
         hasError={hasError}
@@ -284,7 +292,7 @@ export default function DataExplorer() {
             </button>
           </div>
         </div>
-        <Footer isMobile={isMobile}/>
+        <Footer isMobile={isMobile} isInitiallyLoaded={isInitiallyLoaded}/>
       </div>
     </>
   );
