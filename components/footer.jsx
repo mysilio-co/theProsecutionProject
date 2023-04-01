@@ -21,7 +21,7 @@ export default function Footer({isMobile, isInitiallyLoaded}) {
                     <div className="mx-5">
                         <a href="mailto:michael@theprosecutionproject.org" target="_blank">
                         <img
-                            className="block h-10"
+                            className="block h-8"
                             src="/mail.png"
                             alt="email icon"
                         />
@@ -30,7 +30,7 @@ export default function Footer({isMobile, isInitiallyLoaded}) {
                     <div className="mx-5">
                         <a href="https://twitter.com/ProsecutionProj" target="_blank">
                         <img
-                            className="block h-10"
+                            className="block h-8"
                             src="/twitter.png"
                             alt="twitter logo"
                         />
@@ -39,7 +39,7 @@ export default function Footer({isMobile, isInitiallyLoaded}) {
                     <div className="mx-5">
                         <a href="https://www.linkedin.com/company/the-prosecution-project/" target="_blank">
                         <img
-                            className="block h-10"
+                            className="block h-8"
                             src="/linkedin.png"
                             alt="linkedin logo"
                         />
