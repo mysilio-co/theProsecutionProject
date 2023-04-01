@@ -28,6 +28,10 @@
   }
 }
 
+  html {
+    background-color: rgb(31 41 55);
+  }
+
   .rs-slider-progress-bar {
     background-color: #2563eb !important;
   }

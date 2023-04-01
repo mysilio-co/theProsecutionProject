@@ -120,20 +120,24 @@ export default function DataExplorer() {
       setIsLoading(true);
       setFilteredData([]);
     }
-    setNewTabSelected(true);
   }, [selectedTab]);
+
+  // set newTabSelected to true if either a new tab is selected or a new tab finishes loading
+  useEffect(() => {
+    setNewTabSelected(true);
+  }, [selectedTab, isLoading]);
 
   // sets range and dropdown filters to match current tab in case they contain values not currently availale
   // selecting a new tab sets the newTabSelected to true and then this runs after data has been filtered
   // and then sets this to newTabSelected to false
   useEffect(() => {
-    if(newTabSelected) {
+    if(newTabSelected && untouchedData) {
       const dropdownValuesToBeUpdated = removeMismatchedDropdown(router, dropdownValues);
       const rangeValuesToBeUpdated = removeMismatchedRange(router, rangeValues);
       addMultipleQueryParams(new Map([...dropdownValuesToBeUpdated, ...rangeValuesToBeUpdated]), router);
       setNewTabSelected(false);
     }
-  }, [filteredData]);
+  }, [filteredData, isLoading]);
 
 
   useEffect(()=>{
@@ -265,21 +269,23 @@ export default function DataExplorer() {
         hasError={hasError}
         showFilterButton={showFilterButton}
       />
-      <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
-        <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
-          <ResultsPerPage router={router} length={!!filteredData ? filteredData.length : 0} isLoading={isLoading} hasError={hasError}/>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal} query={router.asPath}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-            Download Data
-          </button>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal} router={router}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-            User Manual
-          </button>
-          <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
-            Request Data
-          </button>
+      <div className="divide-y divide-gray-700 bg-gray-800">
+        <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
+          <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
+            <ResultsPerPage router={router} length={!!filteredData ? filteredData.length : 0} isLoading={isLoading} hasError={hasError}/>
+            <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal} query={router.asPath}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+              Download Data
+            </button>
+            <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal} router={router}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+              User Manual
+            </button>
+            <button onClick={()=>{setShowModal(true); setCurrentModal(<ContactUsModalContents setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+              Request Data
+            </button>
+          </div>
         </div>
+        <Footer isMobile={isMobile}/>
       </div>
-      <Footer isMobile={isMobile}/>
     </>
   );
 }

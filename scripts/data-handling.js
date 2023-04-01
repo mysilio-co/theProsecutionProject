@@ -211,19 +211,42 @@ function sortByDate(columnA, columnB, order) {
 }
 
 function sortByNumber(columnA, columnB, order) {
-  columnA = Number(columnA?.replaceAll(',', ''));
-  columnB = Number(columnB?.replaceAll(',', ''));
-  if(!columnA) {
-    columnA = -1;
+  let numericColumnA = Number(columnA?.replaceAll(',', ''));
+  let numericColumnB = Number(columnB?.replaceAll(',', ''));
+  // console.log(numericColumnA + "   " + numericColumnB);
+  if(!numericColumnA) {
+    if(columnA=="X") {
+      numericColumnA = -4;
+    }
+    else if(columnA=="#") {
+      numericColumnA = -3;
+    }
+    else if(columnA.toLowerCase() === "data not available") {
+      numericColumnA = -2;
+    }
+    else {
+      numericColumnA = -1; 
+    }
   }
-  if(!columnB) {
-    columnB = -1;
+  if(!numericColumnB) {
+    if(columnB=="X") {
+      numericColumnB = -4;
+    }
+    else if(columnB=="#") {
+      numericColumnB = -3;
+    }
+    else if(columnB.toLowerCase() === "data not available") {
+      numericColumnB = -2;
+    }
+    else {
+      numericColumnB = -1; 
+    }
   }
-  return order=="asc" ? d3.descending(columnA, columnB) : d3.ascending(columnA, columnB);
+  return order=="asc" ? d3.descending(numericColumnA, numericColumnB) : d3.ascending(numericColumnA, numericColumnB);
 }
 
 function sortByText(columnA, columnB, order) {
-  return order=="asc" ? d3.ascending(columnA, columnB) : d3.descending(columnA, columnB);
+  return order=="asc" ? d3.ascending(columnA.toUpperCase(), columnB.toUpperCase()) : d3.descending(columnA.toUpperCase(), columnB.toUpperCase());
 }
 
 export function parseSheetsResponse(response) {

@@ -1,13 +1,7 @@
-import { useEffect } from "react";
-import { classNames } from "../scripts/common";
-
 export default function Footer({isMobile}) {
-    useEffect(() => {
-        console.log('test')
-      }, [isMobile]);
     return (
         !isMobile ? 
-        <div className="flex justify-between">
+        <div className="flex justify-between mx-8">
             <div className="flex-1 px-2 flex items-center justify-start sm:inset-0 bg-gray-800">
                 <div className="relative">
                     <a href="https://theprosecutionproject.org/" target="_blank">
