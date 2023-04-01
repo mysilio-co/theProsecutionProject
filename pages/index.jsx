@@ -19,6 +19,7 @@ import ContactUsModalContents from "../components/modals/contact-us-modal-conten
 import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
 import { classNames } from "../scripts/common.js";
 import { generateListDropdowns, generateNumericRanges } from "../scripts/filter-components.js";
+import Footer from "../components/footer.jsx";
 
 const fetcher = async (url) => await fetch(url).then((res) => {
   if (!res.ok) {
@@ -278,46 +279,7 @@ export default function DataExplorer() {
           </button>
         </div>
       </div>
-      <div className="flex-1 px-2 pt-6 pb-3 flex items-center justify-center sm:inset-0 bg-gray-800">
-        <div className="relative">
-          <a href="https://theprosecutionproject.org/" target="_blank">
-            <img
-              className="block h-24"
-              src="https://i0.wp.com/theprosecutionproject.org/wp-content/uploads/2020/08/Illustration-Hiking-Website-Email-Header-2.png?w=600&ssl=1"
-              alt="The Prosecution Project"
-            />
-          </a>
-        </div>
-      </div>
-      <div className="flex-1 px-2 pt-12 md:pt-3 pb-12 md:pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
-        <div className="mx-5">
-          <a href="mailto:michael@theprosecutionproject.org" target="_blank">
-            <img
-              className="block h-10"
-              src="/mail.png"
-              alt="email icon"
-            />
-          </a>
-        </div>
-        <div className="mx-5">
-          <a href="https://twitter.com/ProsecutionProj" target="_blank">
-            <img
-              className="block h-10"
-              src="/twitter.png"
-              alt="twitter logo"
-            />
-          </a>
-        </div>
-        <div className="mx-5">
-          <a href="https://www.linkedin.com/company/the-prosecution-project/" target="_blank">
-            <img
-              className="block h-10"
-              src="/linkedin.png"
-              alt="linkedin logo"
-            />
-          </a>
-        </div>
-      </div>
+      <Footer isMobile={isMobile}/>
     </>
   );
 }
