@@ -230,7 +230,7 @@ export default function DataExplorer() {
                 </div>
                 <div className="flex-row md:flex items-center">
                   <div className="flex py-2 md:py-0 items-center md:mr-5 lg:mr-10">
-                    <BasicSearch router={router} search={search}/>
+                    <BasicSearch router={router} search={search} isLoading={isLoading}/>
                   </div>
                   <div className="flex py-2 pb-5 md:py-0 items-center">
                     <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
