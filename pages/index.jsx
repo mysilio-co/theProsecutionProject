@@ -216,7 +216,6 @@ export default function DataExplorer() {
   const search = query.search || "";
   untouchedData = getSheetData(selectedTab);
   updateIsLoadingState();
-  console.log(filterActive);
 
   if(filteredData && query.currentPage && query.numShown) {
     displayData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));

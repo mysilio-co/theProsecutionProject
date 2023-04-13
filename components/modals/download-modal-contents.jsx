@@ -8,14 +8,12 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 export default function DownloadModalContents({data, setShowModal, query, selectedTab}) {
-    const formsUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdKYszFyZrY3M2b9w9Vgit2KS44u3Dli9I7r81PXASGT65U9g/formResponse?&submit=Submit?usp=pp_url&entry.1564785546=*PURPOSE*&entry.82466501=*NAME*&entry.1299586216=*EMAIL*&entry.945781104=*ORG*&entry.714111775=Yes&entry.2138348062=*URL*"
     const formsForm = useRef();
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [nameInput, setNameInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [orgInput, setOrgInput] = useState('');
     const [purposeInput, setPurposeInput] = useState('');
-    const [formsError, setFormsError] = useState(false);
 
     useEffect(() => {
         setFormSubmitted(sessionStorage.getItem('formSubmitted'));
@@ -25,44 +23,31 @@ export default function DownloadModalContents({data, setShowModal, query, select
         setShowModal(showModalValue);
     }
 
-    function handleSubmit(e) {
-        fetch(createFormsUrl(), {
+    async function handleSubmit(e) {
+        fetch('api/submitGoogleForm?name=' + nameInput + '&email=' + emailInput + '&org=' + orgInput + '&purpose=' + purposeInput + '&query=' + query.replaceAll('&', '-'), {
             method: 'POST', 
             mode: 'cors',
             body: ''
-        }).then(res => {
-            setFormsError(false);
-        }).catch(e => {
-            setFormsError(true);
-            console.error('There was a problem submitting form');
-        })
-        sessionStorage.setItem('formSubmitted', 'true');
-        setFormSubmitted(true);
+        }).finally(res => {
+            sessionStorage.setItem('formSubmitted', 'true');
+            setFormSubmitted(true);
+        });
         e.preventDefault();
     }
 
-    function createFormsUrl() {
-        let formSubmissionUrl = formsUrl.replace('*NAME*', nameInput);
-        formSubmissionUrl = formSubmissionUrl.replace('*EMAIL*', emailInput);
-        formSubmissionUrl = formSubmissionUrl.replace('*ORG*', orgInput);
-        formSubmissionUrl = formSubmissionUrl.replace('*PURPOSE*', purposeInput);
-        return formSubmissionUrl.replace('*URL*', query.replaceAll('&', '-'));
-    }
-
-
     async function downloadFiles() {
-        let eulaSuccess = true;
-        const eulaBlob = await fetch('https://drive.google.com/uc?export=download&id=1mqGs7sN3mj58Ci4_6RMjzGMyNuUNtctr')
-        .then(response => response.blob())
-        .catch(e => {
-            eulaSuccess = false;
-            console.error("There was a problem retrieving EULA.");
-        });
         var zip = new JSZip();
+        await fetch('/api/retrieveEULA')
+            .then(response => response.json())
+            .then(res => {
+                zip.file("External_RDUA_v3.html", new Blob([res.file], {
+                    type: "text/html"
+                }));
+            })
+            .catch(e => {
+                console.error("There was a problem retrieving EULA.");
+            });
         zip.file(createFileName(), createSheetFile());
-        if(eulaSuccess) {
-            zip.file("External _RDUA_v3.pdf", eulaBlob);
-        }
         zip.generateAsync({type:"blob"}).then(function(content) {
             saveAs(content, "tPP-data.zip");
         });
@@ -105,7 +90,7 @@ export default function DownloadModalContents({data, setShowModal, query, select
                             </div> 
                             : 
                             <div className="">
-                                <form onSubmit={e => handleSubmit(e)}>
+                                <form onSubmit={e=>handleSubmit(e)}>
                                     <label className="block text-gray-500 text-sm pt-2 text-start">Name:</label>
                                     <input onInput={e => setNameInput(e.target.value)} className="block w-full border rounded-md py-2 pr-3 text-sm placeholder-gray-400 focus:outline-none sm:text-sm" type="text" name="name" required/>
                                     <label className="block text-gray-500 text-sm pt-2 text-start">Email Address:</label>
