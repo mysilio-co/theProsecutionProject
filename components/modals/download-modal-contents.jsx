@@ -136,7 +136,7 @@ export default function DownloadModalContents({data, setShowModal, query, select
                             sessionStorage.removeItem('formSubmitted');
                             downloadFiles();
                         }}
-                        // disabled={!formSubmitted}
+                        disabled={!formSubmitted}
                     >
                         Download
                     </button>
