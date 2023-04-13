@@ -51,7 +51,7 @@ export default function FilterModalContents ({dropdownValues, rangeValues, isLoa
                             <div className="mt-12">
                                 <h4 className="mx-4 text-start pb-2">Filter By Range</h4>
                                 <p className="mx-4 text-start">Filter data by the value of a numeric variable. Click the toggle associated with the variable to activate it. Values can be selected by dragging the slider (desktop only), typing the number into the text box, or clicking the arrows next to the text box to increase/decrease.</p>
-                                <p className="mx-4 text-start">NOTE: Activating a variable will automatically remove any data where that variable is not available.</p>
+                                <p className="mx-4 text-start">Activating a variable will automatically remove any data where that variable is not available.</p>
                             <FilterRanges
                                 values={rangeValues}
                                 router={router}

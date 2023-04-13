@@ -20,6 +20,9 @@ import FilterModalContents from "../components/modals/filter-modal-contents.jsx"
 import { classNames } from "../scripts/common.js";
 import { generateListDropdowns, generateNumericRanges } from "../scripts/filter-components.js";
 import Footer from "../components/footer.jsx";
+import { set } from "lodash";
+import { STATIC_QUERIES } from "../scripts/query-constants.js";
+import WelcomeModalContents from "../components/modals/welcome-modal-contents.jsx";
 
 const fetcher = async (url) => await fetch(url).then((res) => {
   if (!res.ok) {
@@ -42,18 +45,19 @@ export default function DataExplorer() {
   let displayData = [];
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [currentModal, setCurrentModal] = useState(null);
+  const [showModal, setShowModal] = useState(true);
+  const [currentModal, setCurrentModal] = useState(<WelcomeModalContents setShowModal={setShowModal}/>);
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 0);
   let isMobile = width <= 768;
   const [isInitiallyLoaded, setIsInitiallyLoaded] = useState(false);
   const [newTabSelected, setNewTabSelected] = useState(false);
-  
+  const [filterActive, setFilterActive] = useState(false);
+
   function showFilterButton() {
     return (
       <button disabled={isLoading && !hasError} onClick={()=>{setShowModal(true); setCurrentModal(
         <FilterModalContents rangeValues={rangeValues} dropdownValues={dropdownValues} setShowModal={setShowModal} isLoading={isLoading} hasError={hasError}/>)
-      }} className="mt-4 md:mt-0 md:ml-8 lg:ml-8 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+      }} className="mt-4 md:mt-0 md:ml-4 lg:ml-8 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
         Filter Data
       </button>
     )
@@ -98,12 +102,27 @@ export default function DataExplorer() {
     }
   }
 
+  function determineFilterActive() {
+    let urlContainsQueryFilter = false;
+    Object.keys(query).forEach(queryName => {
+      if(!STATIC_QUERIES.includes(queryName)) {
+        urlContainsQueryFilter = true;
+      }
+    })
+    setFilterActive(urlContainsQueryFilter);
+  }
+
   // adding event listener for screen resize and setting the initial load to be true
   // we can attach this initial load variable to any formulas that use the width variable to re-render the formula
   // after the window actually has a width
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
     setIsInitiallyLoaded(true);
+    if (window.sessionStorage.getItem('welcomeShown')) {
+      setShowModal(false);
+    } else {
+      sessionStorage.setItem('welcomeShown', true);
+    }
     return () => {
         window.removeEventListener('resize', handleWindowSizeChange);
     }
@@ -121,6 +140,7 @@ export default function DataExplorer() {
       setRangeValues(generateNumericRanges(untouchedData));
       setFilteredData(runAllFilters(untouchedData, query, isMobile));
     }
+    determineFilterActive();
   }, [isLoading, query]);
 
   // set isLoading to true if new tab selected that has yet to be loaded
@@ -159,10 +179,9 @@ export default function DataExplorer() {
       const searchByKeys = isMobile ? SEARCH_BY_KEYS_MOBILE : SEARCH_BY_KEYS;
       const searchBy = searchByKeys.includes(router.query.searchBy) ? router.query.searchBy : null;
       const showAll = router.query.showAll=="true" ? "true" : null;
-      const showFilter = router.query.showFilter=="true" ? "true" : null;
       const from = Date.parse(router.query.from) ? router.query.from : null;
       const to = Date.parse(router.query.to) ? router.query.to : null;
-      const dropdownValues = retrieveDropdownParams(router.query);
+      const dropdownValues = retrieveDropdownParams(router.query);  
       const numericValues = retrieveNumericParams(router.query);
       let query = {tab: tab, currentPage: 1, numShown: numShown};
       if(sortBy && order) { 
@@ -177,9 +196,6 @@ export default function DataExplorer() {
       }
       if(showAll) {
         query.showAll = showAll;
-      }
-      if(showFilter) {
-        query.showFilter = showFilter;
       }
       if(from) {
         query.from = from;
@@ -200,6 +216,7 @@ export default function DataExplorer() {
   const search = query.search || "";
   untouchedData = getSheetData(selectedTab);
   updateIsLoadingState();
+  console.log(filterActive);
 
   if(filteredData && query.currentPage && query.numShown) {
     displayData = filteredData.slice((parseInt(query.currentPage)-1)*parseInt(query.numShown),((parseInt(query.currentPage))*parseInt(query.numShown)));
@@ -276,12 +293,13 @@ export default function DataExplorer() {
         showFilter={query.showFilter}
         hasError={hasError}
         showFilterButton={showFilterButton}
+        filterActive={filterActive}
       />
       <div className="divide-y divide-gray-700 bg-gray-800">
         <div className="relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800">
           <div className="w-full flex-col md:flex-row md:inline-flex items-center justify-center">
             <ResultsPerPage router={router} length={!!filteredData ? filteredData.length : 0} isLoading={isLoading} hasError={hasError}/>
-            <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal} query={router.asPath}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+            <button onClick={()=>{setShowModal(true); setCurrentModal(<DownloadModalContents data={filteredData} setShowModal={setShowModal} query={router.asPath} selectedTab={selectedTab}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
               Download Data
             </button>
             <button onClick={()=>{setShowModal(true); setCurrentModal(<HowToModalContents setShowModal={setShowModal} router={router}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">

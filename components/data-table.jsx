@@ -13,14 +13,15 @@ import {
   import { setSortingParams } from "../scripts/router-handling";
   import Spinner from "../components/spinner.jsx";
   import ShowAllCheckbox from "./filters/show-all-checkbox";
-  import { TABLE_WIDTH_MAP, TAB_NAMES, RESULTS_PER_PAGE_KEYS } from "../scripts/constants.js";
+  import { TABLE_WIDTH_MAP, TAB_NAMES, RESULTS_PER_PAGE_KEYS, TAB_DESCRIPTIONS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
   import { classNames } from "../scripts/common.js";
   import { useRef, useState } from "react";
   import { CODEBOOK } from "../scripts/codebook";
   import DataRow from "./data-row";
+import ActiveFilterMessage from "./active-filter-message";
 
-export default function DataTable({ title, data, length, router, isLoading, isInitiallyLoaded, isMobile, hasError, showFilterButton }) {
+export default function DataTable({ title, data, length, router, isLoading, isInitiallyLoaded, isMobile, hasError, showFilterButton, filterActive }) {
     const headers = data && data[0] && Object.keys(data[0]);
     const currentIndex = ((Number(router.query.currentPage)-1)*Number(router.query.numShown))+1;
     const isDisabled = isLoading && !hasError;
@@ -60,12 +61,12 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
             <p className="mt-2 text-sm text-gray-700">
-              Below you may access portions of the data collected as part of the Prosecution Project. Data is currently displayed on two tabs--Pending which features cases still proceeding through the courts, and Completed which features cases in which defendants have been sentenced.
+              {TAB_DESCRIPTIONS[router.query.tab]}
             </p>
             <div className="md:flex md:justify-between items-center mt-6">
               <div className="flex items-center">
                 <p className={classNames((showViewDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute -translate-y-20 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
-                  Only the 7 most important variables are shown initially to make viewing easier. Activate the toggle to show all variables.<br/>Note: This option is not available on mobile.
+                  Only 7 primary variables are shown initially to make viewing easier. Activate the “Show all columns” toggle to show all 46 variables.
                 </p>
                 <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute -translate-y-10 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
                   <span className="font-semibold">{columnDescription}</span>{": " + CODEBOOK[columnDescription]}<br/>Learn more by visiting the Codebook tab in the User Manual modal at the bottom of the page
@@ -73,11 +74,19 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
                 <p className="text-lg m-0 font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
                 </p>
-                {!isMobile || !isInitiallyLoaded ? showFilterButton() : ""}
-                {!isMobile || !isInitiallyLoaded ? <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError} setShowViewDescription={setShowViewDescription} /> : ""}
+                {!isMobile || !isInitiallyLoaded ? 
+                <div className="flex items-center">
+                  {showFilterButton()}
+                  <ShowAllCheckbox router={router} isLoading={isLoading} hasError={hasError} setShowViewDescription={setShowViewDescription} />
+                  {filterActive ? <ActiveFilterMessage/> : ""}
+                </div> : ""}
               </div>
-              {isMobile || !isInitiallyLoaded ? showFilterButton() : ""}
-              <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 md:ml-8 lg:ml-16 w-full md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
+              {isMobile || !isInitiallyLoaded ? 
+              <div>
+                {filterActive ? <ActiveFilterMessage/> : ""}
+                {showFilterButton()}
+              </div> : ""}
+              <button onClick={resetUrl} disabled={isDisabled} className="mt-4 md:mt-0 w-full whitespace-nowrap md:w-32 bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white py-2 px-4 rounded">
                 Reset Search
               </button>
             </div>
@@ -87,10 +96,10 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
         <ErrorMessage/>
         : 
         <div className="relative mt-3 flex flex-col">
-          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((scrollbarLeft || isDisabled ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -left-3 md:-left-6 lg:-left-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
+          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((scrollbarLeft || isDisabled ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute md:fixed w-10 z-10 top-1/2 -left-3 md:left-0 transition-opacity ease-in-out duration-300")} onClick={()=>{
             scrollContainer.current.scrollLeft = 0;
           }}/>
-          <ArrowRightCircleIcon ref={rightArrow} className={classNames((scrollbarRight || isDisabled  ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute w-10 top-1/2 -right-3 md:-right-6 lg:-right-8 transition-opacity ease-in-out duration-300")} onClick={()=>{
+          <ArrowRightCircleIcon ref={rightArrow} className={classNames((scrollbarRight || isDisabled  ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute md:fixed w-10 z-10 top-1/2 -right-3 md:right-0 transition-opacity ease-in-out duration-300")} onClick={()=>{
             scrollContainer.current.scrollLeft = scrollContainer.current.scrollWidth;
           }}/>
           <div ref={scrollContainer} className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8" onScroll={() => {
@@ -114,7 +123,7 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
                     <tr>
                       <th
                         scope="col"
-                        className="w-14 md:py-2 text-xs md:text-sm text-gray-500"
+                        className="w-10 md:py-2 text-xs md:text-sm text-gray-500"
                         key="index"
                       >
                       </th>

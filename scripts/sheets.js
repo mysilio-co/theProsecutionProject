@@ -1,4 +1,4 @@
-import { RANGE_MAP, TAB_NAMES } from './constants';
+import { RANGE_MAP } from './constants';
 
 const { google } = require('googleapis');
 const {GoogleAuth} = require('google-auth-library');
