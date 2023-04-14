@@ -27,7 +27,7 @@ export default function BasicSearch({router, search, isLoading}) {
         <div className="relative z-0 flex-1 px-2 flex items-center justify-center lg:justify-start sm:inset-0">
             <div className="w-full md:w-96">
                 <label htmlFor="search" className="sr-only">
-                Search
+                    Search
                 </label>
                 <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
@@ -45,6 +45,7 @@ export default function BasicSearch({router, search, isLoading}) {
                     type="search"
                     onChange={e => setQuery(e.target.value)}
                     onSubmit={(e) => {}}
+                    disabled={isLoading}
                 />
                 </div>
             </div>

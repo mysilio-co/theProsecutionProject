@@ -15,7 +15,7 @@ export default function DataRow({row, headers, router, currentIndex, idx}) {
             key={currentIndex+idx}
             className={classNames(idx % 2 === 0 ? undefined : "bg-gray-200", "flex hover:bg-stone-100 items-center")}
             >
-            <td className="w-14 pl-4 py-3 md:py-2 text-xs md:text-sm text-gray-600">{currentIndex+idx}</td>
+            <td className="w-10 pl-4 py-3 md:py-2 text-xs md:text-sm text-gray-600">{currentIndex+idx}</td>
             
             {headers && headers.map((h) => 
                 { return h==="Short narrative" ?

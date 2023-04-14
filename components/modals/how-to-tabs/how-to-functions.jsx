@@ -26,7 +26,7 @@ export default function HowToFunctions() {
                 content={
                     <div className="text-start">
                         {/* <h4 className="text-gray-700 mb-2">Sorting</h4> */}
-                        <p>Data can be filtered by date, categorical variable, or quantitative variable by click the "Filter Data" button above the table. Instructions for how to filter each type of variable can be viewed when that modal is opened.</p>
+                        <p>Data can be filtered by date, categorical variable, or quantitative variable by clicking the "Filter Data" button above the table. Instructions for how to filter each type of variable can be viewed when that modal is opened.</p>
                     </div>
             }/>
             <ContentDisclosure 
@@ -34,8 +34,12 @@ export default function HowToFunctions() {
                 content={
                     <div className="text-start">
                         {/* <h4 className="text-gray-700 mb-2">Selecting Dataset</h4> */}
-                        <p>There are currently 3 datasets to view: General is *quick description of general*, Summer-Fall 2020 Protests is *description of summer fall*, Capitol Raid is *desc*</p>
-                        <p>Note: Switching datasets can affect what filters are selected. If a value from a dropdown is selected on one dataset but doesn't exist on another dataset, it will be removed. If a selected value on a number slider for one dataset is higher than the highest value of a different dataset, it will be reduced.</p>
+                        <p>Data are currently displayed across three tabs: </p>
+                        <ol className="list-decimal ml-6 text-gray-500">
+                            <li><span className="font-bold">General</span>, which includes completed cases as well as those still proceeding through the courts.</li>
+                            <li><span className="font-bold">Summer-Fall 2020 Protests</span>, which covers cases occurring during that time period in response to the death of George Floyd.</li>
+                            <li><span className="font-bold">Capitol Raid</span>, which displays federal and non-federal charges levied against protesters active in and around the US Capitol building on January 6, 2021.</li>
+                        </ol>
                     </div>
             }/>
             <ContentDisclosure 
@@ -43,7 +47,7 @@ export default function HowToFunctions() {
                 content={
                     <div className="text-start">
                         {/* <h4 className="text-gray-700 mb-2">Downloading Data</h4> */}
-                        <p>Data can be downloaded in .csv format by clicking the "Download Data" button at the bottom of the page.</p>
+                        <p>Data can be downloaded in .csv format by clicking the "Download Data" button at the bottom of the page after accepting the terms and conditions.</p>
                     </div>
             }/>
             <ContentDisclosure 

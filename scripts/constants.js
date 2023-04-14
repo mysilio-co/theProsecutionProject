@@ -4,6 +4,18 @@ export const TAB_NAMES = {
     "Capitol Raid":"Capitol raid cases"
   };
 
+  export const TAB_DESCRIPTIONS = {
+    "General": "This tab covers completed cases as well as those still proceeding through the courts.",
+    "Summer-Fall 2020 Protests":"This tab covers protest-related cases occurring during the Summer and Fall of 2020 in response to the death of George Floyd.",
+    "Capitol Raid":"This tab covers federal and non-federal cases against protesters active in and around the US Capitol building on January 6, 2021."
+  };
+
+  export const TAB_DOWNLOAD = {
+    "General": "general",
+    "Summer-Fall 2020 Protests":"summer-fall-2020",
+    "Capitol Raid":"capitol-raid"
+  };
+
   export const SHEET_NAMES = [
     "U//FOUO",
     "Summer-Fall 2020 protest cases",
@@ -150,7 +162,7 @@ export const IDEOLOGICAL_GROUPING_FILTER_VALUES = {
 }
 
 export const TABLE_WIDTH_MAP = {
-  "Date": "mobile-w-28 w-28",
+  "Date": "mobile-w-28 w-28 whitespace-nowrap",
   "Date descriptor": "w-40",
   "Case ID": "w-64",
   "Group identifier": "w-40",
@@ -161,7 +173,7 @@ export const TABLE_WIDTH_MAP = {
   "Co-offender": "w-40",
   "Reason for inclusion": "w-96",
   "Name of case": "w-96",
-  "Jurisdiction": "w-36",
+  "Jurisdiction": "w-40",
   "Location: country": "w-52",
   "Location: state": "w-52",
   "Location: city": "w-52",
@@ -177,8 +189,8 @@ export const TABLE_WIDTH_MAP = {
   "Criminal method": "w-48",
   "Additional criminal method": "w-48",
   "Completion of crime": "w-64",
-  "# killed": "w-32",
-  "# injured": "w-32",
+  "# killed": "w-36",
+  "# injured": "w-36",
   "Charges": "w-96",
   "Plea": "w-64",
   "Verdict": "w-40",

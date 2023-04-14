@@ -44,7 +44,7 @@ export default function Dropdown({label, options, router, isLoading, hasError}) 
           <>
             <Listbox.Label className="block text-start text-sm pr-2 font-medium text-gray-400">{label}</Listbox.Label>
             <div className="relative">
-              <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-40 h-9 text-left shadow-sm focus:border-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800">
+              <Listbox.Button className="relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-10 h-9 text-left shadow-sm focus:border-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800">
                 <span className="flex items-center">
                   <span className="ml-3 block truncate">{selectedKey.join(', ')}</span>
                 </span>

@@ -1,6 +1,6 @@
-import { DESKTOP_EXPRESS_COLUMN_IDS, MOBILE_COLUMN_IDS, RANGE_MAP, SHEET_NAMES } from '../../../scripts/constants';
+import { SHEET_NAMES } from '../../../scripts/constants';
 import { parseSheetsResponse } from '../../../scripts/data-handling';
-import { concatAllColumns, concatSpecificColumns, generateSheetsQuery, getSheetsData, getSingleSheetData } from '../../../scripts/sheets';
+import { concatAllColumns, generateSheetsQuery, getSheetsData } from '../../../scripts/sheets';
 
 export const config = {
   runtime: 'nodejs'
