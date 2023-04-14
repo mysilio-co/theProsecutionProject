@@ -21,7 +21,7 @@ export default function WelcomeModalContents ({setShowModal}) {
                             Welcome!
                         </Dialog.Title>
                         <a ref={invisFocusRef} href="" onClick={(event) => event.preventDefault() }></a>
-                        <div className="mt-2 p-4">
+                        <div className="mt-2 p-4 pb-0">
                             <h2>The Prosecution Project Data</h2>
                             <p className="mt-6 text-sm text-gray-500">
                                 The Prosecution Project (tPP) is a long-term, Open-Source Intelligence research platform tracking and providing an <span className="font-bold">analysis of felony criminal cases involving illegal political violence occurring in the United States since 1990.</span></p>
