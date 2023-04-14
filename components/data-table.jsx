@@ -16,7 +16,7 @@ import {
   import { TABLE_WIDTH_MAP, TAB_NAMES, RESULTS_PER_PAGE_KEYS, TAB_DESCRIPTIONS } from "../scripts/constants.js";
   import ErrorMessage from "./error-message";
   import { classNames } from "../scripts/common.js";
-  import { useRef, useState } from "react";
+  import { useEffect, useRef, useState } from "react";
   import { CODEBOOK } from "../scripts/codebook";
   import DataRow from "./data-row";
 import ActiveFilterMessage from "./active-filter-message";
@@ -33,6 +33,7 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
     const rightArrow = useRef();
     const [scrollbarLeft, setScrollbarLeft] = useState(true);
     const [scrollbarRight, setScrollbarRight] = useState(false);
+    const [hasScrollBar, setHasScrollBar] = useState(true);
     
     function resetUrl() {
       const tab = router.query.tab ? router.query.tab : Object.keys(TAB_NAMES)[0];
@@ -54,6 +55,59 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
         {}
       );
     }
+
+    // tracks if window has been resized
+    // https://stackoverflow.com/questions/62846043/react-js-useeffect-with-window-resize-event-listener-not-working
+    function useWindowSize() {
+      const [windowSize, setWindowSize] = useState({
+        width: undefined,
+        height: undefined,
+      });
+      useEffect(() => {
+        function handleResize() {
+          setWindowSize({
+            width: window.innerWidth,
+            height: window.innerHeight,
+          });
+        }
+        window.addEventListener("resize", handleResize);
+        handleResize();
+        return () => window.removeEventListener("resize", handleResize);
+      }, []);
+      return windowSize;
+    }
+
+    function determineScrollBarPresence() {
+      return scrollContainer?.current?.scrollWidth > scrollContainer?.current?.clientWidth;
+    }
+
+    function determineScrollBarLocation() {
+      if(scrollContainer.current.scrollLeft <= 0) {
+        setScrollbarLeft(true);
+        setScrollbarRight(false);
+      }
+      else if(scrollContainer.current.scrollWidth <= Math.ceil(scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth)) {
+        setScrollbarRight(true);
+        setScrollbarLeft(false);
+      }
+      else {
+        setScrollbarLeft(false);
+        setScrollbarRight(false);
+      }
+    }
+    
+    useEffect(()=>{
+      setHasScrollBar(determineScrollBarPresence());
+    }, [ , useWindowSize(), data]);
+
+    useEffect(()=>{
+    }, [useWindowSize()]);
+
+    useEffect(()=>{
+      if(hasScrollBar) {
+        determineScrollBarLocation();
+      }
+    }, [hasScrollBar]);
     
     return (
       <div className="py-3 px-4 sm:px-6 lg:px-8">
@@ -96,25 +150,14 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
         <ErrorMessage/>
         : 
         <div className="relative mt-3 flex flex-col">
-          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((scrollbarLeft || isDisabled ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute md:fixed w-10 z-10 top-1/2 -left-3 md:left-0 transition-opacity ease-in-out duration-300")} onClick={()=>{
+          <ArrowLeftCircleIcon ref={leftArrow} className={classNames((!hasScrollBar || scrollbarLeft || isDisabled ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute md:fixed w-10 z-10 top-1/2 -left-3 md:left-0 transition-opacity ease-in-out duration-300")} onClick={()=>{
             scrollContainer.current.scrollLeft = 0;
           }}/>
-          <ArrowRightCircleIcon ref={rightArrow} className={classNames((scrollbarRight || isDisabled  ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute md:fixed w-10 z-10 top-1/2 -right-3 md:right-0 transition-opacity ease-in-out duration-300")} onClick={()=>{
+          <ArrowRightCircleIcon ref={rightArrow} className={classNames((!hasScrollBar || scrollbarRight || isDisabled  ? 'opacity-0 cursor-default invisible' : 'opacity-90 cursor-pointer'), "absolute md:fixed w-10 z-10 top-1/2 -right-3 md:right-0 transition-opacity ease-in-out duration-300")} onClick={()=>{
             scrollContainer.current.scrollLeft = scrollContainer.current.scrollWidth;
           }}/>
           <div ref={scrollContainer} className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8" onScroll={() => {
-            if(scrollContainer.current.scrollLeft <= 0) {
-              setScrollbarLeft(true);
-              setScrollbarRight(false);
-            }
-            else if(scrollContainer.current.scrollWidth <= scrollContainer.current.scrollLeft + scrollContainer.current.offsetWidth) {
-              setScrollbarRight(true);
-              setScrollbarLeft(false);
-            }
-            else {
-              setScrollbarLeft(false);
-              setScrollbarRight(false);
-            }
+            determineScrollBarLocation();
           }}>
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
