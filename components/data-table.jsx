@@ -68,8 +68,8 @@ export default function DataTable({ title, data, length, router, isLoading, isIn
                 <p className={classNames((showViewDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute -translate-y-20 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
                   Only 7 primary variables are shown initially to make viewing easier. Activate the “Show all columns” toggle to show all 46 variables.
                 </p>
-                <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute -translate-y-10 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
-                  <span className="font-semibold">{columnDescription}</span>{": " + CODEBOOK[columnDescription]}<br/>Learn more by visiting the Codebook tab in the User Manual modal at the bottom of the page
+                <p className={classNames((showColumnDescription ? 'opacity-100' : 'opacity-0 invisible'), "absolute lg:-translate-y-15 xl:-translate-y-15 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300")}>
+                  <span className="font-semibold">{columnDescription}</span>{": " + CODEBOOK[columnDescription]}
                 </p>
                 <p className="text-lg m-0 font-semibold text-gray-700">
                   Search Results: {length + (length==1 ? " Case" : " Cases")}
