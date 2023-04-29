@@ -17,10 +17,10 @@ export default function ContactUsModalContents ({setShowModal}) {
                     <div className="mt-2 p-4">
                         <h3>Want to get in touch?</h3>
                         <p className="my-2 text-sm text-gray-500">
-                            If you are interested in acquiring tPP's data, please visit our <a href="https://theprosecutionproject.org/data-requests/" target="_blank">Data Requests</a> page for more information.
+                            If you are interested in acquiring a specfic subset of data, or require assistance gathering the data you need, please visit our <a href="https://theprosecutionproject.org/data-requests/" target="_blank">Data Requests</a> page for more information.
                         </p>
-                        <p className="my-2 text-sm text-gray-500">
-                            Documents, media requests and other inquiries should be sent to us via the project Director, <a href="mailto:michael@theprosecutionproject.org">Dr. Michael Loadenthal (michael@theprosecutionproject.org)</a>
+                        <p className="my-2 text-sm text-gray-500 break-words">
+                            Documents, media requests and other inquiries should be sent to us via the project Director, <a href="mailto:michael@theprosecutionproject.org">Dr. Michael Loadenthal</a>. We also welcome corrections for incorrect information and any contributions for data we might be missing!
                         </p>
                         <p className="my-2 text-sm text-gray-500">
                             If you are interested in joining the tPP team, please visit our <a href="https://theprosecutionproject.org/want-to-join-our-team/" target="_blank">Join Our Team</a> page and fill out the application!

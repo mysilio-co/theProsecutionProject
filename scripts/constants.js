@@ -31,7 +31,7 @@ export const HOW_TO_TABS = [
     "Codebook"
 ]
 
-export const IDEOLOGICAL_GROUPING = "Ideological Grouping"
+export const IDEOLOGICAL_GROUPING = "Ideological grouping"
 
 export const DROPDOWN_KEYS = [
     "Date descriptor",

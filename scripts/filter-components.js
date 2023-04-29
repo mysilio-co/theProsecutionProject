@@ -8,7 +8,7 @@ export function generateListDropdowns(data) {
             dropdowns.push({[col]:listOptions});
         }
     }
-    dropdowns.push({ "Ideological Grouping" : IDEOLOGICAL_GROUPING_DROPDOWN_VALUES});
+    dropdowns.push({ "Ideological grouping" : IDEOLOGICAL_GROUPING_DROPDOWN_VALUES});
     return dropdowns;
 }
 

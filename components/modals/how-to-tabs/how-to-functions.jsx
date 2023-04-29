@@ -4,7 +4,7 @@ export default function HowToFunctions() {
 
     return (
         <div>
-            {/* <p className="mt-4 mx-6 text-start">All the capabilities currently possible on the site are listed here.</p> */}
+            <p className="mt-4 mx-6 text-start">All the capabilities currently possible on the site are listed here.</p>
             <ContentDisclosure 
                 name={"Searching"} 
                 content={
@@ -26,7 +26,7 @@ export default function HowToFunctions() {
                 content={
                     <div className="text-start">
                         {/* <h4 className="text-gray-700 mb-2">Sorting</h4> */}
-                        <p>Data can be filtered by date, categorical variable, or quantitative variable by clicking the "Filter Data" button above the table. Instructions for how to filter each type of variable can be viewed when that modal is opened.</p>
+                        <p>Data can be filtered by date, categorical variable, or quantitative variable by clicking the "Filter Data" button above the table. Instructions for how to filter each type of variable can be viewed when that modal is opened. A "Filter Active" message will appear if any filter is currently selected.</p>
                     </div>
             }/>
             <ContentDisclosure 

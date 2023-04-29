@@ -31,12 +31,15 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading, has
         if(!isDisabled && !router.query.searchBy) {
             setSearchBy("Any");
         }
+        else {
+            setSearchBy(router.query.searchBy);
+        }
     },[router.query.searchBy])
     
     return (
         <div className="relative w-full z-10 flex-1 px-2 flex items-center justify-center sm:inset-0">
         <div className="w-full md:inline-flex md:items-center md:justify-center">
-        <Listbox value={ searchBy} onChange={setSearchBy} disabled={isDisabled}>
+        <Listbox value={searchBy} onChange={setSearchBy} disabled={isDisabled}>
             {({ open }) => (
                 <>
                 <Listbox.Label className="block text-sm w-24 pl-0 md:pl-4 pr-2 font-medium text-gray-400">Search By:</Listbox.Label>
