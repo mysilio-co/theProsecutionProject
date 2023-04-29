@@ -31,7 +31,7 @@ export default function SearchBy({router, isMobile, isAllColumns, isLoading, has
         if(!isDisabled && !router.query.searchBy) {
             setSearchBy("Any");
         }
-        else {
+        else if(router.query.searchBy) {
             setSearchBy(router.query.searchBy);
         }
     },[router.query.searchBy])
