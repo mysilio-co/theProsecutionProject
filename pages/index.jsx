@@ -105,8 +105,6 @@ export default function DataExplorer() {
   }
 
   function handleInProgressAlert(tab) {
-    console.log(tab);
-    console.log(showModal);
     if(tab==="In Progress") {
       if(!inProgressAlertShown) {
         setCurrentModal(<InProgressModalContents setShowModal={setShowModal}/>);

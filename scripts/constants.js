@@ -9,7 +9,7 @@ export const TAB_NAMES = {
     "General": "This tab covers completed cases as well as those still proceeding through the courts.",
     "Summer-Fall 2020 Protests":"This tab covers protest-related cases occurring during the Summer and Fall of 2020 in response to the death of George Floyd.",
     "Capitol Raid":"This tab covers federal and non-federal cases against protesters active in and around the US Capitol building on January 6, 2021.",
-    "In Progress":"This one is in progress"
+    "In Progress":"This tab includes cases currently being investigated and coded by researchers. These cases have not been completed, will change over time, and have not been audited. These cases are provided as a resource, but should be independently investigated and verified before being included in research products."
   };
 
   export const TAB_DOWNLOAD = {
