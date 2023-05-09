@@ -29,7 +29,7 @@ export default function WelcomeModalContents ({setShowModal}) {
                                 Through identification, analysis, and assessment of thousands of cases, tPP seeks to identify correlations between who a defendant is, how they are charged and prosecuted, and other related factors, such as political ideology, religion, and the crime’s motive, means, target, and impact.
                             </p>
                             <p className="text-sm text-gray-500">
-                                You may access portions of the data collected as part of the Prosecution Project on this site. Data are currently displayed across three tabs:
+                                You may access portions of the data collected as part of the Prosecution Project on this site. Data are currently displayed across four tabs:
                             </p>
                             <ol className="list-decimal ml-6 text-gray-500">
                                 <li><span className="font-bold">General</span>, which includes completed cases as well as those still proceeding through the courts.</li>
