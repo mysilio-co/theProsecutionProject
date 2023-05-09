@@ -34,11 +34,12 @@ export default function HowToFunctions() {
                 content={
                     <div className="text-start">
                         {/* <h4 className="text-gray-700 mb-2">Selecting Dataset</h4> */}
-                        <p>Data are currently displayed across three tabs: </p>
+                        <p>Data are currently displayed across four tabs: </p>
                         <ol className="list-decimal ml-6 text-gray-500">
                             <li><span className="font-bold">General</span>, which includes completed cases as well as those still proceeding through the courts.</li>
                             <li><span className="font-bold">Summer-Fall 2020 Protests</span>, which covers cases occurring during that time period in response to the death of George Floyd.</li>
                             <li><span className="font-bold">Capitol Raid</span>, which displays federal and non-federal charges levied against protesters active in and around the US Capitol building on January 6, 2021.</li>
+                            <li><span className="font-bold">In Progress</span>, which includes cases currently being investigated and coded by researchers. These cases have not been completed, will change over time, and have not been audited. These cases are provided as a resource, but should be independently investigated and verified before being included in research products.</li>
                         </ol>
                     </div>
             }/>

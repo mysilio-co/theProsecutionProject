@@ -29,12 +29,13 @@ export default function WelcomeModalContents ({setShowModal}) {
                                 Through identification, analysis, and assessment of thousands of cases, tPP seeks to identify correlations between who a defendant is, how they are charged and prosecuted, and other related factors, such as political ideology, religion, and the crime’s motive, means, target, and impact.
                             </p>
                             <p className="text-sm text-gray-500">
-                                You may access portions of the data collected as part of the Prosecution Project on this site. Data are currently displayed across three tabs:
+                                You may access portions of the data collected as part of the Prosecution Project on this site. Data are currently displayed across four tabs:
                             </p>
                             <ol className="list-decimal ml-6 text-gray-500">
                                 <li><span className="font-bold">General</span>, which includes completed cases as well as those still proceeding through the courts.</li>
                                 <li><span className="font-bold">Summer-Fall 2020 Protests</span>, which covers cases occurring during that time period in response to the death of George Floyd.</li>
                                 <li><span className="font-bold">Capitol Raid</span>, which displays federal and non-federal charges levied against protesters active in and around the US Capitol building on January 6, 2021.</li>
+                                <li><span className="font-bold">In Progress</span>, which includes cases currently being investigated and coded by researchers. These cases have not been completed, will change over time, and have not been audited. These cases are provided as a resource, but should be independently investigated and verified before being included in research products.</li>
                             </ol>
                         </div>
                     </div>

@@ -23,6 +23,7 @@ import Footer from "../components/footer.jsx";
 import { set } from "lodash";
 import { STATIC_QUERIES } from "../scripts/query-constants.js";
 import WelcomeModalContents from "../components/modals/welcome-modal-contents.jsx";
+import InProgressModalContents from "../components/modals/in-progress-modal-contents.jsx";
 
 const fetcher = async (url) => await fetch(url).then((res) => {
   if (!res.ok) {
@@ -45,7 +46,8 @@ export default function DataExplorer() {
   let displayData = [];
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [inProgressAlertShown, setInProgressAlertShown] = useState(false);
   const [currentModal, setCurrentModal] = useState(<WelcomeModalContents setShowModal={setShowModal}/>);
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 0);
   let isMobile = width <= 768;
@@ -102,6 +104,21 @@ export default function DataExplorer() {
     }
   }
 
+  function handleInProgressAlert(tab) {
+    if(tab==="In Progress") {
+      if(!inProgressAlertShown) {
+        setCurrentModal(<InProgressModalContents setShowModal={setShowModal}/>);
+        setShowModal(true); 
+        setInProgressAlertShown(true);
+      }
+    }
+    else {
+      if(inProgressAlertShown) {
+        setInProgressAlertShown(false);
+      }
+    }
+  }
+
   function determineFilterActive() {
     let urlContainsQueryFilter = false;
     Object.keys(query).forEach(queryName => {
@@ -118,20 +135,19 @@ export default function DataExplorer() {
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
     setIsInitiallyLoaded(true);
-    if (window.sessionStorage.getItem('welcomeShown')) {
-      setShowModal(false);
-    } else {
+    if (!window.sessionStorage.getItem('welcomeShown')) {
       sessionStorage.setItem('welcomeShown', true);
+      setShowModal(true);
     }
     return () => {
         window.removeEventListener('resize', handleWindowSizeChange);
     }
   }, []);
 
-    // filter data when any filter values are updated
-    useEffect(() => {
-      setWidth(window.innerWidth);
-    }, [isLoading]);
+  // filter data when any filter values are updated
+  useEffect(() => {
+    setWidth(window.innerWidth);
+  }, [isLoading]);
 
   // filter data when any filter values are updated
   useEffect(() => {
@@ -149,6 +165,7 @@ export default function DataExplorer() {
       setIsLoading(true);
       setFilteredData([]);
     }
+    handleInProgressAlert(selectedTab);
   }, [selectedTab]);
 
   // set newTabSelected to true if either a new tab is selected or a new tab finishes loading
