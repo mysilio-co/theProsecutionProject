@@ -35,6 +35,7 @@ export default function WelcomeModalContents ({setShowModal}) {
                                 <li><span className="font-bold">General</span>, which includes completed cases as well as those still proceeding through the courts.</li>
                                 <li><span className="font-bold">Summer-Fall 2020 Protests</span>, which covers cases occurring during that time period in response to the death of George Floyd.</li>
                                 <li><span className="font-bold">Capitol Raid</span>, which displays federal and non-federal charges levied against protesters active in and around the US Capitol building on January 6, 2021.</li>
+                                <li><span className="font-bold">In Progress</span>, which is something</li>
                             </ol>
                         </div>
                     </div>
