@@ -17,9 +17,6 @@ export default function InProgressModalContents ({setShowModal}) {
             <div className="bg-white pt-0 pb-4 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                     <div className="mt-0 text-center sm:text-left w-full">
-                    <Dialog.Title  as="h3" className="p-4 bg-gray-800 text-lg font-medium leading-6 text-white">
-                            In Progress Tab Disclaimer
-                        </Dialog.Title>
                         <div className="mt-2 p-4 pb-0 text-center">
                             <h2>Attention!</h2>
                             <p className="mt-6 text-sm text-gray-500">
