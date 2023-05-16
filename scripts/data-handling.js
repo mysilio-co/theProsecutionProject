@@ -219,7 +219,7 @@ function sortByNumber(columnA, columnB, order) {
     else if(columnA=="#") {
       numericColumnA = -3;
     }
-    else if(columnA.toLowerCase() === "data not available") {
+    else if(columnA?.toLowerCase() === "data not available") {
       numericColumnA = -2;
     }
     else {
@@ -233,7 +233,7 @@ function sortByNumber(columnA, columnB, order) {
     else if(columnB=="#") {
       numericColumnB = -3;
     }
-    else if(columnB.toLowerCase() === "data not available") {
+    else if(columnB?.toLowerCase() === "data not available") {
       numericColumnB = -2;
     }
     else {
