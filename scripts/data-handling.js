@@ -143,11 +143,11 @@ export function filterByDate(data, fromQuery, toQuery) {
     return data;
   }
   else {
-    const from = fromQuery ? new Date(fromQuery) : new Date("01/01/0001");
+    const from = fromQuery ? new Date(fromQuery) : new Date("01/01/1900");
     const to = toQuery ? new Date(toQuery) : new Date("01/01/3000");
     return data.filter(row=> {
       const date = new Date(row["Date"]);
-      return date>=from && date<=to ? true : false;
+      return date>=from && date<=to;
     })
   }
 }

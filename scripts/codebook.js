@@ -31,7 +31,7 @@ export const CODEBOOK = {
     "Charges":"What criminal charges were brought against the defendant?",
     "Plea":"How did the defendant plead to the charges?",
     "Verdict":"What was the final verdict of the criminal case?",
-    "Length of prison sentence":"How many months was the defendant sentenced to serve in prison?",
+    "Length of prison sentence (months)":"How many months was the defendant sentenced to serve in prison?",
     "Life sentence":"How many life sentences did the defendant receive?",
     "Death sentence":"How many death sentences did the defendant receive?",
     "Additional details":"What notable, additional, or atypical charges or conditions were associated with the defendant in order of importance?",

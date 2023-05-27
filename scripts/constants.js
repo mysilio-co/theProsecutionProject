@@ -73,7 +73,7 @@ export const SEARCH_BY_KEYS_EXPRESS = [
     "Ideological affiliation",
     "Group affiliation",
     "Criminal method",
-    "Length of prison sentence",
+    "Length of prison sentence (months)",
     "Short narrative"
 ]
 
@@ -97,7 +97,7 @@ export const SEARCH_BY_KEYS_MOBILE = [
     "Full legal name", 
     "Group affiliation",
     "Ideological affiliation",
-    "Length of prison sentence"
+    "Length of prison sentence (months)"
 ]
 
 export const RESULTS_PER_PAGE_KEYS = [
@@ -198,7 +198,7 @@ export const TABLE_WIDTH_MAP = {
   "Charges": "w-96",
   "Plea": "w-64",
   "Verdict": "w-40",
-  "Length of prison sentence": "mobile-w-40 w-52",
+  "Length of prison sentence (months)": "mobile-w-40 w-52",
   "Life sentence": "w-40",
   "Death sentence": "w-40",
   "Additional details": "w-72",
@@ -228,7 +228,7 @@ export const TABLE_WIDTH_MAP_MOBILE = {
     "Full legal name": "w-20",
     "Ideological affiliation": "w-20",
     "Group affiliation": "w-20",
-    "Length of prison sentence": "w-20"
+    "Length of prison sentence (months)": "w-20"
   }
 
   export const MOBILE_COLUMN_KEYS = [
@@ -236,7 +236,7 @@ export const TABLE_WIDTH_MAP_MOBILE = {
     "Full legal name", 
     "Ideological affiliation",
     "Group affiliation",
-    "Length of prison sentence"
+    "Length of prison sentence (months)"
 ]
 
 export const MOBILE_COLUMN_IDS = [
@@ -249,7 +249,7 @@ export const DESKTOP_EXPRESS_COLUMN_KEYS = [
     "Ideological affiliation",
     "Group affiliation",
     "Criminal method",
-    "Length of prison sentence",
+    "Length of prison sentence (months)",
     "Short narrative"
 ]
 
@@ -258,7 +258,7 @@ export const DESKTOP_EXPRESS_COLUMN_IDS = [
 ]
 
 export const NUMERIC_COLUMNS = [
-    "Length of prison sentence",
+    "Length of prison sentence (months)",
     "# killed",
     "# injured",
     "Life sentence",
@@ -299,7 +299,7 @@ export const DESKTOP_COLUMN_KEYS = [
     "Charges",
     "Plea",
     "Verdict",
-    "Length of prison sentence",
+    "Length of prison sentence (months)",
     "Life sentence",
     "Death sentence",
     "Additional details",

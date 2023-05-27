@@ -76,18 +76,29 @@ export default function DataExplorer() {
   }
 
   function getSheetData(tab) {
-    const isGeneral = tab==="General" ? true : false;
+    const isGeneral = tab==="General";
+    const isInProgress = tab==="In Progress";
     const fouo = getChunksOfSheet('U//FOUO', '2010', tab);
-    const { data: pending, error: pendingError } = useSWR(isGeneral ? '/api/sheets/getSheets?sheet=Pending cases' : null, fetcher);
+    const { data: pending, error: pendingError } = useSWR(isInProgress ? '/api/sheets/getSheets?sheet=Pending cases' : null, fetcher);
     const { data: nonGeneral, error:nonGeneralError } = useSWR(!isGeneral ? '/api/sheets/getSheets?sheet='+TAB_NAMES[tab] : null, fetcher);
     updateHasError(pendingError || nonGeneralError);
-    return isGeneral ? (fouo && pending && !hasError ? fouo.concat(pending) : null) : (nonGeneral && !hasError ? nonGeneral : null);
+    if(hasError) {
+      return null;
+    } else {
+      if(isInProgress) {
+        return nonGeneral && pending ? nonGeneral.concat(pending) : null;
+      } else if(isGeneral) {
+        return fouo ? fouo : null;
+      } else {
+        return nonGeneral ? nonGeneral : null;
+      }
+    }
   }
 
   function getChunksOfSheet(sheet, year, tab) {
     //shouldCall is used to determine if the call should be made using nextJS conditional fetching
     //if false, cascades down and prevents the sheets calls from being made
-    const shouldCall = tab==="General" ? true : false;
+    const shouldCall = tab==="General";
     const { data:dateColumn, error:dateColumnError } = useSWR(shouldCall ? '/api/sheets/getSheetDateColumn?sheet='+sheet : null, fetcher);
     updateHasError(dateColumnError);
     const locationOfYear = dateColumn && !hasError ? findFirstOccurenceOfYear(dateColumn, year) : null;
