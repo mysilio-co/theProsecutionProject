@@ -57,7 +57,7 @@ const CustomFields = {
   Charges: TPP.charges,
   Plea: TPP.plea,
   Verdict: TPP.verdict,
-  "Length of prison sentence": TPP.lengthOfPrisonSentence,
+  "Length of prison sentence (months)": TPP.lengthOfPrisonSentence,
   "Life sentence": TPP.lifeSentence,
   "Death sentence": TPP.deathSentence,
   "Additional details": TPP.additionalDetails,

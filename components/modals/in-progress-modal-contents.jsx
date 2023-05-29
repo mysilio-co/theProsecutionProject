@@ -20,7 +20,7 @@ export default function InProgressModalContents ({setShowModal}) {
                         <div className="mt-2 p-4 pb-0 text-center">
                             <h2>Attention!</h2>
                             <p className="mt-6 text-sm text-gray-500">
-                                The cases included on the "In Progress" tab are currently being investigated and coded by researchers and are not complete. These cases have not been fully coded, will change over time, and have not been audited. These cases are provided as a resource, but should be independently investigated and verified before being included in research products.
+                                This tab includes cases currently being investigated and coded by researchers as well as those still proceeding through the courts. These cases have not been completed, will change over time, and have not been audited. These cases are provided as a resource, but should be independently investigated and verified before being included in research products.
                             </p>
                         </div>
                     </div>
