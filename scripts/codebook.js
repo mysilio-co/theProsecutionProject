@@ -1,5 +1,5 @@
 export const CODEBOOK = {
-    "Date":"What date did the incident occur?",
+    "Date":'Date associated with case (see "Date descriptor").',
     "Date descriptor":"What stage in the prosecution does this date describe?",
     "Case ID":"The 8-digit M/D/Y value + the defendant's initials (e.g., 01011998_AA for a defendant indicted on January 1, 1998 with the name Amy Arsonist).",
     "Group identifier":"Did the defendant's case involve other co-offenders, co-conspirators, or co-defendants? I.e., Did the members intentionally work together to commit the crime?",
