@@ -17,13 +17,14 @@ import DownloadModalContents from "../components/modals/download-modal-contents.
 import HowToModalContents from "../components/modals/how-to-modal-contents.jsx";
 import ContactUsModalContents from "../components/modals/contact-us-modal-contents.jsx";
 import FilterModalContents from "../components/modals/filter-modal-contents.jsx";
+import DataVisualizerModalContents from "../components/modals/data-visualizer-modal-contents.jsx";
 import { classNames } from "../scripts/common.js";
 import { generateListDropdowns, generateNumericRanges } from "../scripts/filter-components.js";
 import Footer from "../components/footer.jsx";
-import { set } from "lodash";
 import { STATIC_QUERIES } from "../scripts/query-constants.js";
 import WelcomeModalContents from "../components/modals/welcome-modal-contents.jsx";
 import InProgressModalContents from "../components/modals/in-progress-modal-contents.jsx";
+import Chart from "../components/chart.jsx";
 
 const fetcher = async (url) => await fetch(url).then((res) => {
   if (!res.ok) {
@@ -278,6 +279,11 @@ export default function DataExplorer() {
                   </div>
                   <div className="flex py-2 pb-5 md:py-0 items-center">
                     <SearchBy router={router} isMobile={isMobile} isAllColumns={query.showAll} isLoading={isLoading} hasError={hasError}/>
+                  </div>
+                  <div className="flex py-2 pb-5 md:py-0 items-center">
+                  <button onClick={()=>{setShowModal(true); setCurrentModal(<DataVisualizerModalContents data={filteredData} setShowModal={setShowModal}/>)}} className="mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded">
+                    Visualize Data
+                  </button>
                   </div>
                 </div>
               </div>
