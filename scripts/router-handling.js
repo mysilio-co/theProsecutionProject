@@ -1,4 +1,4 @@
-import { DROPDOWN_KEYS, NUMERIC_COLUMNS } from "./constants";
+import { CATEGORICAL_KEYS, NUMERIC_COLUMNS } from "./constants";
 
 export function removeQueryParam(param, router) {
     const { pathname, query } = router;
@@ -85,7 +85,7 @@ export function setSortingParams(clickedColumn, router) {
 
 export function retrieveDropdownParams(query) {
     let paramObject = {};
-    DROPDOWN_KEYS.forEach(key => {
+    CATEGORICAL_KEYS.forEach(key => {
         if(key in query) {
             paramObject[key] = query[key];
         }

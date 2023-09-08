@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import * as d3 from "d3";
-import { DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED, DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
+import { DESKTOP_COLUMN_KEYS, DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED, CATEGORICAL_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_FILTER_VALUES, NUMERIC_COLUMNS, SEARCH_BY_KEYS_MOBILE } from "./constants";
 
 export function runAllFilters(data, query, isMobile) {
   data = fuzzySearch(data, query.search, query.searchBy, isMobile);
@@ -86,7 +86,7 @@ export function filterByDropdown(data, queryParams) {
     let filteredData = [];
     let filterParams = {};
     // Extract filter values from query params
-    DROPDOWN_KEYS.forEach(key => {
+    CATEGORICAL_KEYS.forEach(key => {
       if(queryParams[key]) {
         filterParams[key] = queryParams[key].split(', ');
       }
@@ -166,7 +166,7 @@ export function removeMismatchedDropdown(router, dropdownValues) {
   let columnsToBeUpdated = new Map();
   if(router.query && dropdownValues.length!=0) {
     // Extract filter values from query params
-    DROPDOWN_KEYS.forEach(key => {
+    CATEGORICAL_KEYS.forEach(key => {
       if(router.query[key] && dropdownValues.find(dropdownValue=>Object.keys(dropdownValue)==key)) {
         const routerValue = router.query[key].split(', ');
         const dropdownValue = Object.values(dropdownValues.find(dropdownValue=>Object.keys(dropdownValue)==key))[0];

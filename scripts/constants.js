@@ -35,9 +35,14 @@ export const HOW_TO_TABS = [
     "Codebook"
 ]
 
+export const DATA_VISUALIZER_TABS = [
+    "Explore",
+    "Premade Charts"
+]
+
 export const IDEOLOGICAL_GROUPING = "Ideological grouping"
 
-export const DROPDOWN_KEYS = [
+export const CATEGORICAL_KEYS = [
     "Date descriptor",
     "Co-offender",
     "Reason for inclusion",

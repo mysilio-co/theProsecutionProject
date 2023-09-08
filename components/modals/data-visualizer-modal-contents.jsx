@@ -1,21 +1,16 @@
 import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import Chart from '../chart';
+import Chart from './data-visualizer/line-chart';
 import * as DataVisualizerConstants from '../../scripts/data-visualizer-constants';
 import DataVisualizerDropdowns from '../data-visualizer-dropdowns';
 import { classNames } from '../../scripts/common.js';
 import { cloneDeep } from 'lodash';
+import { DATA_VISUALIZER_TABS } from '../../scripts/constants';
+import ExploreTab from './data-visualizer/explore-tab';
 
 export default function DataVisualizerModalContents({ data, setShowModal }) {
-  const [chartType, setChartType] = useState(DataVisualizerConstants.LINE);
-  const [timeRange, setTimeRange] = useState(
-    DataVisualizerConstants.DATE_OPTIONS[0],
-  );
-  const [chartStatistic, setChartStatistic] = useState(
-    DataVisualizerConstants.AGGREGATE_OPTIONS[0],
-  );
-  const [chartData, setChartData] = useState();
+  const [selectedTab, setSelectedTab] = useState(DATA_VISUALIZER_TABS[0]);
   function setModalVisibility(showModalValue) {
     setShowModal(showModalValue);
   }
@@ -31,53 +26,35 @@ export default function DataVisualizerModalContents({ data, setShowModal }) {
             >
               Data Visualizer
             </Dialog.Title>
-            <div>
-              <div>
-                <button
-                  onClick={() => setChartType(DataVisualizerConstants.LINE)}
-                  className={classNames(
-                    chartType === DataVisualizerConstants.LINE
-                      ? 'bg-gray-500'
-                      : 'bg-gray-800',
-                    'mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 hover:bg-gray-500 hover:bg-gray-500 text-white py-2 px-4 rounded',
-                  )}
-                >
-                  Line Chart
-                </button>
-                <button
-                  onClick={() => setChartType(DataVisualizerConstants.BAR)}
-                  className={classNames(
-                    chartType === DataVisualizerConstants.BAR
-                      ? 'bg-gray-500'
-                      : 'bg-gray-800',
-                    'mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 hover:bg-gray-500 hover:bg-gray-500 text-white py-2 px-4 rounded',
-                  )}
-                >
-                  Bar Chart
-                </button>
-                <button
-                  onClick={() => setChartType(DataVisualizerConstants.PIE)}
-                  className={classNames(
-                    chartType === DataVisualizerConstants.PIE
-                      ? 'bg-gray-500'
-                      : 'bg-gray-800',
-                    'mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 hover:bg-gray-500 hover:bg-gray-500 text-white py-2 px-4 rounded',
-                  )}
-                >
-                  Pie Chart
-                </button>
-                <DataVisualizerDropdowns
-                  setTimeRange={setTimeRange}
-                  setChartStatistic={setChartStatistic}
-                ></DataVisualizerDropdowns>
-              </div>
-              <Chart
-                data={data}
-                chartType={chartType}
-                timeRange={timeRange}
-                aggregate={chartStatistic}
-              ></Chart>
+            <div className='bg-gray-800 border-t border-gray-700'>
+              <nav
+                className='px-2 md:py-2 md:flex md:space-x-8'
+                aria-label='Global'
+              >
+                {DATA_VISUALIZER_TABS.map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => {
+                      setSelectedTab(tab);
+                    }}
+                  >
+                    <a
+                      key={tab}
+                      className={classNames(
+                        tab === selectedTab
+                          ? 'bg-gray-900 text-white hover:text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'whitespace-nowrap rounded-md py-2 px-3 inline-flex items-center text-sm font-medium hover:no-underline',
+                      )}
+                      aria-current={tab === selectedTab ? 'page' : undefined}
+                    >
+                      {tab}
+                    </a>
+                  </button>
+                ))}
+              </nav>
             </div>
+            {selectedTab === 'Explore' ? <ExploreTab data={data} /> : ''}
           </div>
         </div>
       </div>
