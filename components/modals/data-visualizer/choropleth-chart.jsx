@@ -1,0 +1,112 @@
+import * as d3 from 'd3';
+import { Legend } from '../../../scripts/color-legend.js';
+import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
+import { cloneDeep } from 'lodash';
+import { useEffect, useState } from 'react';
+import * as topojson from 'topojson';
+import { STATES_ALBERS_10M } from '../../../scripts/states-albers-10m.js';
+
+export default function ChoroplethChart({
+  svgRef,
+  data,
+  setCategoryNames,
+  setChartData,
+  width = 975,
+  height = 610,
+  margin = 20,
+}) {
+  const [instanceData, setInstanceData] = useState([]);
+
+  useEffect(() => {
+    setChartData(instanceData);
+  }, [instanceData]);
+
+  useEffect(() => {
+    setCategoryNames([]);
+    const categories = groupByCategory(data, 'Location: state');
+    setInstanceData(mapData(categories));
+  }, [data]);
+
+  if (!!data && data.length > 0) {
+    d3.selectAll('path').remove();
+    const svg = d3.select(svgRef.current);
+    const us = STATES_ALBERS_10M;
+    const chartData = _.cloneDeep(instanceData).filter(data => {
+      return data.key != 'Outside U.S.' && data.key != 'Multiple states';
+    });
+    // chartData.map(data => {
+    //   data['key'] = DataVisualizerConstants.US_HASH[data['key']];
+    // });
+
+    const path = d3.geoPath();
+    const format = d => `${d}%`;
+    const valuemap = new Map(chartData.map(d => [d.key, d.value]));
+    const color = d3.scaleQuantize(
+      [1, d3.max(instanceData.map(category => category.value))],
+      d3.schemeBlues[9],
+    );
+
+    svg
+      .append('g')
+      .attr('transform', 'translate(610,20)')
+      .append(() =>
+        Legend(color, { title: '# of Cases by State', width: 260 }),
+      );
+    svg
+      .append('g')
+      .selectAll('path')
+      .data(topojson.feature(us, us.objects.states).features)
+      .join('path')
+      .attr('fill', d => {
+        return color(
+          !!valuemap.get(d.properties.name)
+            ? valuemap.get(d.properties.name)
+            : 0,
+        );
+      })
+      .attr('d', path)
+      .append('title')
+      .text(
+        d =>
+          `${d.properties.name}, ${
+            !!valuemap.get(d.properties.name)
+              ? valuemap.get(d.properties.name)
+              : 0
+          }`,
+      );
+
+    svg
+      .append('path')
+      .datum(topojson.mesh(us, us.objects.states))
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('stroke-linejoin', 'round')
+      .attr('d', path);
+    svg
+      .append('g')
+      .append('path')
+      .datum(topojson.feature(us, us.objects.nation))
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('stroke-linejoin', 'round')
+      .attr('d', d3.geoPath());
+    return <svg width={width} height={height} ref={svgRef}></svg>;
+  } else {
+    return <div></div>;
+  }
+}
+
+function groupByCategory(data, category) {
+  return d3.group(data, d => d[category]);
+}
+
+function mapData(dataRollup) {
+  let ret = [];
+  dataRollup.forEach((value, key) => {
+    ret.push({ key: key, value: value.length });
+  });
+  ret.sort(function compare(a, b) {
+    return b.value - a.value;
+  });
+  return ret;
+}

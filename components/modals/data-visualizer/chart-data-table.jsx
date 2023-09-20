@@ -23,6 +23,7 @@ export default function ChartDataTable({ data, category }) {
                     idx % 2 === 0 ? undefined : 'bg-gray-200',
                     'flex hover:bg-stone-100 items-center',
                   )}
+                  key={'data-' + idx}
                 >
                   <td className='w-12 pl-3 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {idx + 1}

@@ -6,11 +6,12 @@ import BarChart from './bar-chart';
 import PieChart from './pie-chart';
 import ChartDataTable from './chart-data-table';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants';
-import DataVisualizerDropdowns from '../../data-visualizer-dropdowns';
+import DataVisualizerDropdowns from './data-visualizer-dropdowns';
 import ChartColors from './chart-colors';
 import { classNames } from '../../../scripts/common.js';
 import { cloneDeep } from 'lodash';
 import { DATA_VISUALIZER_TABS } from '../../../scripts/constants';
+import ChoroplethChart from './choropleth-chart';
 
 export default function ExploreTab({ data }) {
   const svgRef = useRef();
@@ -69,7 +70,8 @@ export default function ExploreTab({ data }) {
           chartType={selectedTab}
           timeRange={timeRange}
           variable={variable}
-          categoryNames={categoryNames}
+          setCategoryNames={setCategoryNames}
+          setChartData={setChartData}
         />
       ) : (
         ''
@@ -80,7 +82,8 @@ export default function ExploreTab({ data }) {
           data={data}
           chartType={selectedTab}
           variable={variable}
-          categoryNames={categoryNames}
+          setCategoryNames={setCategoryNames}
+          setChartData={setChartData}
         />
       ) : (
         ''
@@ -91,6 +94,17 @@ export default function ExploreTab({ data }) {
           data={data}
           chartType={selectedTab}
           variable={variable}
+          setCategoryNames={setCategoryNames}
+          setChartData={setChartData}
+        />
+      ) : (
+        ''
+      )}
+      {selectedTab === DataVisualizerConstants.CHOROPLETH ? (
+        <ChoroplethChart
+          svgRef={svgRef}
+          data={data}
+          chartType={selectedTab}
           setCategoryNames={setCategoryNames}
           setChartData={setChartData}
         />

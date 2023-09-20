@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
 import { cloneDeep } from 'lodash';
 
@@ -7,7 +7,8 @@ export default function BarChart({
   svgRef,
   data,
   variable,
-  categoryNames,
+  setCategoryNames,
+  setChartData,
   width = 900,
   height = 400,
   marginTop = 20,
@@ -15,15 +16,25 @@ export default function BarChart({
   marginBottom = 30,
   marginLeft = 40,
 }) {
+  const [instanceData, setInstanceData] = useState([]);
+
+  useEffect(() => {
+    setChartData(instanceData);
+    setCategoryNames(instanceData.map(category => category.key));
+  }, [instanceData]);
+
+  useEffect(() => {
+    const categories = groupByCategory(data, variable);
+    setInstanceData(mapData(categories));
+  }, [variable]);
+
   if (!!data && data.length > 0) {
     d3.selectAll('rect').remove();
     const gx = useRef();
     const gy = useRef();
     const svg = d3.select(svgRef.current);
-    const categoryValues = [];
-    const categories = groupByCategory(data, variable);
-    const instanceData = mapData(categories, categoryNames, categoryValues);
-    console.log(instanceData);
+    const categoryNames = instanceData.map(category => category.key);
+    const categoryValues = instanceData.map(category => category.value);
     const x = d3
       .scaleBand()
       .range([0, width])
@@ -77,12 +88,13 @@ function groupByCategory(data, category) {
   return d3.group(data, d => d[category]);
 }
 
-function mapData(dataRollup, categoryNames, categoryValues) {
+function mapData(dataRollup) {
   let ret = [];
   dataRollup.forEach((value, key) => {
-    categoryNames.push(key);
-    categoryValues.push(value.length);
     ret.push({ key: key, value: value.length });
+  });
+  ret.sort(function compare(a, b) {
+    return b.value - a.value;
   });
   return ret;
 }

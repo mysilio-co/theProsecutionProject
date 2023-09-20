@@ -1,9 +1,6 @@
 import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import Chart from './data-visualizer/line-chart';
-import * as DataVisualizerConstants from '../../scripts/data-visualizer-constants';
-import DataVisualizerDropdowns from '../data-visualizer-dropdowns';
 import { classNames } from '../../scripts/common.js';
 import { cloneDeep } from 'lodash';
 import { DATA_VISUALIZER_TABS } from '../../scripts/constants';
@@ -18,7 +15,7 @@ export default function DataVisualizerModalContents({ data, setShowModal }) {
   return (
     <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6'>
       <div className='bg-white pt-0 pb-4 sm:pb-4'>
-        <div className='sm:flex sm:items-start'>
+        <div className='sm:flex sm:items-start overflow-x-auto'>
           <div className='mt-0 text-center sm:text-left'>
             <Dialog.Title
               as='h3'

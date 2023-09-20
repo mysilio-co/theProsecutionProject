@@ -17,9 +17,6 @@ export default function PieChart({
 
   useEffect(() => {
     setChartData(instanceData);
-  }, [instanceData]);
-
-  useEffect(() => {
     setCategoryNames(instanceData.map(category => category.key));
   }, [instanceData]);
 

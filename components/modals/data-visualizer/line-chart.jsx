@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
 import { cloneDeep } from 'lodash';
 
@@ -8,7 +8,8 @@ export default function LineChart({
   data,
   timeRange,
   variable,
-  categoryNames,
+  setCategoryNames,
+  setChartData,
   width = 900,
   height = 400,
   marginTop = 20,
@@ -16,12 +17,25 @@ export default function LineChart({
   marginBottom = 30,
   marginLeft = 40,
 }) {
+  const [instanceData, setInstanceData] = useState([]);
+
+  useEffect(() => {
+    setChartData(instanceData);
+    setCategoryNames(instanceData.map(category => category.key));
+  }, [instanceData]);
+
+  useEffect(() => {
+    const categories = groupByCategory(data, variable);
+    setInstanceData(mapData(categories));
+  }, [timeRange, variable]);
+
   if (!!data && data.length > 0) {
     d3.selectAll('path').remove();
     const gx = useRef();
     const gy = useRef();
     const svg = d3.select(svgRef.current);
     const lineData = [];
+    const categoryNames = [];
     let lines = [];
     const categories = groupByCategory(data, variable);
     categories.forEach(categoryData => {
@@ -191,4 +205,15 @@ function roundToNearestMonth(dateString) {
       ? '0' + (date.getMonth() + 1)
       : date.getMonth() + 1;
   return year + '-' + month + '-01';
+}
+
+function mapData(dataRollup) {
+  let ret = [];
+  dataRollup.forEach((value, key) => {
+    ret.push({ key: key, value: value.length });
+  });
+  ret.sort(function compare(a, b) {
+    return b.value - a.value;
+  });
+  return ret;
 }
