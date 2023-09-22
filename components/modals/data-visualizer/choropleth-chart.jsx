@@ -90,7 +90,9 @@ export default function ChoroplethChart({
       .attr('stroke', 'black')
       .attr('stroke-linejoin', 'round')
       .attr('d', d3.geoPath());
-    return <svg width={width} height={height} ref={svgRef}></svg>;
+    return (
+      <svg width={width} height={height} ref={svgRef} className='m-auto'></svg>
+    );
   } else {
     return <div></div>;
   }
