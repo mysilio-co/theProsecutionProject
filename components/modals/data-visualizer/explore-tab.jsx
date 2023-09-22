@@ -15,6 +15,7 @@ import ChoroplethChart from './choropleth-chart';
 
 export default function ExploreTab({ data }) {
   const svgRef = useRef();
+  const modalRef = useRef();
   const [selectedTab, setSelectedTab] = useState(
     DataVisualizerConstants.CHART_TYPES[0],
   );
@@ -31,7 +32,7 @@ export default function ExploreTab({ data }) {
 
   return (
     <div>
-      <div className='bg-gray-800 border-t border-gray-700'>
+      <div className='bg-gray-800 border-t border-gray-700' ref={modalRef}>
         <nav className='px-2 md:py-2 md:flex md:space-x-8' aria-label='Global'>
           {DataVisualizerConstants.CHART_TYPES.map(tab => (
             <button
@@ -46,7 +47,7 @@ export default function ExploreTab({ data }) {
                   tab === selectedTab
                     ? 'bg-gray-900 text-white hover:text-white'
                     : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                  'whitespace-nowrap rounded-md py-2 px-3 inline-flex items-center text-sm font-medium hover:no-underline',
+                  'whitespace-nowrap rounded-md py-2 px-5 inline-flex items-center text-sm font-medium hover:no-underline',
                 )}
                 aria-current={tab === selectedTab ? 'page' : undefined}
               >
@@ -64,50 +65,78 @@ export default function ExploreTab({ data }) {
         ></DataVisualizerDropdowns>
       </div>
       {selectedTab === DataVisualizerConstants.LINE ? (
-        <LineChart
-          svgRef={svgRef}
-          data={data}
-          chartType={selectedTab}
-          timeRange={timeRange}
-          variable={variable}
-          setCategoryNames={setCategoryNames}
-          setChartData={setChartData}
-        />
+        <div className='overflow-x-scroll'>
+          <LineChart
+            svgRef={svgRef}
+            data={data}
+            chartType={selectedTab}
+            timeRange={timeRange}
+            variable={variable}
+            width={
+              modalRef.current && modalRef.current.offsetWidth > 900
+                ? modalRef.current.offsetWidth
+                : 900
+            }
+            setCategoryNames={setCategoryNames}
+            setChartData={setChartData}
+          />
+        </div>
       ) : (
         ''
       )}
       {selectedTab === DataVisualizerConstants.BAR ? (
-        <BarChart
-          svgRef={svgRef}
-          data={data}
-          chartType={selectedTab}
-          variable={variable}
-          setCategoryNames={setCategoryNames}
-          setChartData={setChartData}
-        />
+        <div className='overflow-x-scroll'>
+          <BarChart
+            svgRef={svgRef}
+            data={data}
+            chartType={selectedTab}
+            variable={variable}
+            width={
+              modalRef.current && modalRef.current.offsetWidth > 600
+                ? modalRef.current.offsetWidth
+                : 600
+            }
+            setCategoryNames={setCategoryNames}
+            setChartData={setChartData}
+          />
+        </div>
       ) : (
         ''
       )}
       {selectedTab === DataVisualizerConstants.PIE ? (
-        <PieChart
-          svgRef={svgRef}
-          data={data}
-          chartType={selectedTab}
-          variable={variable}
-          setCategoryNames={setCategoryNames}
-          setChartData={setChartData}
-        />
+        <div className='overflow-x-scroll'>
+          <PieChart
+            svgRef={svgRef}
+            data={data}
+            chartType={selectedTab}
+            variable={variable}
+            width={
+              modalRef.current && modalRef.current.offsetWidth < 400
+                ? modalRef.current.offsetWidth
+                : 400
+            }
+            height={
+              modalRef.current && modalRef.current.offsetWidth < 400
+                ? modalRef.current.offsetWidth
+                : 400
+            }
+            setCategoryNames={setCategoryNames}
+            setChartData={setChartData}
+          />
+        </div>
       ) : (
         ''
       )}
       {selectedTab === DataVisualizerConstants.CHOROPLETH ? (
-        <ChoroplethChart
-          svgRef={svgRef}
-          data={data}
-          chartType={selectedTab}
-          setCategoryNames={setCategoryNames}
-          setChartData={setChartData}
-        />
+        <div className='overflow-x-scroll'>
+          <ChoroplethChart
+            svgRef={svgRef}
+            data={data}
+            chartType={selectedTab}
+            setCategoryNames={setCategoryNames}
+            setChartData={setChartData}
+          />
+        </div>
       ) : (
         ''
       )}

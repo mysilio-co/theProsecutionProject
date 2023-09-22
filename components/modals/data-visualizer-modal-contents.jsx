@@ -13,10 +13,10 @@ export default function DataVisualizerModalContents({ data, setShowModal }) {
   }
 
   return (
-    <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6'>
+    <Dialog.Panel className='relative transform rounded-lg overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6'>
       <div className='bg-white pt-0 pb-4 sm:pb-4'>
-        <div className='sm:flex sm:items-start overflow-x-auto'>
-          <div className='mt-0 text-center sm:text-left'>
+        <div className='sm:flex sm:items-start'>
+          <div className='mt-0 text-center sm:text-left w-full'>
             <Dialog.Title
               as='h3'
               className='p-4 bg-gray-800 text-lg font-medium leading-6 text-white'

@@ -48,7 +48,9 @@ export default function PieChart({
       .attr('stroke', 'black')
       .style('stroke-width', '1px')
       .style('opacity', 0.7);
-    return <svg width={width} height={height} ref={svgRef}></svg>;
+    return (
+      <svg width={width} height={height} ref={svgRef} className='m-auto'></svg>
+    );
   } else {
     return <div></div>;
   }
