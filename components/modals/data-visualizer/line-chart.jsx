@@ -18,7 +18,7 @@ export default function LineChart({
   marginLeft = 40,
 }) {
   const [instanceData, setInstanceData] = useState([]);
-  const lineData = [];
+  let lineData = [];
 
   useEffect(() => {
     setChartData(instanceData);
@@ -46,13 +46,21 @@ export default function LineChart({
       categoryNames.push(category);
       lineData.push(obj);
     });
-    const allDates = generateAllDatesArray(getAllDates(lineData), timeRange);
-    combineChartDataWithAllDates(lineData, allDates);
-    lineData.sort(function compare(a, b) {
+    const allDates = getAllDates(lineData);
+    const allValues = getAllValues(lineData);
+    const finalChartData = combineChartDataWithAllDates(
+      lineData,
+      generateAllDatesValues(allDates, timeRange),
+    );
+    console.log(finalChartData);
+    finalChartData.sort(function compare(a, b) {
       return Object.values(b)[0].length - Object.values(a)[0].length;
     });
+    console.log(finalChartData);
     lines = generateLines(
-      lineData,
+      finalChartData,
+      allDates,
+      allValues,
       width,
       height,
       marginLeft,
@@ -60,9 +68,8 @@ export default function LineChart({
       marginTop,
       marginBottom,
     );
-
-    const x = scaleX(getAllDates(lineData), width, marginLeft, marginRight);
-    const y = scaleY(getAllValues(lineData), height, marginTop, marginBottom);
+    const x = scaleX(allDates, width, marginLeft, marginRight);
+    const y = scaleY(allValues, height, marginTop, marginBottom);
 
     useEffect(() => void d3.select(gx.current).call(d3.axisBottom(x)), [gx, x]);
     useEffect(() => void d3.select(gy.current).call(d3.axisLeft(y)), [gy, y]);
@@ -109,6 +116,8 @@ function scaleY(data, height, marginTop, marginBottom) {
 
 function generateLines(
   lineData,
+  allDates,
+  allValues,
   width,
   height,
   marginLeft,
@@ -117,14 +126,13 @@ function generateLines(
   marginBottom,
 ) {
   const lines = [];
-  const x = scaleX(getAllDates(lineData), width, marginLeft, marginRight);
-  const y = scaleY(getAllValues(lineData), height, marginTop, marginBottom);
+  const x = scaleX(allDates, width, marginLeft, marginRight);
+  const y = scaleY(allValues, height, marginTop, marginBottom);
   lineData.forEach(line => {
     const lineArray = Object.values(line)[0];
-
     const linePoints = d3
       .line()
-      .x(d => x(d['key']))
+      .x(d => x(new Date(d['key'])))
       .y(d => y(d['value']));
     lines.push(linePoints(lineArray));
   });
@@ -136,9 +144,9 @@ function groupByCategory(data, category) {
 }
 
 function mapRollup(dataRollup) {
-  let ret = [];
+  let ret = {};
   dataRollup.forEach((value, key) => {
-    ret.push({ key: key, value: value });
+    ret[new Date(key)] = value;
   });
   return ret;
 }
@@ -164,14 +172,11 @@ function timeRollup(data, timeRange) {
       d => d.Date,
     ),
   );
-  chartData.sort(function compare(a, b) {
-    var dateA = new Date(a.key);
-    var dateB = new Date(b.key);
-    return dateA - dateB;
-  });
-  chartData.map(function (item) {
-    item['key'] = new Date(item['key']);
-  });
+  // chartData.sort(function compare(a, b) {
+  //   var dateA = new Date(a.key);
+  //   var dateB = new Date(b.key);
+  //   return dateA - dateB;
+  // });
   return chartData;
 }
 
@@ -182,7 +187,7 @@ function roundToNearestMonth(dateString) {
     date.getMonth().toString().length == 1
       ? '0' + (date.getMonth() + 1)
       : date.getMonth() + 1;
-  return year + '-' + month + '-01 00:00:00 EST';
+  return year + '-' + month + '-01 00:00:00';
 }
 
 function mapData(dataRollup) {
@@ -196,16 +201,24 @@ function mapData(dataRollup) {
   return ret;
 }
 
-function combineChartDataWithAllDates(data, allDates) {
+function combineChartDataWithAllDates(data, allDatesValues) {
+  const chartData = [];
   data.forEach(line => {
-    console.log(line);
+    const lineValues = Object.values(line)[0];
+    const mergedValues = { ...allDatesValues, ...lineValues };
+    const result = Object.keys(mergedValues).map(key => {
+      return {
+        key: key,
+        value: mergedValues[key],
+      };
+    });
+    chartData.push({ [Object.keys(line)[0]]: result });
   });
-  console.log(data);
-  console.log(allDates);
+  return chartData;
 }
 
-function generateAllDatesArray(allDatesList, timeRange) {
-  const retValue = [];
+function generateAllDatesValues(allDatesList, timeRange) {
+  const retValue = {};
   const minDate = new Date(d3.min(allDatesList));
   const maxDate = new Date(d3.max(allDatesList));
   let currentDate = minDate;
@@ -213,7 +226,7 @@ function generateAllDatesArray(allDatesList, timeRange) {
     minDate.setDate(1);
   }
   while (currentDate <= maxDate) {
-    retValue.push({ key: _.cloneDeep(currentDate), value: 0 });
+    retValue[_.cloneDeep(currentDate)] = 0;
     if (timeRange === DataVisualizerConstants.YEAR) {
       currentDate.setFullYear(currentDate.getFullYear() + 1);
     } else if (timeRange === DataVisualizerConstants.MONTH) {
@@ -228,15 +241,16 @@ function generateAllDatesArray(allDatesList, timeRange) {
 function getAllDates(data) {
   let allDates = [];
   data.forEach(line => {
-    allDates = [...allDates, ...Object.values(line)[0]];
+    allDates = [...allDates, ...Object.keys(Object.values(line)[0])];
   });
-  return allDates.map(a => a.key);
+  return allDates.map(date => new Date(date).getTime());
 }
 
 function getAllValues(data) {
   let allValues = [];
+  console.log(data);
   data.forEach(line => {
-    allValues = [...allValues, ...Object.values(line)[0]];
+    allValues = [...allValues, ...Object.values(Object.values(line)[0])];
   });
-  return allValues.map(a => a.value);
+  return allValues;
 }
