@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash';
 import { useEffect, useState } from 'react';
 import * as topojson from 'topojson';
 import { STATES_ALBERS_10M } from '../../../scripts/states-albers-10m.js';
+import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function ChoroplethChart({
   svgRef,
@@ -15,19 +16,17 @@ export default function ChoroplethChart({
   height = 610,
   margin = 20,
 }) {
-  const [instanceData, setInstanceData] = useState([]);
-
-  useEffect(() => {
-    setChartData(instanceData);
-  }, [instanceData]);
+  let instanceData = [];
+  let categories = [];
 
   useEffect(() => {
     setCategoryNames([]);
-    const categories = groupByCategory(data, 'Location: state');
-    setInstanceData(mapData(categories));
+    setChartData(instanceData);
   }, [data]);
 
   if (!!data && data.length > 0) {
+    categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
+    instanceData = mapData(categories);
     d3.selectAll('path').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
@@ -42,7 +41,7 @@ export default function ChoroplethChart({
     const format = d => `${d}%`;
     const valuemap = new Map(chartData.map(d => [d.key, d.value]));
     const color = d3.scaleQuantize(
-      [1, d3.max(instanceData.map(category => category.value))],
+      [1, d3.max(chartData.map(category => category.value))],
       d3.schemeBlues[9],
     );
 
@@ -96,10 +95,6 @@ export default function ChoroplethChart({
   } else {
     return <div></div>;
   }
-}
-
-function groupByCategory(data, category) {
-  return d3.group(data, d => d[category]);
 }
 
 function mapData(dataRollup) {

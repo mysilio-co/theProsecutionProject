@@ -1,6 +1,7 @@
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants';
 
 export default function ChartColors({ categoryNames }) {
+  categoryNames = categoryNames?.length > 1 ? categoryNames : [];
   return (
     <div>
       {categoryNames.map((value, index) => {

@@ -18,20 +18,18 @@ export default function LineChart({
   marginBottom = 30,
   marginLeft = 40,
 }) {
-  const [instanceData, setInstanceData] = useState([]);
+  let instanceData = [];
+  let categories = [];
   let lineData = [];
 
   useEffect(() => {
     setChartData(instanceData);
-    setCategoryNames(lineData.map(a => Object.keys(a)[0]));
-  }, [instanceData]);
-
-  useEffect(() => {
-    const categories = groupByCategory(data, variable);
-    setInstanceData(mapData(categories));
-  }, [timeRange, variable]);
+    setCategoryNames(instanceData.map(category => category.key));
+  }, [, variable]);
 
   if (!!data && data.length > 0) {
+    categories = DataVisualizerScripts.groupByCategory(data, variable);
+    instanceData = mapData(categories);
     d3.selectAll('path').remove();
     d3.selectAll('.grid').remove();
     const gx = useRef();
@@ -39,7 +37,6 @@ export default function LineChart({
     const svg = d3.select(svgRef.current);
     const categoryNames = [];
     let lines = [];
-    const categories = groupByCategory(data, variable);
     categories.forEach(categoryData => {
       const category = categoryData[0][variable];
       const chartData = timeRollup(_.cloneDeep(categoryData), timeRange);
@@ -149,10 +146,6 @@ function generateLines(
   return lines;
 }
 
-function groupByCategory(data, category) {
-  return d3.group(data, d => d[category]);
-}
-
 function mapRollup(dataRollup) {
   let ret = {};
   dataRollup.forEach((value, key) => {
@@ -258,7 +251,6 @@ function getAllDates(data) {
 
 function getAllValues(data) {
   let allValues = [];
-  console.log(data);
   data.forEach(line => {
     allValues = [...allValues, ...Object.values(Object.values(line)[0])];
   });

@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
 import { cloneDeep } from 'lodash';
 import { useEffect, useState } from 'react';
+import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function PieChart({
   svgRef,
@@ -13,23 +14,20 @@ export default function PieChart({
   height = 400,
   margin = 20,
 }) {
-  const [instanceData, setInstanceData] = useState([]);
+  let instanceData = [];
+  let categories = [];
 
   useEffect(() => {
     setChartData(instanceData);
     setCategoryNames(instanceData.map(category => category.key));
-  }, [instanceData]);
-
-  useEffect(() => {
-    const categories = groupByCategory(data, variable);
-    setInstanceData(mapData(categories));
-  }, [variable]);
+  }, [, variable]);
 
   if (!!data && data.length > 0) {
+    categories = DataVisualizerScripts.groupByCategory(data, variable);
+    instanceData = mapData(categories);
     d3.selectAll('path').remove();
     const svg = d3.select(svgRef.current);
     var radius = Math.min(width, height) / 2 - margin;
-
     var pie = d3.pie().value(function (d) {
       return d['value'];
     });
@@ -54,10 +52,6 @@ export default function PieChart({
   } else {
     return <div></div>;
   }
-}
-
-function groupByCategory(data, category) {
-  return d3.group(data, d => d[category]);
 }
 
 function mapData(dataRollup) {

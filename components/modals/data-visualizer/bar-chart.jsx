@@ -17,19 +17,17 @@ export default function BarChart({
   marginBottom = 30,
   marginLeft = 40,
 }) {
-  const [instanceData, setInstanceData] = useState([]);
+  let instanceData = [];
+  let categories = [];
 
   useEffect(() => {
     setChartData(instanceData);
     setCategoryNames(instanceData.map(category => category.key));
-  }, [instanceData]);
-
-  useEffect(() => {
-    const categories = groupByCategory(data, variable);
-    setInstanceData(mapData(categories));
-  }, [variable]);
+  }, [, variable]);
 
   if (!!data && data.length > 0) {
+    categories = DataVisualizerScripts.groupByCategory(data, variable);
+    instanceData = mapData(categories);
     d3.selectAll('rect').remove();
     d3.selectAll('.grid').remove();
     const gx = useRef();
@@ -92,10 +90,6 @@ export default function BarChart({
   } else {
     return <div></div>;
   }
-}
-
-function groupByCategory(data, category) {
-  return d3.group(data, d => d[category]);
 }
 
 function mapData(dataRollup) {
