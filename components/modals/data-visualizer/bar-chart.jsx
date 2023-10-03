@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
 import { cloneDeep } from 'lodash';
+import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function BarChart({
   svgRef,
@@ -30,6 +31,7 @@ export default function BarChart({
 
   if (!!data && data.length > 0) {
     d3.selectAll('rect').remove();
+    d3.selectAll('.grid').remove();
     const gx = useRef();
     const gy = useRef();
     const svg = d3.select(svgRef.current);
@@ -37,7 +39,7 @@ export default function BarChart({
     const categoryValues = instanceData.map(category => category.value);
     const x = d3
       .scaleBand()
-      .range([0, width])
+      .range([marginLeft, width])
       .domain(categoryNames)
       .padding(0.2);
     const y = d3
@@ -45,7 +47,10 @@ export default function BarChart({
       .domain([0, d3.max(categoryValues)])
       .range([height - marginBottom, marginTop]);
 
-    useEffect(() => void d3.select(gx.current).call(d3.axisBottom(x)), [gx, x]);
+    useEffect(
+      () => void d3.select(gx.current).call(d3.axisBottom(x).tickFormat('')),
+      [gx, x],
+    );
     useEffect(() => void d3.select(gy.current).call(d3.axisLeft(y)), [gy, y]);
     svg
       .select('.x-axis')
@@ -55,6 +60,11 @@ export default function BarChart({
       .select('.y-axis')
       .style('transform', 'translateX(0px)')
       .call(d3.axisLeft(y));
+    svg
+      .append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(${marginLeft},0)`)
+      .call(DataVisualizerScripts.gridY(y, 10).tickSize(-width).tickFormat(''));
     svg
       .selectAll('mybar')
       .data(instanceData)

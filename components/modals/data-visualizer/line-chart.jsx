@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { useRef, useEffect, useState } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
 import { cloneDeep, spread } from 'lodash';
+import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function LineChart({
   svgRef,
@@ -32,6 +33,7 @@ export default function LineChart({
 
   if (!!data && data.length > 0) {
     d3.selectAll('path').remove();
+    d3.selectAll('.grid').remove();
     const gx = useRef();
     const gy = useRef();
     const svg = d3.select(svgRef.current);
@@ -52,11 +54,9 @@ export default function LineChart({
       lineData,
       generateAllDatesValues(allDates, timeRange),
     );
-    console.log(finalChartData);
     finalChartData.sort(function compare(a, b) {
       return Object.values(b)[0].length - Object.values(a)[0].length;
     });
-    console.log(finalChartData);
     lines = generateLines(
       finalChartData,
       allDates,
@@ -92,6 +92,16 @@ export default function LineChart({
       .attr('d', d => {
         return d;
       });
+    svg
+      .append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(0,${height - marginBottom})`)
+      .call(DataVisualizerScripts.gridX(x, 5).tickSize(-height).tickFormat(''));
+    svg
+      .append('g')
+      .attr('class', 'grid')
+      .attr('transform', `translate(${marginLeft},0)`)
+      .call(DataVisualizerScripts.gridY(y, 5).tickSize(-width).tickFormat(''));
     return (
       <svg width={width} height={height} ref={svgRef}>
         <g ref={gx} transform={`translate(0,${height - marginBottom})`} />
