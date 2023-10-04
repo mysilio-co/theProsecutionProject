@@ -141,7 +141,14 @@ export default function ExploreTab({ data }) {
         ''
       )}
       <ChartColors categoryNames={categoryNames} />
-      <ChartDataTable data={chartData} category={variable} />
+      <ChartDataTable
+        data={chartData}
+        category={
+          selectedTab === DataVisualizerConstants.CHOROPLETH
+            ? 'Location: state'
+            : variable
+        }
+      />
     </div>
   );
 }
