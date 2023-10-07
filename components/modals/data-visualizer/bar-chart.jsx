@@ -27,7 +27,7 @@ export default function BarChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
-    instanceData = mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories);
     d3.selectAll('rect').remove();
     d3.selectAll('.grid').remove();
     const gx = useRef();
@@ -90,15 +90,4 @@ export default function BarChart({
   } else {
     return <div></div>;
   }
-}
-
-function mapData(dataRollup) {
-  let ret = [];
-  dataRollup.forEach((value, key) => {
-    ret.push({ key: key, value: value.length });
-  });
-  ret.sort(function compare(a, b) {
-    return b.value - a.value;
-  });
-  return ret;
 }

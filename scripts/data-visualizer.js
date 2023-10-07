@@ -25,3 +25,17 @@ export function gridX(x, ticks) {
 export function gridY(y, ticks) {
   return d3.axisLeft(y).ticks(ticks);
 }
+
+export function mapData(dataRollup) {
+  let ret = [];
+  dataRollup.forEach((value, key) => {
+    ret.push({
+      key: !!key ? key : '(Empty/missing value)',
+      value: value.length,
+    });
+  });
+  ret.sort(function compare(a, b) {
+    return b.value - a.value;
+  });
+  return ret;
+}

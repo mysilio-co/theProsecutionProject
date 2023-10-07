@@ -34,6 +34,15 @@ export const CHART_COLORS = [
   '#f0027f',
   '#bf5b17',
   '#666666',
+  '#9b19f5',
+  '#0bb4ff',
+  '#50e991',
+  '#e6d800',
+  '#9b19f5',
+  '#0bb4ff',
+  '#dc0ab4',
+  '#b3d4ff',
+  '#00bfa0',
 ];
 
 export const US_HASH = {

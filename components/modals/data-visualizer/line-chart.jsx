@@ -29,7 +29,7 @@ export default function LineChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
-    instanceData = mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories);
     d3.selectAll('path').remove();
     d3.selectAll('.grid').remove();
     const gx = useRef();
@@ -55,7 +55,6 @@ export default function LineChart({
       lineData,
       generateAllDatesValues(allDates, timeRange),
     );
-    // console.log(finalChartData);
     lines = generateLines(
       finalChartData,
       allDates,
@@ -177,11 +176,6 @@ function timeRollup(data, timeRange) {
       d => d.Date,
     ),
   );
-  // chartData.sort(function compare(a, b) {
-  //   var dateA = new Date(a.key);
-  //   var dateB = new Date(b.key);
-  //   return dateA - dateB;
-  // });
   return chartData;
 }
 
@@ -193,17 +187,6 @@ function roundToNearestMonth(dateString) {
       ? '0' + (date.getMonth() + 1)
       : date.getMonth() + 1;
   return year + '-' + month + '-01 00:00:00';
-}
-
-function mapData(dataRollup) {
-  let ret = [];
-  dataRollup.forEach((value, key) => {
-    ret.push({ key: key, value: value.length });
-  });
-  ret.sort(function compare(a, b) {
-    return b.value - a.value;
-  });
-  return ret;
 }
 
 function combineChartDataWithAllDates(data, allDatesValues) {

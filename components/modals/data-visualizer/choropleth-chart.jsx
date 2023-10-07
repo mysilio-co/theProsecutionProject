@@ -26,7 +26,7 @@ export default function ChoroplethChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
-    instanceData = mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories);
     d3.selectAll('path').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
@@ -95,15 +95,4 @@ export default function ChoroplethChart({
   } else {
     return <div></div>;
   }
-}
-
-function mapData(dataRollup) {
-  let ret = [];
-  dataRollup.forEach((value, key) => {
-    ret.push({ key: key, value: value.length });
-  });
-  ret.sort(function compare(a, b) {
-    return b.value - a.value;
-  });
-  return ret;
 }

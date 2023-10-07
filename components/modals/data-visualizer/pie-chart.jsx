@@ -24,7 +24,7 @@ export default function PieChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
-    instanceData = mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories);
     d3.selectAll('path').remove();
     const svg = d3.select(svgRef.current);
     var radius = Math.min(width, height) / 2 - margin;
@@ -52,15 +52,4 @@ export default function PieChart({
   } else {
     return <div></div>;
   }
-}
-
-function mapData(dataRollup) {
-  let ret = [];
-  dataRollup.forEach((value, key) => {
-    ret.push({ key: key, value: value.length });
-  });
-  ret.sort(function compare(a, b) {
-    return b.value - a.value;
-  });
-  return ret;
 }
