@@ -3,7 +3,7 @@ import * as DataVisualizerConstants from '../../../scripts/data-visualizer-const
 export default function ChartColors({ categoryNames }) {
   categoryNames = categoryNames?.length > 1 ? categoryNames : [];
   return (
-    <div>
+    <div className='my-2 mx-3'>
       {categoryNames.map((value, index) => {
         return (
           <div
