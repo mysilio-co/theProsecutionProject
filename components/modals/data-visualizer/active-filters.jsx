@@ -10,13 +10,14 @@ export default function ActiveFilters({ queryParams }) {
   return (
     <div>
       {activeFilters.length > 0 ? (
-        <div className='pl-0 md:pl-5 my-3'>
-          <p className='font-bold'>Active Filters</p>
+        <div className='text-start pl-5 my-3'>
+          <p className='font-bold text-xl'>Active Filters</p>
           {activeFilters.map((value, index) => {
             return (
               <div key={index}>
                 <p>
-                  {Object.keys(value)[0]}: {Object.values(value)[0]}
+                  <span className='font-semibold'>{Object.keys(value)[0]}</span>
+                  : {Object.values(value)[0]}
                 </p>
               </div>
             );
