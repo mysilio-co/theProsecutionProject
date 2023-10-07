@@ -26,7 +26,7 @@ export default function ChoroplethChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
-    instanceData = DataVisualizerScripts.mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories, '');
     d3.selectAll('path').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;

@@ -26,11 +26,15 @@ export function gridY(y, ticks) {
   return d3.axisLeft(y).ticks(ticks);
 }
 
-export function mapData(dataRollup) {
+export function mapData(dataRollup, variableName) {
   let ret = [];
   dataRollup.forEach((value, key) => {
     ret.push({
-      key: !!key ? key : '(Empty/missing value)',
+      key: !!key
+        ? key
+        : variableName === 'All'
+        ? 'All Data'
+        : '(Empty/missing value)',
       value: value.length,
     });
   });

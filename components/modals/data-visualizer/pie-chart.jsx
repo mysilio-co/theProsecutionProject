@@ -24,7 +24,7 @@ export default function PieChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
-    instanceData = DataVisualizerScripts.mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories, variable);
     d3.selectAll('path').remove();
     const svg = d3.select(svgRef.current);
     var radius = Math.min(width, height) / 2 - margin;

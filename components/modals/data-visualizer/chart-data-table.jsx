@@ -8,7 +8,7 @@ export default function ChartDataTable({ data, category }) {
             <tr className='w-full flex items-center text-start'>
               <th className='w-12 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'></th>
               <th className='text-start w-1/2 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
-                {category}
+                {category != 'All' ? category : '(No variable selected)'}
               </th>
               <th className='text-start w-1/6 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 # of cases

@@ -29,7 +29,7 @@ export default function LineChart({
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
-    instanceData = DataVisualizerScripts.mapData(categories);
+    instanceData = DataVisualizerScripts.mapData(categories, variable);
     d3.selectAll('path').remove();
     d3.selectAll('.grid').remove();
     const gx = useRef();

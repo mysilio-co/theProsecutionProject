@@ -14,7 +14,7 @@ export const CHART_TYPES = [LINE, BAR, PIE, CHOROPLETH];
 
 export const AGGREGATE_OPTIONS = [COUNT, AVERAGE];
 
-export const DATE_OPTIONS = [DAY, MONTH, YEAR];
+export const DATE_OPTIONS = [YEAR, MONTH, DAY];
 
 export const CHART_COLORS = [
   '#1f77b4',
