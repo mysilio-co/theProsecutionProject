@@ -33,7 +33,7 @@ export default function DataVisualizerDropdowns({
   }, [categoricalOption]);
 
   return (
-    <div className='md:flex items-center my-5'>
+    <div className='md:flex items-center md:mt-2 mb-5'>
       {chartType === CHOROPLETH ? (
         <p className='p-3'>
           All variables are grouped together in map view. Use the Filter modal
