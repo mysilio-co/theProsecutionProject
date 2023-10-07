@@ -7,10 +7,10 @@ export default function ChartDataTable({ data, category }) {
           <thead className='bg-gray-50 flex'>
             <tr className='w-full flex items-center text-start'>
               <th className='w-12 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'></th>
-              <th className='text-start w-1/2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+              <th className='text-start w-1/2 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 {category}
               </th>
-              <th className='text-start w-1/6 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+              <th className='text-start w-1/6 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 # of cases
               </th>
             </tr>
@@ -28,10 +28,10 @@ export default function ChartDataTable({ data, category }) {
                   <td className='text-start w-12 pl-3 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {idx + 1}
                   </td>
-                  <td className='text-start w-1/2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                  <td className='text-start w-1/2 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {object.key}
                   </td>
-                  <td className='text-start w-1/6 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                  <td className='text-start w-1/6 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {object.value}
                   </td>
                 </tr>
