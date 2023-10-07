@@ -52,6 +52,10 @@
     height: 42px;
   }
 
+  .h-38px {
+    height: 38px;
+  }
+
   .w-screen {
     width: 100vw;
   }

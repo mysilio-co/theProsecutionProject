@@ -368,7 +368,7 @@ export default function DataExplorer() {
                   </div>
                 </div>
                 <div className='flex-row md:flex items-center'>
-                  <div className='flex py-2 md:py-0 items-center md:mr-5 lg:mr-10'>
+                  <div className='flex py-2 md:py-0 items-center mr-0'>
                     <BasicSearch
                       router={router}
                       search={search}
@@ -396,7 +396,7 @@ export default function DataExplorer() {
                           />,
                         );
                       }}
-                      className='mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+                      className='h-38px mt-1 mx-2 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
                     >
                       Visualize Data
                     </button>
