@@ -272,7 +272,7 @@ export const NUMERIC_COLUMNS = [
   'Age',
 ];
 
-export const DESKTOP_COLUMN_KEYS = [
+export const ALL_COLUMN_KEYS = [
   'Date',
   'Date descriptor',
   'Case ID',

@@ -6,7 +6,11 @@ import { cloneDeep } from 'lodash';
 import { DATA_VISUALIZER_TABS } from '../../scripts/constants';
 import ExploreTab from './data-visualizer/explore-tab';
 
-export default function DataVisualizerModalContents({ data, setShowModal }) {
+export default function DataVisualizerModalContents({
+  data,
+  setShowModal,
+  queryParams,
+}) {
   const [selectedTab, setSelectedTab] = useState(DATA_VISUALIZER_TABS[0]);
   function setModalVisibility(showModalValue) {
     setShowModal(showModalValue);
@@ -51,7 +55,11 @@ export default function DataVisualizerModalContents({ data, setShowModal }) {
                 ))}
               </nav>
             </div>
-            {selectedTab === 'Explore' ? <ExploreTab data={data} /> : ''}
+            {selectedTab === 'Explore' ? (
+              <ExploreTab data={data} queryParams={queryParams} />
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

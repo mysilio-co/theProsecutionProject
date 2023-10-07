@@ -35,9 +35,9 @@ export default function DataVisualizerDropdowns({
   return (
     <div className='md:flex items-center'>
       {chartType === CHOROPLETH ? (
-        <p>
-          No options available for map, use filter modal to select data *TO BE
-          CHANGED*
+        <p className='p-3'>
+          All variables are grouped together in map view. Use the Filter modal
+          to view only specified variables.
         </p>
       ) : (
         ''

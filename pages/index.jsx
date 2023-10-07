@@ -26,7 +26,7 @@ import {
   TAB_NAMES,
   SEARCH_BY_KEYS_MOBILE,
   ORDER_BY_KEYS,
-  DESKTOP_COLUMN_KEYS,
+  ALL_COLUMN_KEYS,
   SEARCH_BY_KEYS,
 } from '../scripts/constants.js';
 import Modal from '../components/modals/modal.jsx';
@@ -284,7 +284,7 @@ export default function DataExplorer() {
       const numShown = RESULTS_PER_PAGE_KEYS.includes(router.query.numShown)
         ? router.query.numShown
         : RESULTS_PER_PAGE_KEYS[0];
-      const sortBy = DESKTOP_COLUMN_KEYS.includes(router.query.sortBy)
+      const sortBy = ALL_COLUMN_KEYS.includes(router.query.sortBy)
         ? router.query.sortBy
         : null;
       const order = ORDER_BY_KEYS.includes(router.query.order)
@@ -392,6 +392,7 @@ export default function DataExplorer() {
                           <DataVisualizerModalContents
                             data={filteredData}
                             setShowModal={setShowModal}
+                            queryParams={query}
                           />,
                         );
                       }}

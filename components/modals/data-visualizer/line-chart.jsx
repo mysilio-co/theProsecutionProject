@@ -42,8 +42,12 @@ export default function LineChart({
       const chartData = timeRollup(_.cloneDeep(categoryData), timeRange);
       const obj = {};
       obj[category] = chartData;
+      obj['length'] = categoryData.length;
       categoryNames.push(category);
       lineData.push(obj);
+    });
+    lineData.sort(function compare(a, b) {
+      return b.length - a.length;
     });
     const allDates = getAllDates(lineData);
     const allValues = getAllValues(lineData);
@@ -51,9 +55,7 @@ export default function LineChart({
       lineData,
       generateAllDatesValues(allDates, timeRange),
     );
-    finalChartData.sort(function compare(a, b) {
-      return Object.values(b)[0].length - Object.values(a)[0].length;
-    });
+    // console.log(finalChartData);
     lines = generateLines(
       finalChartData,
       allDates,

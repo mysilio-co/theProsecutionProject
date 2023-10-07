@@ -1,7 +1,7 @@
 import Fuse from 'fuse.js';
 import * as d3 from 'd3';
 import {
-  DESKTOP_COLUMN_KEYS,
+  ALL_COLUMN_KEYS,
   DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED,
   CATEGORICAL_KEYS,
   IDEOLOGICAL_GROUPING,
@@ -26,7 +26,7 @@ export function fuzzySearch(data, search, key, isMobile) {
   if (isMobile) {
     key = !!key ? [key] : SEARCH_BY_KEYS_MOBILE;
   } else {
-    key = !!key ? [key] : DESKTOP_COLUMN_KEYS;
+    key = !!key ? [key] : ALL_COLUMN_KEYS;
   }
   const options =
     key[0] === 'Date' && key.length === 1
