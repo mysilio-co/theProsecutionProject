@@ -46,6 +46,7 @@ export default function LineChart({
       categoryNames.push(category);
       lineData.push(obj);
     });
+
     lineData.sort(function compare(a, b) {
       return b.length - a.length;
     });

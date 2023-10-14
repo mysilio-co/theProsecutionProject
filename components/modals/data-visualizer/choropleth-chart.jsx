@@ -31,7 +31,13 @@ export default function ChoroplethChart({
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
     const chartData = _.cloneDeep(instanceData).filter(data => {
-      return data.key != 'Outside U.S.' && data.key != 'Multiple states';
+      return (
+        data.key != 'Outside U.S.' &&
+        data.key != 'Multiple states' &&
+        data.key != 'Unknown' &&
+        data.key != 'Puerto Rico' &&
+        data.key != 'Virgin Islands'
+      );
     });
     // chartData.map(data => {
     //   data['key'] = DataVisualizerConstants.US_HASH[data['key']];
@@ -41,7 +47,7 @@ export default function ChoroplethChart({
     const format = d => `${d}%`;
     const valuemap = new Map(chartData.map(d => [d.key, d.value]));
     const color = d3.scaleQuantize(
-      [1, d3.max(chartData.map(category => category.value))],
+      [0, d3.max(chartData.map(category => category.value))],
       d3.schemeBlues[9],
     );
 

@@ -386,6 +386,7 @@ export default function DataExplorer() {
                   </div>
                   <div className='flex py-2 pb-5 md:py-0 items-center'>
                     <button
+                      disabled={isLoading && !hasError}
                       onClick={() => {
                         setShowModal(true);
                         setCurrentModal(

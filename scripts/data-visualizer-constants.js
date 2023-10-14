@@ -1,6 +1,6 @@
-export const LINE = 'Line';
-export const BAR = 'Bar';
-export const PIE = 'Pie';
+export const LINE = 'Line Chart';
+export const BAR = 'Bar Chart';
+export const PIE = 'Pie Chart';
 export const CHOROPLETH = 'U.S. Map';
 
 export const COUNT = 'Count';

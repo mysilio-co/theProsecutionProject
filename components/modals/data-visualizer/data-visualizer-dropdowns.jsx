@@ -204,7 +204,7 @@ export default function DataVisualizerDropdowns({
           {({ open }) => (
             <>
               <Listbox.Label className='block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
-                Time grouping
+                Date grouping
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
                 <Listbox.Button className='relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
