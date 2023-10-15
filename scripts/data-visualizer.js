@@ -15,6 +15,11 @@ export function groupByCategory(data, category) {
         IDEOLOGICAL_GROUPING_VALUES[datum[IDEOLOGICAL_AFFILIATION]]);
     });
   }
+  chartData.forEach(d => {
+    if (!d[category]) {
+      d[category] = '';
+    }
+  });
   return d3.group(chartData, d => d[category]);
 }
 
@@ -34,7 +39,7 @@ export function mapData(dataRollup, variableName) {
         ? key
         : variableName === 'All'
         ? 'All Data'
-        : '(Missing/invalid value)',
+        : '(Missing/Invalid value)',
       value: value.length,
     });
   });

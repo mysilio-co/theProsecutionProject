@@ -46,7 +46,6 @@ export default function LineChart({
       categoryNames.push(category);
       lineData.push(obj);
     });
-
     lineData.sort(function compare(a, b) {
       return b.length - a.length;
     });
@@ -151,7 +150,9 @@ function generateLines(
 function mapRollup(dataRollup) {
   let ret = {};
   dataRollup.forEach((value, key) => {
-    ret[new Date(key)] = value;
+    if (!key || key != 'NaN') {
+      ret[new Date(key)] = value;
+    }
   });
   return ret;
 }
@@ -182,7 +183,11 @@ function timeRollup(data, timeRange) {
 
 function roundToNearestMonth(dateString) {
   const date = new Date(dateString);
+
   const year = date.getFullYear();
+  if (!year) {
+    return undefined;
+  }
   const month =
     date.getMonth().toString().length == 1
       ? '0' + (date.getMonth() + 1)

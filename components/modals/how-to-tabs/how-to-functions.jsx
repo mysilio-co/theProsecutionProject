@@ -90,9 +90,9 @@ export default function HowToFunctions() {
             <p>
               Data can be visualized in graph form by clicking the "Visualize
               Data" button at the top of the page. The graph types currently
-              avaiable are line chart, bar chart, pie chart, and chloropleth
-              chart (map of the U.S.). The visuals use the same data filters
-              that are currently present in the table view.
+              avaiable are line chart, bar chart, pie chart, and chloropleth map
+              (map of the U.S.). The visuals use the same data filters that are
+              currently present in the table view.
             </p>
           </div>
         }
