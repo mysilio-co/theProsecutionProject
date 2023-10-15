@@ -151,7 +151,6 @@ function mapRollup(dataRollup) {
   let ret = {};
   dataRollup.forEach((value, key) => {
     if (!!key && key != 'NaN' && key != 'Invalid Date') {
-      console.log(key);
       ret[new Date(key)] = value;
     }
   });
