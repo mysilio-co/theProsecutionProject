@@ -28,10 +28,12 @@ export default function ChoroplethChart({
     categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
     instanceData = DataVisualizerScripts.mapData(categories, '');
     d3.selectAll('path').remove();
+    d3.selectAll('text').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
     const chartData = _.cloneDeep(instanceData).filter(data => {
       return (
+        data.key != 'District of Columbia' &&
         data.key != 'Outside U.S.' &&
         data.key != 'Multiple states' &&
         data.key != 'Unknown' &&

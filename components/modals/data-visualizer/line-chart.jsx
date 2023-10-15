@@ -150,7 +150,8 @@ function generateLines(
 function mapRollup(dataRollup) {
   let ret = {};
   dataRollup.forEach((value, key) => {
-    if (!key || key != 'NaN') {
+    if (!!key && key != 'NaN' && key != 'Invalid Date') {
+      console.log(key);
       ret[new Date(key)] = value;
     }
   });
@@ -183,13 +184,12 @@ function timeRollup(data, timeRange) {
 
 function roundToNearestMonth(dateString) {
   const date = new Date(dateString);
-
   const year = date.getFullYear();
   if (!year) {
     return undefined;
   }
   const month =
-    date.getMonth().toString().length == 1
+    (date.getMonth() + 1).toString().length == 1
       ? '0' + (date.getMonth() + 1)
       : date.getMonth() + 1;
   return year + '-' + month + '-01 00:00:00';

@@ -123,7 +123,7 @@ export default function DataVisualizerDropdowns({
         <Listbox value={categoricalOption} onChange={setCategoricalOption}>
           {({ open }) => (
             <>
-              <Listbox.Label className='block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
+              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
                 Variable
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
@@ -203,7 +203,7 @@ export default function DataVisualizerDropdowns({
         <Listbox value={dateOptions} onChange={setDateOptions}>
           {({ open }) => (
             <>
-              <Listbox.Label className='block text-sm pl-1 md:pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
+              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
                 Date grouping
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
