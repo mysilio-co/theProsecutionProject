@@ -39,7 +39,7 @@ export function mapData(dataRollup, variableName) {
         ? key
         : variableName === 'All'
         ? 'All Data'
-        : '(Missing/Invalid value)',
+        : '(Missing/invalid value)',
       value: value.length,
     });
   });
