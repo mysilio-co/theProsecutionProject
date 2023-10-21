@@ -1,7 +1,13 @@
-import { ALL_COLUMN_KEYS } from '../../../scripts/constants';
+import { ALL_COLUMN_KEYS } from '../../scripts/constants';
 
 export default function ActiveFilters({ queryParams }) {
   const activeFilters = [];
+
+  function updateExcludeLabel(label) {
+    const isExclude = _.includes(label, '!');
+    return isExclude ? 'Exclude (' + _.replace(label, '!', '') + ')' : label;
+  }
+
   Object.keys(queryParams).forEach(param => {
     if (ALL_COLUMN_KEYS.includes(param) || param === 'from' || param === 'to') {
       activeFilters.push({ [param]: queryParams[param] });
@@ -17,7 +23,7 @@ export default function ActiveFilters({ queryParams }) {
               <div key={index}>
                 <p>
                   <span className='font-semibold'>{Object.keys(value)[0]}</span>
-                  : {Object.values(value)[0]}
+                  : {updateExcludeLabel(Object.values(value)[0])}
                 </p>
               </div>
             );

@@ -102,16 +102,28 @@ export function filterByDropdown(data, queryParams) {
     filteredData = data.filter(row => {
       let matchCount = 0;
       Object.keys(filterParams).forEach(key => {
+        const isExclude = _.includes(filterParams[key][0], '!');
+        const filterParamsCopy = _.cloneDeep(filterParams);
+        filterParamsCopy[key][0] = filterParamsCopy[key][0].replace('!', '');
         if (key != IDEOLOGICAL_GROUPING) {
-          if (filterParams[key].includes(row[key])) {
+          if (
+            (!isExclude && filterParamsCopy[key].includes(row[key])) ||
+            (isExclude && !filterParamsCopy[key].includes(row[key]))
+          ) {
             matchCount++;
           }
         } else {
           if (
-            filterByIdeologicalGrouping(
-              filterParams[key],
-              row['Ideological affiliation'],
-            )
+            (!isExclude &&
+              filterByIdeologicalGrouping(
+                filterParamsCopy[key],
+                row['Ideological affiliation'],
+              )) ||
+            (isExclude &&
+              !filterByIdeologicalGrouping(
+                filterParamsCopy[key],
+                row['Ideological affiliation'],
+              ))
           ) {
             matchCount++;
           }
@@ -183,11 +195,12 @@ export function removeMismatchedDropdown(router, dropdownValues) {
   if (router.query && dropdownValues.length != 0) {
     // Extract filter values from query params
     CATEGORICAL_KEYS.forEach(key => {
+      const query = _.replace(router.query[key], '!', '');
       if (
-        router.query[key] &&
+        query &&
         dropdownValues.find(dropdownValue => Object.keys(dropdownValue) == key)
       ) {
-        const routerValue = router.query[key].split(', ');
+        const routerValue = query.split(', ');
         const dropdownValue = Object.values(
           dropdownValues.find(
             dropdownValue => Object.keys(dropdownValue) == key,

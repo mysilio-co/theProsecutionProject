@@ -12,7 +12,7 @@ import { classNames } from '../../../scripts/common.js';
 import { cloneDeep } from 'lodash';
 import { DATA_VISUALIZER_TABS } from '../../../scripts/constants';
 import ChoroplethChart from './choropleth-chart';
-import ActiveFilters from './active-filters';
+import ActiveFilters from '../active-filters';
 
 export default function ExploreTab({ data, queryParams }) {
   const svgRef = useRef();
