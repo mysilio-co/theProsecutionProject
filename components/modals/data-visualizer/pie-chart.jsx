@@ -45,7 +45,10 @@ export default function PieChart({
       })
       .attr('stroke', 'black')
       .style('stroke-width', '1px')
-      .style('opacity', 0.7);
+      .style('opacity', 0.7)
+      .append('title')
+      .text(d => `${d.data.key}, ${d.data.value} cases`);
+
     return (
       <svg width={width} height={height} ref={svgRef} className='m-auto'></svg>
     );

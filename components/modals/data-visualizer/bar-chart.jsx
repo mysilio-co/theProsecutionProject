@@ -80,7 +80,10 @@ export default function BarChart({
       .attr('width', x.bandwidth())
       .attr('height', function (d) {
         return height - y(d.value) - marginBottom;
-      });
+      })
+      .attr('d', y)
+      .append('title')
+      .text(d => `${d.key}, ${d.value} cases`);
     return (
       <svg width={width} height={height} ref={svgRef}>
         <g ref={gx} transform={`translate(0,${height - marginBottom})`} />

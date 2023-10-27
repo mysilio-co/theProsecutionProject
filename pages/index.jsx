@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
 import useSWR from 'swr';
-
 import DataTable from '../components/data-table.jsx';
 import { Disclosure } from '@headlessui/react';
 

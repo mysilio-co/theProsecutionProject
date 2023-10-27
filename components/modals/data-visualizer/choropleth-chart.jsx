@@ -15,6 +15,8 @@ export default function ChoroplethChart({
   width = 975,
   height = 610,
   margin = 20,
+  censusData,
+  isCensus,
 }) {
   let instanceData = [];
   let categories = [];
@@ -22,18 +24,24 @@ export default function ChoroplethChart({
   useEffect(() => {
     setCategoryNames([]);
     setChartData(instanceData);
-  }, [data]);
+  }, [data, isCensus]);
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
     instanceData = DataVisualizerScripts.mapData(categories, '');
+    instanceData.map(data => {
+      data[DataVisualizerConstants.CENSUS_KEY] = censusData[data['key']];
+      data[DataVisualizerConstants.CENSUS_RATIO_KEY] =
+        (data['value'] / data[DataVisualizerConstants.CENSUS_KEY]) * 100;
+    });
     d3.selectAll('path').remove();
     d3.selectAll('text').remove();
+    d3.selectAll('rect').remove();
+    d3.selectAll('line').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
     const chartData = _.cloneDeep(instanceData).filter(data => {
       return (
-        data.key != 'District of Columbia' &&
         data.key != 'Outside U.S.' &&
         data.key != 'Multiple states' &&
         data.key != 'Unknown' &&
@@ -41,23 +49,37 @@ export default function ChoroplethChart({
         data.key != 'Virgin Islands'
       );
     });
-    // chartData.map(data => {
-    //   data['key'] = DataVisualizerConstants.US_HASH[data['key']];
-    // });
 
     const path = d3.geoPath();
     const format = d => `${d}%`;
-    const valuemap = new Map(chartData.map(d => [d.key, d.value]));
+    const valuemap = new Map(
+      chartData.map(d =>
+        isCensus ? [d.key, d.censusRatio] : [d.key, d.value],
+      ),
+    );
     const color = d3.scaleQuantize(
-      [0, d3.max(chartData.map(category => category.value))],
-      d3.schemeBlues[9],
+      [
+        0,
+        d3.max(
+          chartData.map(category =>
+            isCensus ? category.censusRatio : category.value,
+          ),
+        ),
+      ],
+      isCensus ? d3.schemeBlues[5] : d3.schemeBlues[8],
     );
 
     svg
       .append('g')
       .attr('transform', 'translate(610,20)')
       .append(() =>
-        Legend(color, { title: '# of Cases by State', width: 260 }),
+        Legend(color, {
+          title: isCensus
+            ? '% of Cases / Population Data (Census 2021)'
+            : '# of Cases by State',
+          width: 260,
+          isCensus: isCensus,
+        }),
       );
     svg
       .append('g')
@@ -77,7 +99,9 @@ export default function ChoroplethChart({
         d =>
           `${d.properties.name}, ${
             !!valuemap.get(d.properties.name)
-              ? valuemap.get(d.properties.name)
+              ? isCensus
+                ? valuemap.get(d.properties.name).toFixed(6) + '%'
+                : valuemap.get(d.properties.name) + ' cases'
               : 0
           }`,
       );

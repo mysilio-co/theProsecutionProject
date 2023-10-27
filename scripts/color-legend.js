@@ -13,6 +13,7 @@ export function Legend(
     ticks = width / 64,
     tickFormat,
     tickValues,
+    isCensus,
   } = {},
 ) {
   function ramp(color, n = 256) {
@@ -101,6 +102,7 @@ export function Legend(
   }
 
   // Threshold
+  // WHAT WE USE -------------------------------------------------------------
   else if (color.invertExtent) {
     const thresholds = color.thresholds
       ? color.thresholds() // scaleQuantize
@@ -132,7 +134,11 @@ export function Legend(
       .attr('fill', d => d);
 
     tickValues = d3.range(thresholds.length);
-    tickFormat = i => thresholdFormat(Math.round(thresholds[i]), i);
+    tickFormat = i =>
+      thresholdFormat(
+        isCensus ? thresholds[i].toFixed(5) + '%' : Math.round(thresholds[i]),
+        i,
+      );
   }
 
   // Ordinal
