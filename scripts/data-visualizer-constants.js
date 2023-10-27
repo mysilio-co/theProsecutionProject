@@ -6,13 +6,21 @@ export const CHOROPLETH = 'U.S. Map';
 export const COUNT = 'Count';
 export const AVERAGE = 'Average';
 
+export const STATE_COUNT = 'Number of Cases';
+export const STATE_RATIO = 'Case Count vs. Population';
+
 export const DAY = 'Day';
 export const MONTH = 'Month';
 export const YEAR = 'Year';
 
+export const CENSUS_KEY = 'census';
+export const CENSUS_RATIO_KEY = 'censusRatio';
+
 export const CHART_TYPES = [LINE, BAR, PIE, CHOROPLETH];
 
 export const AGGREGATE_OPTIONS = [COUNT, AVERAGE];
+
+export const STATE_OPTIONS = [STATE_COUNT, STATE_RATIO];
 
 export const DATE_OPTIONS = [YEAR, MONTH, DAY];
 

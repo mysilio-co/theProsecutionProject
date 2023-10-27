@@ -12,9 +12,22 @@ import { classNames } from '../../../scripts/common.js';
 import { cloneDeep } from 'lodash';
 import { DATA_VISUALIZER_TABS } from '../../../scripts/constants';
 import ChoroplethChart from './choropleth-chart';
-import ActiveFilters from './active-filters';
+import ActiveFilters from '../active-filters';
+import useSWR from 'swr';
 
 export default function ExploreTab({ data, queryParams }) {
+  const fetcher = async url =>
+    await fetch(url).then(res => {
+      if (!res.ok) {
+        const error = new Error(
+          'An error occurred while fetching census data.',
+        );
+        error.status = res.status;
+        throw error;
+      }
+      return res.json();
+    });
+
   const svgRef = useRef();
   const modalRef = useRef();
   const [selectedTab, setSelectedTab] = useState(
@@ -27,9 +40,15 @@ export default function ExploreTab({ data, queryParams }) {
   const [chartData, setChartData] = useState([]);
   const [chartColors, setChartColors] = useState([]);
   const [categoryNames, setCategoryNames] = useState([]);
+  const [isCensus, setIsCensus] = useState(true);
   function setModalVisibility(showModalValue) {
     setShowModal(showModalValue);
   }
+
+  const { data: censusData, error: censusError } = useSWR(
+    '/api/getCensusData',
+    fetcher,
+  );
 
   return (
     <div>
@@ -63,6 +82,7 @@ export default function ExploreTab({ data, queryParams }) {
           chartType={selectedTab}
           setTimeRange={setTimeRange}
           setVariable={setVariable}
+          setIsCensus={setIsCensus}
         ></DataVisualizerDropdowns>
       </div>
       {selectedTab === DataVisualizerConstants.LINE ? (
@@ -136,6 +156,8 @@ export default function ExploreTab({ data, queryParams }) {
             chartType={selectedTab}
             setCategoryNames={setCategoryNames}
             setChartData={setChartData}
+            censusData={censusData}
+            isCensus={isCensus}
           />
         </div>
       ) : (

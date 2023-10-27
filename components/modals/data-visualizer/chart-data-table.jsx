@@ -1,5 +1,10 @@
 import { classNames } from '../../../scripts/common';
+import { CENSUS_KEY } from '../../../scripts/data-visualizer-constants';
 export default function ChartDataTable({ data, category }) {
+  const containsCensus =
+    !!data && data.length > 0
+      ? Object.keys(data[0]).includes(CENSUS_KEY)
+      : false;
   return (
     <div>
       <div className='shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mx-5'>
@@ -7,12 +12,19 @@ export default function ChartDataTable({ data, category }) {
           <thead className='bg-gray-50 flex'>
             <tr className='w-full flex items-center text-start'>
               <th className='w-12 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'></th>
-              <th className='text-start w-1/2 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+              <th className='text-start w-1/2 md:w-2/5 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 {category != 'All' ? category : '(No variable selected)'}
               </th>
-              <th className='text-start w-1/6 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+              <th className='text-start w-1/6 md:w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 # of cases
               </th>
+              {containsCensus ? (
+                <th className='text-start w-1/3 md:w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+                  % of cases / pop.
+                </th>
+              ) : (
+                <th></th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -28,12 +40,21 @@ export default function ChartDataTable({ data, category }) {
                   <td className='text-start w-12 pl-3 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {idx + 1}
                   </td>
-                  <td className='text-start w-1/2 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                  <td className='text-start w-1/2 md:w-2/5 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {object.key}
                   </td>
-                  <td className='text-start w-1/6 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                  <td className='text-start w-1/6 md:w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {object.value}
                   </td>
+                  {containsCensus ? (
+                    <td className='text-start w-1/3 md:w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                      {!!object.censusRatio
+                        ? object.censusRatio.toFixed(6) + '%'
+                        : 'Data not available'}
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
                 </tr>
               ))}
           </tbody>
