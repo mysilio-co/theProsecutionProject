@@ -50,7 +50,7 @@ export default function DataVisualizerDropdowns({
                 Statistic
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
-                <Listbox.Button className='relative min-w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-20 md:pr-30 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
+                <Listbox.Button className='relative min-w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-16 xl:pr-20 md:pr-30 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
                   <span className='flex items-center'>
                     <span className='ml-3 block truncate'>{stateOptions}</span>
                   </span>
@@ -129,7 +129,7 @@ export default function DataVisualizerDropdowns({
                 Variable
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
-                <Listbox.Button className='relative min-w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
+                <Listbox.Button className='relative min-w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-16 xl:pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
                   <span className='flex items-center'>
                     <span className='ml-3 block truncate'>
                       {categoricalOption}
@@ -209,7 +209,7 @@ export default function DataVisualizerDropdowns({
                 Date grouping
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
-                <Listbox.Button className='relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
+                <Listbox.Button className='relative w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-16 xl:pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
                   <span className='flex items-center'>
                     <span className='ml-3 block truncate'>{dateOptions}</span>
                   </span>

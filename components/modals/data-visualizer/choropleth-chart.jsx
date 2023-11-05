@@ -24,16 +24,18 @@ export default function ChoroplethChart({
   useEffect(() => {
     setCategoryNames([]);
     setChartData(instanceData);
-  }, [data, isCensus]);
+  }, [data, isCensus, censusData]);
 
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
     instanceData = DataVisualizerScripts.mapData(categories, '');
-    instanceData.map(data => {
-      data[DataVisualizerConstants.CENSUS_KEY] = censusData[data['key']];
-      data[DataVisualizerConstants.CENSUS_RATIO_KEY] =
-        (data['value'] / data[DataVisualizerConstants.CENSUS_KEY]) * 100;
-    });
+    if (!!censusData) {
+      instanceData.map(data => {
+        data[DataVisualizerConstants.CENSUS_KEY] = censusData[data['key']];
+        data[DataVisualizerConstants.CENSUS_RATIO_KEY] =
+          (data['value'] / data[DataVisualizerConstants.CENSUS_KEY]) * 100;
+      });
+    }
     d3.selectAll('path').remove();
     d3.selectAll('text').remove();
     d3.selectAll('rect').remove();
@@ -122,7 +124,12 @@ export default function ChoroplethChart({
       .attr('stroke-linejoin', 'round')
       .attr('d', d3.geoPath());
     return (
-      <svg width={width} height={height} ref={svgRef} className='m-auto'></svg>
+      <svg
+        width={width}
+        height={height}
+        ref={svgRef}
+        className='m-auto bg-white'
+      ></svg>
     );
   } else {
     return <div></div>;

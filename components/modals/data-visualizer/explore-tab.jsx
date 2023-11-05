@@ -14,6 +14,12 @@ import { DATA_VISUALIZER_TABS } from '../../../scripts/constants';
 import ChoroplethChart from './choropleth-chart';
 import ActiveFilters from '../active-filters';
 import useSWR from 'swr';
+import CitationButton from './citation-button';
+import DownloadButton from './download-button';
+import CitationContents from './citation-contents';
+import DownloadContents from './download-contents';
+import ShowTitleCheckbox from './show-title-checkbox';
+import ShowActiveFilterCheckbox from './show-filter-checkbox';
 
 export default function ExploreTab({ data, queryParams }) {
   const fetcher = async url =>
@@ -41,12 +47,22 @@ export default function ExploreTab({ data, queryParams }) {
   const [chartColors, setChartColors] = useState([]);
   const [categoryNames, setCategoryNames] = useState([]);
   const [isCensus, setIsCensus] = useState(true);
+  const [citationDisplay, setCitationDisplay] = useState(false);
+  const [downloadDisplay, setDownloadDisplay] = useState(false);
+  const [showTitle, setShowTitle] = useState(true);
+  const [showActiveFilter, setShowActiveFilter] = useState(true);
+  const ALL_VISUALS_ID = 'all-visuals';
+  const VISUAL_ELEMENTS_ID = 'visual-elements';
+  const TABLE_ELEMENTS_ID = 'table-elements';
+
   function setModalVisibility(showModalValue) {
     setShowModal(showModalValue);
   }
 
   const { data: censusData, error: censusError } = useSWR(
-    '/api/getCensusData',
+    selectedTab === DataVisualizerConstants.CHOROPLETH
+      ? '/api/getCensusData'
+      : null,
     fetcher,
   );
 
@@ -77,102 +93,156 @@ export default function ExploreTab({ data, queryParams }) {
           ))}
         </nav>
       </div>
-      <div>
+      <div className='block lg:flex justify-between'>
         <DataVisualizerDropdowns
           chartType={selectedTab}
           setTimeRange={setTimeRange}
           setVariable={setVariable}
           setIsCensus={setIsCensus}
         ></DataVisualizerDropdowns>
+        <div className='block lg:flex justify-between'>
+          <div className='flex'>
+            <ShowTitleCheckbox
+              showTitle={showTitle}
+              setShowTitle={setShowTitle}
+            />
+            <ShowActiveFilterCheckbox
+              showActiveFilter={showActiveFilter}
+              setShowActiveFilter={setShowActiveFilter}
+            />
+          </div>
+
+          <DownloadButton
+            display={downloadDisplay}
+            setDisplay={setDownloadDisplay}
+          />
+        </div>
       </div>
-      {selectedTab === DataVisualizerConstants.LINE ? (
-        <div className='overflow-x-scroll'>
-          <LineChart
-            svgRef={svgRef}
-            data={data}
-            chartType={selectedTab}
-            timeRange={timeRange}
-            variable={variable}
-            width={
-              modalRef.current && modalRef.current.offsetWidth > 900
-                ? modalRef.current.offsetWidth
-                : 900
+      <div>
+        <DownloadContents
+          display={downloadDisplay}
+          allVisualsId={ALL_VISUALS_ID}
+          visualElementsId={VISUAL_ELEMENTS_ID}
+          tableElementsId={TABLE_ELEMENTS_ID}
+        />
+      </div>
+
+      <div id={ALL_VISUALS_ID}>
+        <div id={VISUAL_ELEMENTS_ID} className='py-2'>
+          {showTitle ? (
+            <h5 className='ml-4'>
+              Case Count by "
+              {variable === 'All' ? `${variable} cases` : variable}"
+            </h5>
+          ) : (
+            ''
+          )}
+
+          {selectedTab === DataVisualizerConstants.LINE ? (
+            <div className='overflow-x-scroll'>
+              <LineChart
+                svgRef={svgRef}
+                data={data}
+                chartType={selectedTab}
+                timeRange={timeRange}
+                variable={variable}
+                width={
+                  modalRef.current && modalRef.current.offsetWidth > 900
+                    ? modalRef.current.offsetWidth
+                    : 900
+                }
+                setCategoryNames={setCategoryNames}
+                setChartData={setChartData}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+          {selectedTab === DataVisualizerConstants.BAR ? (
+            <div className='overflow-x-scroll'>
+              <BarChart
+                svgRef={svgRef}
+                data={data}
+                chartType={selectedTab}
+                variable={variable}
+                width={
+                  modalRef.current && modalRef.current.offsetWidth > 600
+                    ? modalRef.current.offsetWidth
+                    : 600
+                }
+                setCategoryNames={setCategoryNames}
+                setChartData={setChartData}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+          {selectedTab === DataVisualizerConstants.PIE ? (
+            <div className='overflow-x-scroll flex justify-center'>
+              <PieChart
+                svgRef={svgRef}
+                data={data}
+                chartType={selectedTab}
+                variable={variable}
+                width={
+                  modalRef.current && modalRef.current.offsetWidth < 400
+                    ? modalRef.current.offsetWidth
+                    : 400
+                }
+                height={
+                  modalRef.current && modalRef.current.offsetWidth < 400
+                    ? modalRef.current.offsetWidth
+                    : 400
+                }
+                setCategoryNames={setCategoryNames}
+                setChartData={setChartData}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+          {selectedTab === DataVisualizerConstants.CHOROPLETH ? (
+            <div className='overflow-x-scroll'>
+              <ChoroplethChart
+                svgRef={svgRef}
+                data={data}
+                chartType={selectedTab}
+                setCategoryNames={setCategoryNames}
+                setChartData={setChartData}
+                censusData={censusData}
+                isCensus={isCensus}
+              />
+              {!!censusData ? (
+                ''
+              ) : (
+                <div className='container mx-auto  p-6 my-6 bg-gray-800 rounded-lg'>
+                  <p className='text-center text-lg text-white'>
+                    {DataVisualizerConstants.CENSUS_DATA_ERROR_MESSAGE}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            ''
+          )}
+          <ChartColors categoryNames={categoryNames} />
+          {showActiveFilter ? (
+            <ActiveFilters queryParams={queryParams}></ActiveFilters>
+          ) : (
+            ''
+          )}
+        </div>
+        <div id={TABLE_ELEMENTS_ID} className='py-2'>
+          <ChartDataTable
+            data={chartData}
+            category={
+              selectedTab === DataVisualizerConstants.CHOROPLETH
+                ? 'Location: state'
+                : variable
             }
-            setCategoryNames={setCategoryNames}
-            setChartData={setChartData}
           />
         </div>
-      ) : (
-        ''
-      )}
-      {selectedTab === DataVisualizerConstants.BAR ? (
-        <div className='overflow-x-scroll'>
-          <BarChart
-            svgRef={svgRef}
-            data={data}
-            chartType={selectedTab}
-            variable={variable}
-            width={
-              modalRef.current && modalRef.current.offsetWidth > 600
-                ? modalRef.current.offsetWidth
-                : 600
-            }
-            setCategoryNames={setCategoryNames}
-            setChartData={setChartData}
-          />
-        </div>
-      ) : (
-        ''
-      )}
-      {selectedTab === DataVisualizerConstants.PIE ? (
-        <div className='overflow-x-scroll'>
-          <PieChart
-            svgRef={svgRef}
-            data={data}
-            chartType={selectedTab}
-            variable={variable}
-            width={
-              modalRef.current && modalRef.current.offsetWidth < 400
-                ? modalRef.current.offsetWidth
-                : 400
-            }
-            height={
-              modalRef.current && modalRef.current.offsetWidth < 400
-                ? modalRef.current.offsetWidth
-                : 400
-            }
-            setCategoryNames={setCategoryNames}
-            setChartData={setChartData}
-          />
-        </div>
-      ) : (
-        ''
-      )}
-      {selectedTab === DataVisualizerConstants.CHOROPLETH ? (
-        <div className='overflow-x-scroll'>
-          <ChoroplethChart
-            svgRef={svgRef}
-            data={data}
-            chartType={selectedTab}
-            setCategoryNames={setCategoryNames}
-            setChartData={setChartData}
-            censusData={censusData}
-            isCensus={isCensus}
-          />
-        </div>
-      ) : (
-        ''
-      )}
-      <ChartColors categoryNames={categoryNames} />
-      <ActiveFilters queryParams={queryParams}></ActiveFilters>
-      <ChartDataTable
-        data={chartData}
-        category={
-          selectedTab === DataVisualizerConstants.CHOROPLETH
-            ? 'Location: state'
-            : variable
-        }
-      />
+      </div>
     </div>
   );
 }

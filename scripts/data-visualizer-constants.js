@@ -16,6 +16,10 @@ export const YEAR = 'Year';
 export const CENSUS_KEY = 'census';
 export const CENSUS_RATIO_KEY = 'censusRatio';
 
+export const CHART_ONLY = 'Chart Only';
+export const TABLE_ONLY = 'Table Only';
+export const ALL_CONTENTS = 'All Contents';
+
 export const CHART_TYPES = [LINE, BAR, PIE, CHOROPLETH];
 
 export const AGGREGATE_OPTIONS = [COUNT, AVERAGE];
@@ -23,6 +27,21 @@ export const AGGREGATE_OPTIONS = [COUNT, AVERAGE];
 export const STATE_OPTIONS = [STATE_COUNT, STATE_RATIO];
 
 export const DATE_OPTIONS = [YEAR, MONTH, DAY];
+
+export const DOWNLOAD_OPTIONS = [
+  {
+    name: CHART_ONLY,
+    description: 'Download only the visualization, colors, and filter options',
+  },
+  {
+    name: TABLE_ONLY,
+    description: 'Download only the table containing the data',
+  },
+  { name: ALL_CONTENTS, description: 'Download all contents' },
+];
+
+export const CENSUS_DATA_ERROR_MESSAGE =
+  'There was a problem loading census data, population statistics are not available.';
 
 export const CHART_COLORS = [
   '#1f77b4',

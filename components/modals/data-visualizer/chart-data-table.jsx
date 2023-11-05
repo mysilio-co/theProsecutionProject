@@ -1,13 +1,17 @@
+import { useEffect, useState } from 'react';
 import { classNames } from '../../../scripts/common';
 import { CENSUS_KEY } from '../../../scripts/data-visualizer-constants';
 export default function ChartDataTable({ data, category }) {
-  const containsCensus =
+  const [containsCensus, setContainsCensus] = useState(false);
+  useEffect(() => {
     !!data && data.length > 0
-      ? Object.keys(data[0]).includes(CENSUS_KEY)
-      : false;
+      ? setContainsCensus(Object.keys(data[0]).includes(CENSUS_KEY))
+      : setContainsCensus(false);
+  }, [data]);
+
   return (
     <div>
-      <div className='shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mx-5'>
+      <div className='shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mx-2'>
         <table className='min-w-full divide-y divide-gray-300'>
           <thead className='bg-gray-50 flex'>
             <tr className='w-full flex items-center text-start'>

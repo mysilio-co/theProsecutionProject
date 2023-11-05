@@ -50,7 +50,12 @@ export default function PieChart({
       .text(d => `${d.data.key}, ${d.data.value} cases`);
 
     return (
-      <svg width={width} height={height} ref={svgRef} className='m-auto'></svg>
+      <svg
+        width={width}
+        height={height}
+        ref={svgRef}
+        className='bg-white'
+      ></svg>
     );
   } else {
     return <div></div>;

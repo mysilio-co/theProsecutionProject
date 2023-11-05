@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     CENSUS_POP_ENDPOINT +
     '?get=POP_2021,NAME&for=state:*&key=' +
     Buffer.from(CENSUS_KEY, 'base64');
-  fetch(endpoint)
+  await fetch(endpoint)
     .then(response => response.json())
     .then(json => {
       json.shift();

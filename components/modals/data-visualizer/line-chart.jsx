@@ -32,6 +32,7 @@ export default function LineChart({
     instanceData = DataVisualizerScripts.mapData(categories, variable);
     d3.selectAll('path').remove();
     d3.selectAll('.grid').remove();
+    d3.selectAll('rect').remove();
     const gx = useRef();
     const gy = useRef();
     const svg = d3.select(svgRef.current);
@@ -101,7 +102,7 @@ export default function LineChart({
       .attr('transform', `translate(${marginLeft},0)`)
       .call(DataVisualizerScripts.gridY(y, 5).tickSize(-width).tickFormat(''));
     return (
-      <svg width={width} height={height} ref={svgRef}>
+      <svg width={width} height={height} ref={svgRef} className='bg-white'>
         <g ref={gx} transform={`translate(0,${height - marginBottom})`} />
         <g ref={gy} transform={`translate(${marginLeft},0)`} />
       </svg>
