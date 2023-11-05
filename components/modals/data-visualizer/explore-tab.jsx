@@ -102,16 +102,19 @@ export default function ExploreTab({ data, queryParams }) {
         ></DataVisualizerDropdowns>
         <div className='block lg:flex justify-between'>
           <div className='flex'>
-            <ShowTitleCheckbox
-              showTitle={showTitle}
-              setShowTitle={setShowTitle}
-            />
+            {selectedTab != DataVisualizerConstants.CHOROPLETH ? (
+              <ShowTitleCheckbox
+                showTitle={showTitle}
+                setShowTitle={setShowTitle}
+              />
+            ) : (
+              ''
+            )}
             <ShowActiveFilterCheckbox
               showActiveFilter={showActiveFilter}
               setShowActiveFilter={setShowActiveFilter}
             />
           </div>
-
           <DownloadButton
             display={downloadDisplay}
             setDisplay={setDownloadDisplay}
