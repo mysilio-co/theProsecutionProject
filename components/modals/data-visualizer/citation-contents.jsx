@@ -1,12 +1,6 @@
-import { classNames } from '../../../scripts/common';
-export default function CitationContents({ display }) {
+export default function CitationContents({}) {
   return (
-    <div
-      className={classNames(
-        display ? 'block' : 'hidden',
-        'my-2 mx-4 text-start',
-      )}
-    >
+    <div className='my-2 mx-4 text-start'>
       <p className='text-sm text-gray-500'>
         This work is licensed under the Creative Commons
         Attribution-NonCommercial-ShareAlike 4.0 International License. To view
