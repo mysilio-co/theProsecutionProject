@@ -6,7 +6,7 @@ export default function DownloadButton({ display, setDisplay }) {
     setDisplay(downloadDisplay);
   }, [downloadDisplay]);
   return (
-    <div className='mx-4 mt-6 mb-5 md:mt-3 md:mr-4'>
+    <div className='mx-4 mt-4 mb-5 md:mt-3 md:mr-4'>
       <button
         onClick={function () {
           setDownloadaDisply(!downloadDisplay);

@@ -129,7 +129,7 @@ export default function ExploreTab({ data, queryParams }) {
 
       <div id={ALL_VISUALS_ID}>
         <div id={VISUAL_ELEMENTS_ID} className='py-2'>
-          {showTitle ? (
+          {showTitle && selectedTab != DataVisualizerConstants.CHOROPLETH ? (
             <p className='pl-5 mb-3 font-bold text-xl'>
               Case Count by "
               {variable === 'All' ? `${variable} cases` : variable}"
