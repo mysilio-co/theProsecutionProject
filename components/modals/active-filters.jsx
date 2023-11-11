@@ -1,3 +1,4 @@
+import { isActiveFilters } from '../../scripts/common';
 import { ALL_COLUMN_KEYS } from '../../scripts/constants';
 
 export default function ActiveFilters({ queryParams }) {

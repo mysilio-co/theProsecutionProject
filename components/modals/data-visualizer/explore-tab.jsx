@@ -8,7 +8,7 @@ import ChartDataTable from './chart-data-table';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants';
 import DataVisualizerDropdowns from './data-visualizer-dropdowns';
 import ChartColors from './chart-colors';
-import { classNames } from '../../../scripts/common.js';
+import { classNames, isActiveFilters } from '../../../scripts/common.js';
 import { cloneDeep } from 'lodash';
 import { DATA_VISUALIZER_TABS } from '../../../scripts/constants';
 import ChoroplethChart from './choropleth-chart';
@@ -113,6 +113,7 @@ export default function ExploreTab({ data, queryParams }) {
             <ShowActiveFilterCheckbox
               showActiveFilter={showActiveFilter}
               setShowActiveFilter={setShowActiveFilter}
+              isActiveFilters={isActiveFilters(queryParams)}
             />
           </div>
           <DownloadButton
