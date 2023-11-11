@@ -9,8 +9,10 @@ export default function ShowActiveFilterCheckbox({
     <div className='flex ml-6 mb-1 items-center'>
       <label
         className={classNames(
-          !isActiveFilters ? 'opacity-50' : 'opacity-100',
-          'inline-flex relative items-center cursor-pointer  disabled:text-slate-100',
+          !isActiveFilters
+            ? 'opacity-50 cursor-not-allowed'
+            : 'opacity-100 cursor-pointer ',
+          'inline-flex relative items-center disabled:text-slate-100',
         )}
       >
         <input
