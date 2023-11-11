@@ -36,6 +36,9 @@ export default function ChoroplethChart({
           (data['value'] / data[DataVisualizerConstants.CENSUS_KEY]) * 100;
       });
     }
+    if (isCensus) {
+      DataVisualizerScripts.sortCensusData(instanceData);
+    }
     d3.selectAll('path').remove();
     d3.selectAll('text').remove();
     d3.selectAll('rect').remove();

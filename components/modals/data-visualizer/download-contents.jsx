@@ -113,9 +113,10 @@ export default function DownloadContents({
       </div>
       <div className='mt-2 mx-4 text-start'>
         <p className='text-sm text-gray-500'>
-          The downloaded image is dependent on the window currently being
-          displayed. Try increasing the window size or downloading on a larger
-          screen if the chart comes out cropped.
+          * The downloaded image is dependent on the window currently being
+          displayed, including the title and active filters sections. Try
+          increasing the window size or downloading on a larger screen if the
+          chart comes out cropped.
         </p>
       </div>
       {displayNoSelectionMessage ? (
