@@ -27,7 +27,7 @@ export default function DataVisualizerModalContents({
             >
               Data Visualizer
             </Dialog.Title>
-            <div className='bg-gray-800 border-t border-gray-700'>
+            {/* <div className='bg-gray-800 border-t border-gray-700'>
               <nav
                 className='px-2 md:py-2 md:flex md:space-x-8'
                 aria-label='Global'
@@ -54,7 +54,7 @@ export default function DataVisualizerModalContents({
                   </button>
                 ))}
               </nav>
-            </div>
+            </div> */}
             {selectedTab === 'Explore' ? (
               <ExploreTab data={data} queryParams={queryParams} />
             ) : (
