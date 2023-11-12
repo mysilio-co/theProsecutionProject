@@ -140,7 +140,7 @@ export default function HowToQuickstart({ router }) {
       />
       <ContentDisclosure
         name={
-          'HAMAS-affilicated individuals that were not tried for providing material support'
+          'HAMAS-affiliated individuals that were not tried for providing material support'
         }
         content={
           <div className='text-start'>
