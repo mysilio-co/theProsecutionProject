@@ -3,10 +3,17 @@ import { classNames } from '../../../scripts/common';
 import { CENSUS_KEY } from '../../../scripts/data-visualizer-constants';
 export default function ChartDataTable({ data, category }) {
   const [containsCensus, setContainsCensus] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
-    !!data && data.length > 0
-      ? setContainsCensus(Object.keys(data[0]).includes(CENSUS_KEY))
-      : setContainsCensus(false);
+    let count = 0;
+    if(!!data && data.length > 0) {
+      setContainsCensus(Object.keys(data[0]).includes(CENSUS_KEY));
+      data.forEach(datum=> count += datum.value);
+    }
+    else {
+      setContainsCensus(false)
+    };
+    setTotalCount(count);
   }, [data]);
 
   return (
@@ -27,7 +34,9 @@ export default function ChartDataTable({ data, category }) {
                   % of cases / pop.
                 </th>
               ) : (
-                <th></th>
+                <th className='text-start w-1/3 md:w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+                  % of total
+                </th>
               )}
             </tr>
           </thead>
@@ -57,7 +66,11 @@ export default function ChartDataTable({ data, category }) {
                         : 'Data not available'}
                     </td>
                   ) : (
-                    <td></td>
+                    <td className='text-start w-1/3 md:w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                      {!!totalCount && !!object.value
+                        ? ((object.value / totalCount) * 100).toFixed(3) + '%'
+                        : 'Data not available'}
+                    </td>
                   )}
                 </tr>
               ))}
