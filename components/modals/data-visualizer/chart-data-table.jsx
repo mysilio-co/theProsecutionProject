@@ -26,16 +26,16 @@ export default function ChartDataTable({ data, category }) {
               <th className='text-start w-1/2 md:w-2/5 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 {category != 'All' ? category : '(No variable selected)'}
               </th>
-              <th className='text-start w-1/6 md:w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+              <th className='text-start w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                 # of cases
               </th>
               {containsCensus ? (
-                <th className='text-start w-1/3 md:w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+                <th className='text-start w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
                   % of cases / pop.
                 </th>
               ) : (
-                <th className='text-start w-1/3 md:w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
-                  % of total
+                <th className='text-start w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
+                  % of dataset
                 </th>
               )}
             </tr>
@@ -56,17 +56,17 @@ export default function ChartDataTable({ data, category }) {
                   <td className='text-start w-1/2 md:w-2/5 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {object.key}
                   </td>
-                  <td className='text-start w-1/6 md:w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                  <td className='text-start w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                     {object.value}
                   </td>
                   {containsCensus ? (
-                    <td className='text-start w-1/3 md:w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                    <td className='text-start w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                       {!!object.censusRatio
                         ? object.censusRatio.toFixed(6) + '%'
                         : 'Data not available'}
                     </td>
                   ) : (
-                    <td className='text-start w-1/3 md:w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
+                    <td className='text-start w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                       {!!totalCount && !!object.value
                         ? ((object.value / totalCount) * 100).toFixed(3) + '%'
                         : 'Data not available'}
