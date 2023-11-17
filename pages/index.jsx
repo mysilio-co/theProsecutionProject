@@ -395,9 +395,27 @@ export default function DataExplorer() {
                           />,
                         );
                       }}
-                      className='h-38px mt-1 mx-2 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+                      className='h-38px mt-1 mx-2 md:ml-6 lg:ml-12 w-full md:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
                     >
                       Visualize Data
+                    </button>
+                  </div>
+                  <div className='flex py-2 pb-5 md:py-0 items-center'>
+                    <button
+                      disabled={isLoading && !hasError}
+                      onClick={() => {
+                        setShowModal(true);
+                        setCurrentModal(
+                          <DataVisualizerModalContents
+                            data={filteredData}
+                            setShowModal={setShowModal}
+                            queryParams={query}
+                          />,
+                        );
+                      }}
+                      className='h-38px mt-1 mx-2 md:ml-4 lg:ml-6 w-full md:w-32 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
+                    >
+                      Quickstart
                     </button>
                   </div>
                 </div>
