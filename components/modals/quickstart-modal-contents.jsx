@@ -17,6 +17,7 @@ export default function QuickstartModalContents({ setShowModal, router }) {
       undefined,
       { shallow: true },
     );
+    setModalVisibility(false);
   }
 
   return (
