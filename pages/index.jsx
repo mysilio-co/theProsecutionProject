@@ -42,6 +42,7 @@ import Footer from '../components/footer.jsx';
 import { STATIC_QUERIES } from '../scripts/query-constants.js';
 import WelcomeModalContents from '../components/modals/welcome-modal-contents.jsx';
 import InProgressModalContents from '../components/modals/in-progress-modal-contents.jsx';
+import QuickstartModalContents from '../components/modals/quickstart-modal-contents.jsx';
 
 const fetcher = async url =>
   await fetch(url).then(res => {
@@ -349,9 +350,9 @@ export default function DataExplorer() {
               setShowModal={setShowModal}
               innerComponent={currentModal}
             />
-            <div className='max-w-7xl flex-row justify-center mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-8'>
+            <div className='max-w-7xl flex-row justify-center mx-auto px-2 sm:px-4 md:divide-y md:divide-gray-700 md:px-2 lg:px-4'>
               <div className='relative md:h-16 flex flex-col md:flex-row justify-center'>
-                <div className='relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-10 lg:mr-20'>
+                <div className='relative z-10 px-2 py-3 md:py-0 flex justify-center md:justify-start lg:px-0 md:mr-10 lg:mr-12'>
                   <div className='flex-shrink-0 flex items-center'>
                     <a
                       href='https://theprosecutionproject.org/'
@@ -373,7 +374,7 @@ export default function DataExplorer() {
                       isLoading={isLoading}
                     />
                   </div>
-                  <div className='flex py-2 pb-5 md:py-0 items-center'>
+                  <div className='flex py-2 pb-2 md:py-0 items-center'>
                     <SearchBy
                       router={router}
                       isMobile={isMobile}
@@ -381,6 +382,23 @@ export default function DataExplorer() {
                       isLoading={isLoading}
                       hasError={hasError}
                     />
+                  </div>
+                  <div className='flex py-2 pb-2 md:py-0 items-center'>
+                    <button
+                      disabled={isLoading && !hasError}
+                      onClick={() => {
+                        setShowModal(true);
+                        setCurrentModal(
+                          <QuickstartModalContents
+                            setShowModal={setShowModal}
+                            router={router}
+                          />,
+                        );
+                      }}
+                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-24 lg:w-32 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
+                    >
+                      Quickstart
+                    </button>
                   </div>
                   <div className='flex py-2 pb-5 md:py-0 items-center'>
                     <button
@@ -395,7 +413,7 @@ export default function DataExplorer() {
                           />,
                         );
                       }}
-                      className='h-38px mt-1 mx-2 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-28 lg:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
                     >
                       Visualize Data
                     </button>

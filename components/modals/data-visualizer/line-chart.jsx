@@ -30,7 +30,7 @@ export default function LineChart({
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
     instanceData = DataVisualizerScripts.mapData(categories, variable);
-    d3.selectAll('path').remove();
+    d3.selectAll('.line').remove();
     d3.selectAll('.grid').remove();
     d3.selectAll('rect').remove();
     const gx = useRef();
@@ -85,6 +85,7 @@ export default function LineChart({
       .data(lines)
       .enter()
       .append('path')
+      .attr('class', 'line')
       .attr('fill', 'none')
       .attr('stroke', (d, i) => DataVisualizerConstants.CHART_COLORS[i])
       .attr('stroke-width', '1.5')

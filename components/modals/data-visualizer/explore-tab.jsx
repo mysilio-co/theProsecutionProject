@@ -134,7 +134,7 @@ export default function ExploreTab({ data, queryParams }) {
       <div id={ALL_VISUALS_ID}>
         <div id={VISUAL_ELEMENTS_ID} className='py-2'>
           {showTitle && selectedTab != DataVisualizerConstants.CHOROPLETH ? (
-            <p className='pl-5 mb-3 font-bold text-xl'>
+            <p className='px-5 mb-3 font-bold text-xl'>
               Case Count by "
               {variable === 'All' ? `${variable} cases` : variable}"
             </p>
@@ -151,9 +151,9 @@ export default function ExploreTab({ data, queryParams }) {
                 timeRange={timeRange}
                 variable={variable}
                 width={
-                  modalRef.current && modalRef.current.offsetWidth > 900
+                  modalRef.current && modalRef.current.offsetWidth > 700
                     ? modalRef.current.offsetWidth
-                    : 900
+                    : 700
                 }
                 setCategoryNames={setCategoryNames}
                 setChartData={setChartData}
@@ -169,11 +169,7 @@ export default function ExploreTab({ data, queryParams }) {
                 data={data}
                 chartType={selectedTab}
                 variable={variable}
-                width={
-                  modalRef.current && modalRef.current.offsetWidth > 600
-                    ? modalRef.current.offsetWidth
-                    : 600
-                }
+                width={modalRef.current.offsetWidth}
                 setCategoryNames={setCategoryNames}
                 setChartData={setChartData}
               />

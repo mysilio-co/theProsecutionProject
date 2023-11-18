@@ -25,7 +25,7 @@ export default function PieChart({
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, variable);
     instanceData = DataVisualizerScripts.mapData(categories, variable);
-    d3.selectAll('path').remove();
+    d3.selectAll('.pie-fill').remove();
     const svg = d3.select(svgRef.current);
     var radius = Math.min(width, height) / 2 - margin;
     var pie = d3.pie().value(function (d) {
@@ -38,6 +38,7 @@ export default function PieChart({
       .enter()
       .append('g')
       .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+      .attr('class', 'pie-fill')
       .append('path')
       .attr('d', d3.arc().innerRadius(0).outerRadius(radius))
       .attr('fill', function (d, i) {

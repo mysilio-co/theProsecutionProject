@@ -29,7 +29,7 @@ export default function ChoroplethChart({
   if (!!data && data.length > 0) {
     categories = DataVisualizerScripts.groupByCategory(data, 'Location: state');
     instanceData = DataVisualizerScripts.mapData(categories, '');
-    if (!!censusData) {
+    if (!!censusData && isCensus) {
       instanceData.map(data => {
         data[DataVisualizerConstants.CENSUS_KEY] = censusData[data['key']];
         data[DataVisualizerConstants.CENSUS_RATIO_KEY] =
@@ -39,10 +39,10 @@ export default function ChoroplethChart({
     if (isCensus) {
       DataVisualizerScripts.sortCensusData(instanceData);
     }
-    d3.selectAll('path').remove();
-    d3.selectAll('text').remove();
-    d3.selectAll('rect').remove();
-    d3.selectAll('line').remove();
+    d3.selectAll('.state').remove();
+    d3.selectAll('.state-text').remove();
+    d3.selectAll('.title-text').remove();
+    d3.selectAll('.state-line').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
     const chartData = _.cloneDeep(instanceData).filter(data => {
@@ -77,6 +77,7 @@ export default function ChoroplethChart({
     svg
       .append('g')
       .attr('transform', 'translate(610,20)')
+      .attr('class', 'title-text')
       .append(() =>
         Legend(color, {
           title: isCensus
@@ -89,6 +90,7 @@ export default function ChoroplethChart({
     svg
       .append('g')
       .selectAll('path')
+      .attr('class', 'state')
       .data(topojson.feature(us, us.objects.states).features)
       .join('path')
       .attr('fill', d => {
@@ -100,6 +102,7 @@ export default function ChoroplethChart({
       })
       .attr('d', path)
       .append('title')
+      .attr('class', 'state-text')
       .text(
         d =>
           `${d.properties.name}, ${
@@ -120,6 +123,7 @@ export default function ChoroplethChart({
       .attr('d', path);
     svg
       .append('g')
+      .attr('class', 'state-line')
       .append('path')
       .datum(topojson.feature(us, us.objects.nation))
       .attr('fill', 'none')
