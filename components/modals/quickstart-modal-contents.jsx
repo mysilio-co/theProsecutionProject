@@ -229,7 +229,7 @@ export default function QuickstartModalContents({ setShowModal, router }) {
               />
               <ContentDisclosure
                 name={
-                  'Leftist affiliated individuals tried with federal jurisdiction during the George Floyd protests of 2020'
+                  'Leftist affiliated individuals tried under federal jurisdiction during the George Floyd protests of 2020'
                 }
                 content={
                   <div className='text-start'>

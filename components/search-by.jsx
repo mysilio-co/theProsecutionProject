@@ -53,7 +53,7 @@ export default function SearchBy({
         <Listbox value={searchBy} onChange={setSearchBy} disabled={isDisabled}>
           {({ open }) => (
             <>
-              <Listbox.Label className='block text-sm w-24 pl-0 md:pl-2 pr-2 font-medium text-gray-400'>
+              <Listbox.Label className='block text-sm w-20 pr-2 font-medium text-gray-400'>
                 Search By:
               </Listbox.Label>
               <div className='relative mt-1'>

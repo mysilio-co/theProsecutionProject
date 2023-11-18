@@ -395,7 +395,7 @@ export default function DataExplorer() {
                           />,
                         );
                       }}
-                      className='h-38px mt-1 mx-2 md:mr-0 lg:ml-6 w-full md:w-32 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
+                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-24 lg:w-32 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
                     >
                       Quickstart
                     </button>
@@ -413,7 +413,7 @@ export default function DataExplorer() {
                           />,
                         );
                       }}
-                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
+                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-28 lg:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
                     >
                       Visualize Data
                     </button>
