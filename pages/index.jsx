@@ -484,7 +484,7 @@ export default function DataExplorer() {
                   />,
                 );
               }}
-              className='mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+              className='mt-5 max-h-14 md:mt-0 md:ml-2 lg:ml-6 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
             >
               Download Data
             </button>
@@ -498,7 +498,7 @@ export default function DataExplorer() {
                   />,
                 );
               }}
-              className='mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+              className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
             >
               User Manual
             </button>
@@ -509,7 +509,7 @@ export default function DataExplorer() {
                   <ContactUsModalContents setShowModal={setShowModal} />,
                 );
               }}
-              className='mt-8 max-h-14 md:mt-0 md:ml-6 lg:ml-12 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+              className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
             >
               Request Data
             </button>

@@ -1,5 +1,5 @@
-import { isActiveFilters } from '../../scripts/common';
-import { ALL_COLUMN_KEYS } from '../../scripts/constants';
+import { ALL_COLUMN_KEYS, IDEOLOGICAL_GROUPING } from '../../scripts/constants';
+import { FROM, TO } from '../../scripts/query-constants';
 
 export default function ActiveFilters({ queryParams }) {
   const activeFilters = [];
@@ -10,7 +10,12 @@ export default function ActiveFilters({ queryParams }) {
   }
 
   Object.keys(queryParams).forEach(param => {
-    if (ALL_COLUMN_KEYS.includes(param) || param === 'from' || param === 'to') {
+    if (
+      ALL_COLUMN_KEYS.includes(param) ||
+      param === FROM ||
+      param === TO ||
+      param === IDEOLOGICAL_GROUPING
+    ) {
       activeFilters.push({ [param]: queryParams[param] });
     }
   });
