@@ -44,10 +44,18 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                 content={
                   <div className='text-start'>
                     <h4 className='text-gray-700 mb-2'>Date Filters</h4>
-                    <p className='mt-0'>From - 9/11/2001</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>From</span> - 9/11/2001
+                    </p>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
-                    <p className='mt-0'>Affiliation with FTO - Yes</p>
-                    <p className='mt-0'>Religion - Exclude(Muslim)</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Affiliation with FTO</span> -
+                      Yes
+                    </p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Religion</span> -
+                      Exclude(Muslim)
+                    </p>
                     <button
                       onClick={() => {
                         goToExample({
@@ -71,14 +79,24 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                 content={
                   <div className='text-start'>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
-                    <p className='mt-0'>Gender - Female</p>
-                    <p className='mt-0'>People vs. property - People</p>
                     <p className='mt-0'>
-                      Ideological affiliation - Rightist: identity-focused
+                      <span className='font-bold'>Gender</span> - Female
                     </p>
-                    <p className='mt-0'>Hate crime - Yes</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>People vs. property</span> -
+                      People
+                    </p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Ideological affiliation</span>{' '}
+                      - Rightist: identity-focused
+                    </p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Hate crime</span> - Yes
+                    </p>
                     <h4 className='text-gray-700 mb-2'>Numeric Filters</h4>
-                    <p className='mt-0'>Age - 18,50</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Age</span> - 18,50
+                    </p>
                     <button
                       onClick={() => {
                         goToExample({
@@ -106,18 +124,21 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                   <div className='text-start'>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
                     <p className='mt-0'>
-                      Criminal Method - Firearms: civilian, Firearms: military
+                      <span className='font-bold'>Criminal Method</span> -
+                      Firearms: civilian, Firearms: military
                     </p>
                     <p className='mt-0'>
-                      Veteran Status - Active duty, Dishonorably discharged,
-                      Former Active duty, Former active duty and current reserve
-                      components, Former active duty and reserve components,
-                      Former reserve components, Former/current member of
-                      non-U.S. military, Hardship discharge, Honorably
-                      discharged, Other than honorable discharge,
-                      Reserve/national guard (reserve components)
+                      <span className='font-bold'>Veteran Status</span> - Active
+                      duty, Dishonorably discharged, Former Active duty, Former
+                      active duty and current reserve components, Former active
+                      duty and reserve components, Former reserve components,
+                      Former/current member of non-U.S. military, Hardship
+                      discharge, Honorably discharged, Other than honorable
+                      discharge, Reserve/national guard (reserve components)
                     </p>
-                    <p className='mt-0'>Gender - Male</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Gender</span> - Male
+                    </p>
                     <button
                       onClick={() => {
                         goToExample({
@@ -141,12 +162,17 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                 content={
                   <div className='text-start'>
                     <h4 className='text-gray-700 mb-2'>Search Filters</h4>
-                    <p className='mt-0'>Search - Islamic State</p>
-                    <p className='mt-0'>Search By - Group affiliation</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Search</span> - Islamic State
+                    </p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Search By</span> - Group
+                      affiliation
+                    </p>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
                     <p className='mt-0'>
-                      Verdict - Guilty, Guilty on some charges/not guilty on
-                      others
+                      <span className='font-bold'>Verdict</span> - Guilty,
+                      Guilty on some charges/not guilty on others
                     </p>
                     <button
                       onClick={() => {
@@ -172,11 +198,17 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                 content={
                   <div className='text-start'>
                     <h4 className='text-gray-700 mb-2'>Search Filters</h4>
-                    <p className='mt-0'>Search - HAMAS</p>
-                    <p className='mt-0'>Search By - Group affiliation</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Search</span> - HAMAS
+                    </p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Search By</span> - Group
+                      affiliation
+                    </p>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
                     <p className='mt-0'>
-                      Criminal method - Exclude(Providing material support)
+                      <span className='font-bold'>Criminal method</span> -
+                      Exclude(Providing material support)
                     </p>
                     <button
                       onClick={() => {
@@ -200,17 +232,19 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                 }
                 content={
                   <div className='text-start'>
-                    <h4 className='text-gray-700 mb-2'>Tab</h4>
-                    <p className='mt-0'>Capitol Raid</p>
+                    <h5 className='text-gray-700 mb-2'>Tab</h5>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Capitol Raid</span>
+                    </p>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
                     <p className='mt-0'>
-                      Veteran Status - Active duty, Dishonorably discharged,
-                      Former Active duty, Former active duty and current reserve
-                      components, Former active duty and reserve components,
-                      Former reserve components, Former/current member of
-                      non-U.S. military, Hardship discharge, Honorably
-                      discharged, Other than honorable discharge,
-                      Reserve/national guard (reserve components)
+                      <span className='font-bold'>Veteran Status</span> - Active
+                      duty, Dishonorably discharged, Former Active duty, Former
+                      active duty and current reserve components, Former active
+                      duty and reserve components, Former reserve components,
+                      Former/current member of non-U.S. military, Hardship
+                      discharge, Honorably discharged, Other than honorable
+                      discharge, Reserve/national guard (reserve components)
                     </p>
                     <button
                       onClick={() => {
@@ -234,10 +268,19 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                 content={
                   <div className='text-start'>
                     <h4 className='text-gray-700 mb-2'>Tab</h4>
-                    <p className='mt-0'>Summer-Fall 2020 Protests</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>
+                        Summer-Fall 2020 Protests
+                      </span>
+                    </p>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
-                    <p className='mt-0'>Ideological grouping - Leftist</p>
-                    <p className='mt-0'>Jurisdiction - Federal</p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Ideological grouping</span> -
+                      Leftist
+                    </p>
+                    <p className='mt-0'>
+                      <span className='font-bold'>Jurisdiction</span> - Federal
+                    </p>
                     <button
                       onClick={() => {
                         goToExample({
