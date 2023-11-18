@@ -23,7 +23,7 @@ export default function HowToModalContents({ setShowModal, router }) {
   return (
     <Dialog.Panel
       ref={contentRef}
-      className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8'
+      className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full'
     >
       <div className='bg-white pt-0'>
         <div className='sm:flex sm:items-start'>
