@@ -65,5 +65,4 @@ export function sortCensusData(data) {
       return 0;
     }
   });
-  console.log(data);
 }

@@ -85,25 +85,6 @@ export default function BarChart({
       .attr('d', y)
       .append('title')
       .text(d => `${d.key}, ${d.value} cases`);
-    // potentially adding text to chart svg
-    // svg
-    //   .append('g')
-    //   .attr('class', 'chart-colors')
-    //   .attr('transform', `translate(${marginLeft},${height})`)
-    //   .style('margin', '10')
-    //   .selectAll('.chart-colors')
-    //   .data(instanceData)
-    //   .enter()
-    //   .append('text')
-    //   .attr('transform', function (d, i) {
-    //     console.log(d);
-    //     if (i == 0) {
-    //       return `translate(0,0)`;
-    //     } else {
-    //       return `translate(${instanceData[i - 1].key.length * 20},0)`;
-    //     }
-    //   })
-    //   .text(d => `${d.key}`);
     return (
       <svg width={width} height={height} ref={svgRef} className='bg-white'>
         <g ref={gx} transform={`translate(0,${height - marginBottom})`} />
