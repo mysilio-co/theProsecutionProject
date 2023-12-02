@@ -24,7 +24,6 @@ export default function PieChart({
   }, [, variable]);
 
   if (!!data && data.length > 0) {
-    console.log(offsetWidth);
     categories = DataVisualizerScripts.groupByCategory(data, variable);
     instanceData = DataVisualizerScripts.mapData(categories, variable);
     d3.selectAll('.pie').remove();
