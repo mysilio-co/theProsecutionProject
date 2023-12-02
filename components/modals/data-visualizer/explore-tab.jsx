@@ -155,6 +155,9 @@ export default function ExploreTab({ data, queryParams }) {
                     ? modalRef.current.offsetWidth
                     : 700
                 }
+                offsetWidth={
+                  modalRef.current ? modalRef.current.offsetWidth : 0
+                }
                 setCategoryNames={setCategoryNames}
                 setChartData={setChartData}
               />
@@ -170,6 +173,9 @@ export default function ExploreTab({ data, queryParams }) {
                 chartType={selectedTab}
                 variable={variable}
                 width={modalRef.current.offsetWidth}
+                offsetWidth={
+                  modalRef.current ? modalRef.current.offsetWidth : 0
+                }
                 setCategoryNames={setCategoryNames}
                 setChartData={setChartData}
               />
@@ -194,6 +200,9 @@ export default function ExploreTab({ data, queryParams }) {
                     ? modalRef.current.offsetWidth
                     : 400
                 }
+                offsetWidth={
+                  modalRef.current ? modalRef.current.offsetWidth : 400
+                }
                 setCategoryNames={setCategoryNames}
                 setChartData={setChartData}
               />
@@ -211,6 +220,9 @@ export default function ExploreTab({ data, queryParams }) {
                 setChartData={setChartData}
                 censusData={censusData}
                 isCensus={isCensus}
+                offsetWidth={
+                  modalRef.current ? modalRef.current.offsetWidth : 0
+                }
               />
               {!!censusData ? (
                 ''

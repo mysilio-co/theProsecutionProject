@@ -13,6 +13,7 @@ export default function LineChart({
   setChartData,
   width = 900,
   height = 400,
+  offsetWidth,
   marginTop = 20,
   marginRight = 20,
   marginBottom = 30,
