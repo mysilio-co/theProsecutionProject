@@ -50,7 +50,7 @@ export default function PieChart({
       .attr('fill', function (d, i) {
         return DataVisualizerConstants.CHART_COLORS[i];
       })
-      .attr('stroke', 'black')
+      .attr('stroke', '#333333')
       .style('stroke-width', '1px')
       .style('text-align', 'center')
       .on('mouseover', function (e, d) {
