@@ -12,6 +12,7 @@ export default function BarChart({
   setChartData,
   width = 900,
   height = 400,
+  offsetWidth,
   marginTop = 20,
   marginRight = 20,
   marginBottom = 30,
@@ -31,6 +32,7 @@ export default function BarChart({
     d3.selectAll('rect').remove();
     d3.selectAll('.grid').remove();
     d3.selectAll('.chart-colors').remove();
+    d3.selectAll('.tooltip').remove();
     const gx = useRef();
     const gy = useRef();
     const svg = d3.select(svgRef.current);
@@ -82,9 +84,21 @@ export default function BarChart({
       .attr('height', function (d) {
         return height - y(d.value) - marginBottom;
       })
-      .attr('d', y)
-      .append('title')
-      .text(d => `${d.key}, ${d.value} cases`);
+      .on('mouseover', function (e, d) {
+        DataVisualizerScripts.tooltipMouseOver(
+          svg,
+          e,
+          d,
+          d3.select(this),
+          DataVisualizerConstants.BAR,
+          offsetWidth,
+        );
+      })
+      .on('mouseout', function () {
+        DataVisualizerScripts.tooltipMouseOut(d3.select(this), offsetWidth);
+      })
+      .attr('d', y);
+    DataVisualizerScripts.appendTooltipToSvg(svg);
     return (
       <svg width={width} height={height} ref={svgRef} className='bg-white'>
         <g ref={gx} transform={`translate(0,${height - marginBottom})`} />

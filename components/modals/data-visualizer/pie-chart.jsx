@@ -13,6 +13,7 @@ export default function PieChart({
   width = 400,
   height = 400,
   margin = 20,
+  offsetWidth,
 }) {
   let instanceData = [];
   let categories = [];
@@ -23,9 +24,12 @@ export default function PieChart({
   }, [, variable]);
 
   if (!!data && data.length > 0) {
+    console.log(offsetWidth);
     categories = DataVisualizerScripts.groupByCategory(data, variable);
     instanceData = DataVisualizerScripts.mapData(categories, variable);
+    d3.selectAll('.pie').remove();
     d3.selectAll('.pie-fill').remove();
+    d3.selectAll('.tooltip').remove();
     const svg = d3.select(svgRef.current);
     var radius = Math.min(width, height) / 2 - margin;
     var pie = d3.pie().value(function (d) {
@@ -37,7 +41,10 @@ export default function PieChart({
       .data(pieData)
       .enter()
       .append('g')
-      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+      .attr(
+        'transform',
+        'translate(' + offsetWidth / 2 + ',' + height / 2 + ')',
+      )
       .attr('class', 'pie-fill')
       .append('path')
       .attr('d', d3.arc().innerRadius(0).outerRadius(radius))
@@ -46,13 +53,24 @@ export default function PieChart({
       })
       .attr('stroke', 'black')
       .style('stroke-width', '1px')
-      .style('opacity', 0.7)
-      .append('title')
-      .text(d => `${d.data.key}, ${d.data.value} cases`);
-
+      .style('text-align', 'center')
+      .on('mouseover', function (e, d) {
+        DataVisualizerScripts.tooltipMouseOver(
+          svg,
+          e,
+          d.data,
+          d3.select(this),
+          DataVisualizerConstants.PIE,
+          offsetWidth,
+        );
+      })
+      .on('mouseout', function () {
+        DataVisualizerScripts.tooltipMouseOut(d3.select(this), offsetWidth);
+      });
+    DataVisualizerScripts.appendTooltipToSvg(svg);
     return (
       <svg
-        width={width}
+        width={offsetWidth}
         height={height}
         ref={svgRef}
         className='bg-white'

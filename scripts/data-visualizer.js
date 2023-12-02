@@ -6,7 +6,7 @@ import {
   generateIdeologicalGroupingCategories,
 } from './constants';
 
-import { CENSUS_RATIO_KEY } from './data-visualizer-constants';
+import { BAR, CENSUS_RATIO_KEY, CHOROPLETH } from './data-visualizer-constants';
 
 export function groupByCategory(data, category) {
   const chartData = _.cloneDeep(data);
@@ -48,6 +48,10 @@ export function mapData(dataRollup, variableName) {
   ret.sort(function compare(a, b) {
     return b.value - a.value;
   });
+  ret.forEach((d, i) => {
+    d.length = ret.length;
+    d.index = i;
+  });
   return ret;
 }
 
@@ -65,4 +69,69 @@ export function sortCensusData(data) {
       return 0;
     }
   });
+}
+
+export function appendTooltipToSvg(svg) {
+  svg
+    .append('g')
+    .attr('class', 'tooltip')
+    .attr('fill', '#575757')
+    .style('pointer-events', 'none')
+    .style('opacity', '0');
+  svg
+    .select('.tooltip')
+    .append('rect')
+    .attr('class', 'tooltip-bg')
+    .attr('fill', 'white')
+    .attr('stroke', '#575757')
+    .attr('width', '150px')
+    .attr('height', '50px')
+    .attr('y', '-1rem');
+  svg
+    .select('.tooltip')
+    .append('text')
+    .attr('class', 'tooltip-key')
+    .attr('x', '0.5rem')
+    .attr('y', '0.2rem');
+  svg
+    .select('.tooltip')
+    .append('text')
+    .attr('class', 'tooltip-value')
+    .attr('x', '0.5rem')
+    .attr('y', '1.2rem');
+}
+
+export function tooltipMouseOver(
+  svg,
+  e,
+  d,
+  chartObject,
+  chartType,
+  offsetWidth,
+) {
+  if (offsetWidth > 768) {
+    const tooltip = svg.select('.tooltip');
+    const tooltipWidth = d.key.length > 10 ? d.key.length * 8 : 100;
+    const tooltipX =
+      chartType !== BAR || (0.5 > d.index / d.length && d.length > 1)
+        ? e.offsetX
+        : e.offsetX - tooltipWidth;
+    const tooltipValue = `${d.value} ${
+      chartType !== CHOROPLETH ? 'cases' : ''
+    }`;
+    chartObject.transition().duration('150').attr('opacity', '.7');
+    d3.select('.tooltip-key').html(`${d.key}`);
+    d3.select('.tooltip-value').html(tooltipValue);
+    d3.select('.tooltip-bg').style('width', `${tooltipWidth}px`);
+    tooltip.transition().duration(150).style('opacity', 1);
+    tooltip.style('transform', `translate(${tooltipX}px, ${e.offsetY}px)`);
+  }
+}
+
+export function tooltipMouseOut(chartObject, offsetWidth) {
+  if (offsetWidth > 768) {
+    const tooltip = d3.select('.tooltip');
+    chartObject.transition().duration('150').attr('opacity', '1');
+    tooltip.transition().duration('150').style('opacity', 0);
+  }
 }

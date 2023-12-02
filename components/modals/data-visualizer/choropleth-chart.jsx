@@ -14,6 +14,7 @@ export default function ChoroplethChart({
   setChartData,
   width = 975,
   height = 610,
+  offsetWidth,
   margin = 20,
   censusData,
   isCensus,
@@ -39,10 +40,13 @@ export default function ChoroplethChart({
     if (isCensus) {
       DataVisualizerScripts.sortCensusData(instanceData);
     }
+    d3.selectAll('.full-map').remove();
     d3.selectAll('.state').remove();
     d3.selectAll('.state-text').remove();
-    d3.selectAll('.title-text').remove();
     d3.selectAll('.state-line').remove();
+    d3.selectAll('.us-line').remove();
+    d3.selectAll('.title-text').remove();
+    d3.selectAll('.tooltip').remove();
     const svg = d3.select(svgRef.current);
     const us = STATES_ALBERS_10M;
     const chartData = _.cloneDeep(instanceData).filter(data => {
@@ -89,6 +93,7 @@ export default function ChoroplethChart({
       );
     svg
       .append('g')
+      .attr('class', 'full-map')
       .selectAll('path')
       .attr('class', 'state')
       .data(topojson.feature(us, us.objects.states).features)
@@ -100,21 +105,10 @@ export default function ChoroplethChart({
             : 0,
         );
       })
-      .attr('d', path)
-      .append('title')
-      .attr('class', 'state-text')
-      .text(
-        d =>
-          `${d.properties.name}, ${
-            !!valuemap.get(d.properties.name)
-              ? isCensus
-                ? valuemap.get(d.properties.name).toFixed(6) + '%'
-                : valuemap.get(d.properties.name) + ' cases'
-              : 0
-          }`,
-      );
-
+      .attr('d', path);
     svg
+      .append('g')
+      .attr('class', 'state-line')
       .append('path')
       .datum(topojson.mesh(us, us.objects.states))
       .attr('fill', 'none')
@@ -123,13 +117,38 @@ export default function ChoroplethChart({
       .attr('d', path);
     svg
       .append('g')
-      .attr('class', 'state-line')
+      .attr('class', 'us-line')
       .append('path')
       .datum(topojson.feature(us, us.objects.nation))
       .attr('fill', 'none')
       .attr('stroke', 'black')
       .attr('stroke-linejoin', 'round')
       .attr('d', d3.geoPath());
+    d3.select('.full-map')
+      .selectAll('path')
+      .data(topojson.feature(us, us.objects.states).features)
+      .on('mouseover', function (e, d) {
+        const data = {
+          key: d.properties.name,
+          value: !!valuemap.get(d.properties.name)
+            ? isCensus
+              ? valuemap.get(d.properties.name).toFixed(6) + '%'
+              : valuemap.get(d.properties.name) + ' cases'
+            : 0,
+        };
+        DataVisualizerScripts.tooltipMouseOver(
+          svg,
+          e,
+          data,
+          d3.select(this),
+          DataVisualizerConstants.CHOROPLETH,
+          offsetWidth,
+        );
+      })
+      .on('mouseout', function () {
+        DataVisualizerScripts.tooltipMouseOut(d3.select(this), offsetWidth);
+      });
+    DataVisualizerScripts.appendTooltipToSvg(svg);
     return (
       <svg
         width={width}
