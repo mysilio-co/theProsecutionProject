@@ -133,14 +133,26 @@ export default function ExploreTab({ data, queryParams }) {
 
       <div id={ALL_VISUALS_ID}>
         <div id={VISUAL_ELEMENTS_ID} className='py-2'>
-          {showTitle && selectedTab != DataVisualizerConstants.CHOROPLETH ? (
-            <p className='px-5 mb-3 font-bold text-xl'>
-              Case Count by "
-              {variable === 'All' ? `${variable} cases` : variable}"
-            </p>
-          ) : (
-            ''
-          )}
+          <div className='md:flex'>
+            <div className='md:w-1/2'>
+              {showTitle &&
+              selectedTab != DataVisualizerConstants.CHOROPLETH ? (
+                <p className='px-5 mb-3 font-bold text-xl text-start text-gray-900'>
+                  Case Count by "
+                  {variable === 'All' ? `${variable} cases` : variable}"
+                </p>
+              ) : (
+                ''
+              )}
+            </div>
+            <div className='md:w-1/2 px-5'>
+              {showActiveFilter ? (
+                <ActiveFilters queryParams={queryParams} />
+              ) : (
+                ''
+              )}
+            </div>
+          </div>
 
           {selectedTab === DataVisualizerConstants.LINE ? (
             <div className='overflow-x-scroll'>
@@ -238,11 +250,6 @@ export default function ExploreTab({ data, queryParams }) {
             ''
           )}
           <ChartColors categoryNames={categoryNames} />
-          {showActiveFilter ? (
-            <ActiveFilters queryParams={queryParams}></ActiveFilters>
-          ) : (
-            ''
-          )}
         </div>
         <div id={TABLE_ELEMENTS_ID} className='py-2'>
           <ChartDataTable

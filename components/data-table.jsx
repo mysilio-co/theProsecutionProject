@@ -22,7 +22,7 @@ import { classNames } from '../scripts/common.js';
 import { useEffect, useRef, useState } from 'react';
 import { CODEBOOK } from '../scripts/codebook';
 import DataRow from './data-row';
-import ActiveFilterMessage from './active-filter-message';
+import ActiveFilters from './modals/active-filters.jsx';
 
 export default function DataTable({
   title,
@@ -138,11 +138,18 @@ export default function DataTable({
     <div className='py-3 px-4 sm:px-6 lg:px-8'>
       <div className='sm:flex sm:items-center'>
         <div className='sm:flex-auto'>
-          <h1 className='text-xl font-semibold text-gray-900'>{title}</h1>
-          <p className='mt-2 text-sm text-gray-700'>
-            {TAB_DESCRIPTIONS[router.query.tab]}
-          </p>
-          <div className='md:flex md:justify-between items-center mt-6'>
+          <div className='md:flex justify-between'>
+            <div className='md:w-2/5'>
+              <h1 className='text-xl font-semibold text-gray-900'>{title}</h1>
+              <p className='mt-1 mb-4 md:mb-0 text-sm text-gray-700'>
+                {TAB_DESCRIPTIONS[router.query.tab]}
+              </p>
+            </div>
+            <div className='md:w-2/5'>
+              <ActiveFilters queryParams={router.query} />
+            </div>
+          </div>
+          <div className='md:flex md:justify-between items-center mt-4'>
             <div className='flex items-center'>
               <p
                 className={classNames(
@@ -175,17 +182,13 @@ export default function DataTable({
                     hasError={hasError}
                     setShowViewDescription={setShowViewDescription}
                   />
-                  {filterActive ? <ActiveFilterMessage /> : ''}
                 </div>
               ) : (
                 ''
               )}
             </div>
             {isMobile || !isInitiallyLoaded ? (
-              <div>
-                {filterActive ? <ActiveFilterMessage /> : ''}
-                {showFilterButton()}
-              </div>
+              <div>{showFilterButton()}</div>
             ) : (
               ''
             )}

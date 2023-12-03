@@ -22,8 +22,8 @@ export default function ActiveFilters({ queryParams }) {
   return (
     <div>
       {activeFilters.length > 0 ? (
-        <div className='text-start pl-5 my-3'>
-          <p className='font-bold text-xl'>Active Filters</p>
+        <div className='text-start md:text-end text-gray-900'>
+          <p className='font-bold text-xl mb-1'>Active Filters</p>
           {activeFilters.map((value, index) => {
             return (
               <div key={index}>

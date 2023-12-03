@@ -29,7 +29,7 @@ export default function QuickstartModalContents({ setShowModal, router }) {
               as='h3'
               className='p-4 bg-gray-800 text-lg font-medium leading-6 text-white'
             >
-              Quickstart
+              Sample Queries
             </Dialog.Title>
             <div>
               <p className='mt-4 mx-6 text-start'>

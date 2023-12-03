@@ -395,9 +395,9 @@ export default function DataExplorer() {
                           />,
                         );
                       }}
-                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-24 lg:w-32 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
+                      className='h-38px mt-1 mx-2 lg:ml-6 w-full md:w-32 lg:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-2 rounded'
                     >
-                      Quickstart
+                      Sample Queries
                     </button>
                   </div>
                   <div className='flex py-2 pb-5 md:py-0 items-center'>
