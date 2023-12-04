@@ -10,7 +10,7 @@ export default function HelpMessage({ showHelpMessage, chartType }) {
     <div
       className={classNames(
         showHelpMessage ? 'opacity-100' : 'opacity-0 invisible',
-        'absolute -translate-y-10 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300',
+        'absolute md:-translate-y-24 lg:-translate-y-20 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300',
       )}
     >
       {chartType === LINE || chartType === PIE || chartType === BAR ? (

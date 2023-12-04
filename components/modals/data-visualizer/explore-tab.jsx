@@ -95,6 +95,7 @@ export default function ExploreTab({ data, queryParams }) {
           ))}
         </nav>
       </div>
+      <HelpMessage showHelpMessage={showHelpMessage} chartType={selectedTab} />
       <div className='block lg:flex justify-between'>
         <DataVisualizerDropdowns
           chartType={selectedTab}
@@ -120,10 +121,6 @@ export default function ExploreTab({ data, queryParams }) {
               isActiveFilters={isActiveFilters(queryParams)}
             />
           </div>
-          <HelpMessage
-            showHelpMessage={showHelpMessage}
-            chartType={selectedTab}
-          />
           <DownloadButton
             display={downloadDisplay}
             setDisplay={setDownloadDisplay}
