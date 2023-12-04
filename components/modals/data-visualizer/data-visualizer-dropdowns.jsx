@@ -1,5 +1,6 @@
 import { Disclosure, Listbox, Transition } from '@headlessui/react';
 import { useState, Fragment, useEffect } from 'react';
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import {
   AGGREGATE_OPTIONS,
   CHOROPLETH,
@@ -7,6 +8,7 @@ import {
   STATE_OPTIONS,
   LINE,
   STATE_RATIO,
+  ALL,
 } from '../../../scripts/data-visualizer-constants';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import { classNames } from '../../../scripts/common';
@@ -17,6 +19,7 @@ export default function DataVisualizerDropdowns({
   setTimeRange,
   setVariable,
   setIsCensus,
+  setShowHelpMessage,
 }) {
   const CATEGORICAL_OPTIONS = ['All'].concat(CATEGORICAL_KEYS.sort());
   const [aggregateOptions, setAggregateOptions] = useState(
@@ -129,7 +132,16 @@ export default function DataVisualizerDropdowns({
                 Variable
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
-                <Listbox.Button className='relative min-w-full text-sm cursor-default rounded-md border border-gray-300 bg-white py-2 pl-1 pr-16 xl:pr-20 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500'>
+                <Listbox.Button
+                  className={classNames(
+                    categoricalOption === ALL &&
+                      chartType != LINE &&
+                      chartType != CHOROPLETH
+                      ? 'border-red-600 border-2'
+                      : 'border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500',
+                    'relative min-w-full text-sm cursor-default rounded-md border bg-white py-2 pl-1 pr-16 xl:pr-20 text-left shadow-sm',
+                  )}
+                >
                   <span className='flex items-center'>
                     <span className='ml-3 block truncate'>
                       {categoricalOption}
@@ -201,6 +213,7 @@ export default function DataVisualizerDropdowns({
       ) : (
         <div />
       )}
+
       {chartType === LINE ? (
         <Listbox value={dateOptions} onChange={setDateOptions}>
           {({ open }) => (
@@ -279,6 +292,16 @@ export default function DataVisualizerDropdowns({
       ) : (
         <div />
       )}
+      <QuestionMarkCircleIcon
+        onMouseOver={() => {
+          setShowHelpMessage(true);
+        }}
+        onMouseLeave={() => {
+          setShowHelpMessage(false);
+        }}
+        className='text-gray-400 h-5 w-5 cursor-pointer ml-2'
+        aria-hidden='true'
+      />
     </div>
   );
 }

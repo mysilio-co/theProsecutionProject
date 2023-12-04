@@ -3,6 +3,8 @@ export const BAR = 'Bar Chart';
 export const PIE = 'Pie Chart';
 export const CHOROPLETH = 'U.S. Map';
 
+export const ALL = 'All';
+
 export const COUNT = 'Count';
 export const AVERAGE = 'Average';
 

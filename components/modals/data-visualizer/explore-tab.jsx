@@ -20,6 +20,7 @@ import CitationContents from './citation-contents';
 import DownloadContents from './download-contents';
 import ShowTitleCheckbox from './show-title-checkbox';
 import ShowActiveFilterCheckbox from './show-filter-checkbox';
+import HelpMessage from './help-message.jsx';
 
 export default function ExploreTab({ data, queryParams }) {
   const fetcher = async url =>
@@ -51,6 +52,7 @@ export default function ExploreTab({ data, queryParams }) {
   const [downloadDisplay, setDownloadDisplay] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
   const [showActiveFilter, setShowActiveFilter] = useState(true);
+  const [showHelpMessage, setShowHelpMessage] = useState(false);
   const ALL_VISUALS_ID = 'all-visuals';
   const VISUAL_ELEMENTS_ID = 'visual-elements';
   const TABLE_ELEMENTS_ID = 'table-elements';
@@ -99,7 +101,9 @@ export default function ExploreTab({ data, queryParams }) {
           setTimeRange={setTimeRange}
           setVariable={setVariable}
           setIsCensus={setIsCensus}
+          setShowHelpMessage={setShowHelpMessage}
         ></DataVisualizerDropdowns>
+
         <div className='block lg:flex justify-between'>
           <div className='flex'>
             {selectedTab != DataVisualizerConstants.CHOROPLETH ? (
@@ -116,6 +120,10 @@ export default function ExploreTab({ data, queryParams }) {
               isActiveFilters={isActiveFilters(queryParams)}
             />
           </div>
+          <HelpMessage
+            showHelpMessage={showHelpMessage}
+            chartType={selectedTab}
+          />
           <DownloadButton
             display={downloadDisplay}
             setDisplay={setDownloadDisplay}
