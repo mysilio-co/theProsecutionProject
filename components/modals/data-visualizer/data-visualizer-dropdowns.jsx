@@ -299,7 +299,7 @@ export default function DataVisualizerDropdowns({
         onMouseLeave={() => {
           setShowHelpMessage(false);
         }}
-        className='hidden md:block text-gray-500 h-5 w-5 cursor-pointer ml-2'
+        className='hidden md:block text-gray-400 h-5 w-5 cursor-pointer ml-2'
         aria-hidden='true'
       />
     </div>
