@@ -99,6 +99,7 @@ export default function ExploreTab({ data, queryParams }) {
       <div className='block lg:flex justify-between'>
         <DataVisualizerDropdowns
           chartType={selectedTab}
+          chartData={chartData}
           setTimeRange={setTimeRange}
           setVariable={setVariable}
           setIsCensus={setIsCensus}

@@ -16,6 +16,7 @@ import { CATEGORICAL_KEYS } from '../../../scripts/constants';
 
 export default function DataVisualizerDropdowns({
   chartType,
+  chartData,
   setTimeRange,
   setVariable,
   setIsCensus,
@@ -30,7 +31,6 @@ export default function DataVisualizerDropdowns({
     CATEGORICAL_OPTIONS[0],
   );
   const [stateOptions, setStateOptions] = useState(STATE_OPTIONS[0]);
-
   useEffect(() => {
     setTimeRange(dateOptions);
   }, [dateOptions]);
@@ -49,7 +49,7 @@ export default function DataVisualizerDropdowns({
         <Listbox value={stateOptions} onChange={setStateOptions}>
           {({ open }) => (
             <>
-              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
+              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-500 pt-5 md:pt-0'>
                 Statistic
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
@@ -59,7 +59,7 @@ export default function DataVisualizerDropdowns({
                   </span>
                   <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
                     <ChevronDownIcon
-                      className='h-5 w-5 text-gray-400'
+                      className='h-5 w-5 text-gray-500'
                       aria-hidden='true'
                     />
                   </span>
@@ -128,16 +128,16 @@ export default function DataVisualizerDropdowns({
         <Listbox value={categoricalOption} onChange={setCategoricalOption}>
           {({ open }) => (
             <>
-              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
+              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-500 pt-5 md:pt-0'>
                 Variable
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
                 <Listbox.Button
                   className={classNames(
-                    categoricalOption === ALL &&
+                    chartData.length <= 1 &&
                       chartType != LINE &&
                       chartType != CHOROPLETH
-                      ? 'border-red-600 border-2'
+                      ? 'border-red-500 border-2'
                       : 'border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-blue-500',
                     'relative min-w-full text-sm cursor-default rounded-md border bg-white py-2 pl-1 pr-16 xl:pr-20 text-left shadow-sm',
                   )}
@@ -149,7 +149,7 @@ export default function DataVisualizerDropdowns({
                   </span>
                   <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
                     <ChevronDownIcon
-                      className='h-5 w-5 text-gray-400'
+                      className='h-5 w-5 text-gray-500'
                       aria-hidden='true'
                     />
                   </span>
@@ -218,7 +218,7 @@ export default function DataVisualizerDropdowns({
         <Listbox value={dateOptions} onChange={setDateOptions}>
           {({ open }) => (
             <>
-              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-400 pt-5 md:pt-0'>
+              <Listbox.Label className='block text-sm pl-4 pr-2 font-medium text-gray-500 pt-5 md:pt-0'>
                 Date grouping
               </Listbox.Label>
               <div className='relative mt-1 mx-4 md:mx-0'>
@@ -228,7 +228,7 @@ export default function DataVisualizerDropdowns({
                   </span>
                   <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
                     <ChevronDownIcon
-                      className='h-5 w-5 text-gray-400'
+                      className='h-5 w-5 text-gray-500'
                       aria-hidden='true'
                     />
                   </span>
@@ -299,7 +299,7 @@ export default function DataVisualizerDropdowns({
         onMouseLeave={() => {
           setShowHelpMessage(false);
         }}
-        className='hidden md:block text-gray-400 h-5 w-5 cursor-pointer ml-2'
+        className='hidden md:block text-gray-500 h-5 w-5 cursor-pointer ml-2'
         aria-hidden='true'
       />
     </div>
