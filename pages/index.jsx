@@ -69,7 +69,10 @@ export default function DataExplorer() {
   const [showModal, setShowModal] = useState(false);
   const [inProgressAlertShown, setInProgressAlertShown] = useState(false);
   const [currentModal, setCurrentModal] = useState(
-    <WelcomeModalContents setShowModal={setShowModal} />,
+    <WelcomeModalContents
+      setShowModal={setShowModal}
+      showHowToModal={showHowToModal}
+    />,
   );
   const [width, setWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 0,
@@ -78,6 +81,12 @@ export default function DataExplorer() {
   const [isInitiallyLoaded, setIsInitiallyLoaded] = useState(false);
   const [newTabSelected, setNewTabSelected] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
+  function showHowToModal() {
+    setShowModal(true);
+    setCurrentModal(
+      <HowToModalContents setShowModal={setShowModal} router={router} />,
+    );
+  }
 
   function showFilterButton() {
     return (

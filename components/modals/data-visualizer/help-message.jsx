@@ -16,8 +16,8 @@ export default function HelpMessage({ showHelpMessage, chartType }) {
       {chartType === LINE || chartType === PIE || chartType === BAR ? (
         <p>
           <span className='font-bold'>Variable</span>: The categorical variable
-          the dataset will be grouped by. Selecting "All" will show only 1
-          group.
+          the dataset will be grouped by. Selecting "All" will gather all data
+          into one group.
         </p>
       ) : (
         ''

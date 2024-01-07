@@ -63,7 +63,7 @@ export default function HowToModalContents({ setShowModal, router }) {
                 ))}
               </nav>
             </div>
-            {selectedTab === 'Functions' ? <HowToFunctions /> : ''}
+            {selectedTab === 'Site Guide' ? <HowToFunctions /> : ''}
             {selectedTab === 'Quickstart' ? (
               <HowToQuickstart router={router} />
             ) : (

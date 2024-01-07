@@ -32,7 +32,7 @@ export const SHEET_NAMES = [
   'Pending cases',
 ];
 
-export const HOW_TO_TABS = ['Functions', 'Codebook'];
+export const HOW_TO_TABS = ['Site Guide', 'Codebook'];
 
 export const DATA_VISUALIZER_TABS = ['Explore', 'Premade Charts'];
 
