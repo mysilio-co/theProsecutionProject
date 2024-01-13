@@ -7,8 +7,13 @@ import { classNames } from '../../../../scripts/common';
 
 export default function HowToCarousel({ content }) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
   useEffect(() => {
     setCurrentSlideIndex(0);
+    content._slides.forEach(slide => {
+      const img = new Image();
+      img.src = slide._imgSrc;
+    });
   }, [content]);
 
   const nextSlide = () => {
