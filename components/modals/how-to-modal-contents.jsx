@@ -6,7 +6,7 @@ import HowToFunctions from './how-to-tabs/how-to-functions';
 import HowToQuickstart from './how-to-tabs/how-to-quickstart';
 import HowToCodebook from './how-to-tabs/how-to-codebook';
 
-export default function HowToModalContents({ setShowModal, router }) {
+export default function HowToModalContents({ setShowModal, router, isMobile }) {
   const contentRef = useRef();
   const titleRef = useRef();
   const isVisible = useOnScreen(contentRef);
@@ -63,7 +63,11 @@ export default function HowToModalContents({ setShowModal, router }) {
                 ))}
               </nav>
             </div>
-            {selectedTab === 'Site Guide' ? <HowToFunctions /> : ''}
+            {selectedTab === 'Site Guide' ? (
+              <HowToFunctions isMobile={isMobile} />
+            ) : (
+              ''
+            )}
             {selectedTab === 'Quickstart' ? (
               <HowToQuickstart router={router} />
             ) : (

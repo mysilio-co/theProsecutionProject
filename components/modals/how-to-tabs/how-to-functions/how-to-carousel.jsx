@@ -5,7 +5,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { classNames } from '../../../../scripts/common';
 
-export default function HowToCarousel({ content }) {
+export default function HowToCarousel({ content, isMobile }) {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function HowToCarousel({ content }) {
               : content._slides[0]._imgSrc
           }
           alt='Carousel Slide'
-          className='w-5/6'
+          className={isMobile ? `w-3/4` : `w-5/6`}
         />
         <div className='w-10 flex items-center justify-center'>
           <button

@@ -84,7 +84,11 @@ export default function DataExplorer() {
   function showHowToModal() {
     setShowModal(true);
     setCurrentModal(
-      <HowToModalContents setShowModal={setShowModal} router={router} />,
+      <HowToModalContents
+        setShowModal={setShowModal}
+        router={router}
+        isMobile={isMobile}
+      />,
     );
   }
 
@@ -504,6 +508,7 @@ export default function DataExplorer() {
                   <HowToModalContents
                     setShowModal={setShowModal}
                     router={router}
+                    isMobile={isMobile}
                   />,
                 );
               }}

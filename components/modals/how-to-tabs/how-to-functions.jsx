@@ -12,8 +12,9 @@ import HowToCarousel from './how-to-functions/how-to-carousel';
 import { useEffect, useState } from 'react';
 import HowToFunctionsButtons from './how-to-functions/how-to-functions-button';
 
-export default function HowToFunctions() {
+export default function HowToFunctions({ isMobile }) {
   const [selectedFunction, setSelectedFunction] = useState(DATASET);
+  console.log(isMobile);
 
   return (
     <div>
@@ -56,7 +57,10 @@ export default function HowToFunctions() {
           />
         </nav>
       </div>
-      <HowToCarousel content={HOW_TO_CONTENT[selectedFunction]} />
+      <HowToCarousel
+        content={HOW_TO_CONTENT(isMobile)[selectedFunction]}
+        isMobile={isMobile}
+      />
     </div>
   );
 }

@@ -136,7 +136,7 @@ export function Legend(
     tickValues = d3.range(thresholds.length);
     tickFormat = i =>
       thresholdFormat(
-        isCensus ? thresholds[i].toFixed(5) + '%' : Math.round(thresholds[i]),
+        isCensus ? thresholds[i].toFixed(5) : Math.round(thresholds[i]),
         i,
       );
   }

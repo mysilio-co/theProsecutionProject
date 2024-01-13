@@ -34,7 +34,7 @@ export default function ChoroplethChart({
       instanceData.map(data => {
         data[DataVisualizerConstants.CENSUS_KEY] = censusData[data['key']];
         data[DataVisualizerConstants.CENSUS_RATIO_KEY] =
-          (data['value'] / data[DataVisualizerConstants.CENSUS_KEY]) * 100;
+          (data['value'] / data[DataVisualizerConstants.CENSUS_KEY]) * 100000;
       });
     }
     if (isCensus) {
@@ -60,7 +60,7 @@ export default function ChoroplethChart({
     });
 
     const path = d3.geoPath();
-    const format = d => `${d}%`;
+    const format = d => `${d}`;
     const valuemap = new Map(
       chartData.map(d =>
         isCensus ? [d.key, d.censusRatio] : [d.key, d.value],
@@ -85,7 +85,7 @@ export default function ChoroplethChart({
       .append(() =>
         Legend(color, {
           title: isCensus
-            ? '% of Cases / Population Data (Census 2021)'
+            ? '# of Cases per 100,000 People (Census 2021)'
             : '# of Cases by State',
           width: 260,
           isCensus: isCensus,
@@ -132,7 +132,7 @@ export default function ChoroplethChart({
           key: d.properties.name,
           value: !!valuemap.get(d.properties.name)
             ? isCensus
-              ? valuemap.get(d.properties.name).toFixed(6) + '%'
+              ? valuemap.get(d.properties.name).toFixed(4)
               : valuemap.get(d.properties.name) + ' cases'
             : 0,
         };

@@ -6,13 +6,12 @@ export default function ChartDataTable({ data, category }) {
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
     let count = 0;
-    if(!!data && data.length > 0) {
+    if (!!data && data.length > 0) {
       setContainsCensus(Object.keys(data[0]).includes(CENSUS_KEY));
-      data.forEach(datum=> count += datum.value);
+      data.forEach(datum => (count += datum.value));
+    } else {
+      setContainsCensus(false);
     }
-    else {
-      setContainsCensus(false)
-    };
     setTotalCount(count);
   }, [data]);
 
@@ -31,7 +30,7 @@ export default function ChartDataTable({ data, category }) {
               </th>
               {containsCensus ? (
                 <th className='text-start w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
-                  % of cases / pop.
+                  # of cases per 100,000
                 </th>
               ) : (
                 <th className='text-start w-1/4 pl-2 py-3.5 text-left text-xs md:text-sm font-semibold text-gray-900'>
@@ -62,7 +61,7 @@ export default function ChartDataTable({ data, category }) {
                   {containsCensus ? (
                     <td className='text-start w-1/4 pl-2 py-3 md:py-2 text-xs md:text-sm text-gray-600 break-words'>
                       {!!object.censusRatio
-                        ? object.censusRatio.toFixed(6) + '%'
+                        ? object.censusRatio.toFixed(4)
                         : 'Data not available'}
                     </td>
                   ) : (
