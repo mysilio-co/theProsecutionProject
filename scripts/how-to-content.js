@@ -72,7 +72,7 @@ export const SEARCH_CONTENT = isMobile => {
       },
       {
         subtitle: '2. Select column',
-        description: `Click on the "Search By" dropdown to select which column will be searched on. Selecting “Any” will show matches from any column.`,
+        description: `Click on the "Search By" dropdown to select which column will be searched on. Selecting “Any” will show matches from any column. This dropdown only includes open-ended columns (ones that can't be easily placed into categories), all other columns are covered in the "Filter Data" section. `,
         imgSrc: `/how-to-img/${isMobile ? `mobile` : `desktop`}/search-2.png`,
       },
     ],

@@ -478,55 +478,67 @@ export default function DataExplorer() {
       />
       <div className='divide-y divide-gray-700 bg-gray-800'>
         <div className='relative z-2 flex-1 px-2 pt-6 pb-6 flex items-center justify-center sm:inset-0 bg-gray-800'>
-          <div className='w-full flex-col md:flex-row md:inline-flex items-center justify-center'>
-            <ResultsPerPage
-              router={router}
-              length={!!filteredData ? filteredData.length : 0}
-              isLoading={isLoading}
-              hasError={hasError}
-            />
-            <button
-              onClick={() => {
-                setShowModal(true);
-                setCurrentModal(
-                  <DownloadModalContents
-                    data={filteredData}
-                    setShowModal={setShowModal}
-                    query={router.asPath}
-                    selectedTab={selectedTab}
-                  />,
-                );
-              }}
-              className='mt-5 max-h-14 md:mt-0 md:ml-2 lg:ml-6 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
-            >
-              Download Data
-            </button>
-            <button
-              onClick={() => {
-                setShowModal(true);
-                setCurrentModal(
-                  <HowToModalContents
-                    setShowModal={setShowModal}
-                    router={router}
-                    isMobile={isMobile}
-                  />,
-                );
-              }}
-              className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
-            >
-              User Manual
-            </button>
-            <button
-              onClick={() => {
-                setShowModal(true);
-                setCurrentModal(
-                  <ContactUsModalContents setShowModal={setShowModal} />,
-                );
-              }}
-              className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-40 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
-            >
-              Request Data
-            </button>
+          <div className='w-full flex-col md:flex-wrap xl:flex-nowrap xl:flex-row md:inline-flex items-center justify-center'>
+            <div className=''>
+              <ResultsPerPage
+                router={router}
+                length={!!filteredData ? filteredData.length : 0}
+                isLoading={isLoading}
+                hasError={hasError}
+              />
+            </div>
+            <div className='md:mt-6 xl:mt-0'>
+              <button
+                onClick={() => {
+                  setShowModal(true);
+                  setCurrentModal(
+                    <DownloadModalContents
+                      data={filteredData}
+                      setShowModal={setShowModal}
+                      query={router.asPath}
+                      selectedTab={selectedTab}
+                    />,
+                  );
+                }}
+                className='mt-5 max-h-14 md:mt-0 md:ml-2 lg:ml-6 w-full md:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+              >
+                Download Data
+              </button>
+              <button
+                onClick={() => {
+                  setShowModal(true);
+                  setCurrentModal(
+                    <HowToModalContents
+                      setShowModal={setShowModal}
+                      router={router}
+                      isMobile={isMobile}
+                    />,
+                  );
+                }}
+                className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+              >
+                User Manual
+              </button>
+              <button
+                onClick={() => {
+                  setShowModal(true);
+                  setCurrentModal(
+                    <ContactUsModalContents setShowModal={setShowModal} />,
+                  );
+                }}
+                className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'
+              >
+                Request Data
+              </button>
+              <a
+                target='_blank'
+                href='https://docs.google.com/forms/d/e/1FAIpQLSeej1ck7SXGkpvS7A3ekdNSeITU_VS9Xnbz4ekM8zPKOhUpkw/viewform?usp=sf_link'
+              >
+                <button className='mt-5 max-h-14 md:mt-0 md:ml-6 lg:ml-6 w-full md:w-36 bg-[#FC8F4D] hover:bg-orange-300 active:bg-[#FC8F4D] hover:bg-orange-300 text-black py-2 px-4 rounded'>
+                  Give Feedback
+                </button>
+              </a>
+            </div>
           </div>
         </div>
         <Footer isMobile={isMobile} isInitiallyLoaded={isInitiallyLoaded} />

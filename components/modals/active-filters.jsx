@@ -1,12 +1,12 @@
 import { ALL_COLUMN_KEYS, IDEOLOGICAL_GROUPING } from '../../scripts/constants';
-import { FROM, TO } from '../../scripts/query-constants';
+import { FROM, SEARCH, SEARCH_BY, TO } from '../../scripts/query-constants';
 
 export default function ActiveFilters({ queryParams }) {
   const activeFilters = [];
 
   function updateExcludeLabel(label) {
     const isExclude = _.includes(label, '!');
-    return isExclude ? 'Exclude (' + _.replace(label, '!', '') + ')' : label;
+    return isExclude ? `Exclude (${_.replace(label, '!', '')})` : label;
   }
 
   Object.keys(queryParams).forEach(param => {
@@ -17,6 +17,12 @@ export default function ActiveFilters({ queryParams }) {
       param === IDEOLOGICAL_GROUPING
     ) {
       activeFilters.push({ [param]: queryParams[param] });
+    }
+    if (param === SEARCH) {
+      const searchKey = queryParams[SEARCH_BY]
+        ? `${queryParams[SEARCH_BY]} containing`
+        : `Any column containing`;
+      activeFilters.push({ [searchKey]: queryParams[SEARCH] });
     }
   });
   return (
