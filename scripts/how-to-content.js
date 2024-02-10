@@ -163,8 +163,8 @@ export const DATASET_CONTENT = isMobile => {
         imgSrc: `/how-to-img/${isMobile ? `mobile` : `desktop`}/dataset-2.png`,
       },
       {
-        subtitle: '3. Display "Capitol Raid" tab',
-        description: `Click on the “Capitol Raid” tab. This displays federal and non-federal charges levied against protesters active in and around the US Capitol building on January 6, 2021.`,
+        subtitle: '3. Display "Capitol Protest" tab',
+        description: `Click on the “Capitol Protest” tab. This displays federal and non-federal charges levied against protesters active in and around the US Capitol building on January 6, 2021.`,
         imgSrc: `/how-to-img/${isMobile ? `mobile` : `desktop`}/dataset-3.png`,
       },
       {

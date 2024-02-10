@@ -1,7 +1,7 @@
 export const TAB_NAMES = {
   General: 'General',
   'Summer-Fall 2020 Protests': 'Summer-Fall 2020 protest cases',
-  'Capitol Raid': 'Capitol raid cases',
+  'Capitol Protest': 'Capitol protest cases',
   'In Progress': 'Completed Case starters',
 };
 
@@ -9,7 +9,7 @@ export const TAB_DESCRIPTIONS = {
   General: 'This tab covers completed cases.',
   'Summer-Fall 2020 Protests':
     'This tab covers protest-related cases occurring during the Summer and Fall of 2020 in response to the death of George Floyd.',
-  'Capitol Raid':
+  'Capitol Protest':
     'This tab covers federal and non-federal cases against protesters active in and around the US Capitol building on January 6, 2021.',
   'In Progress':
     'This tab includes cases currently being investigated and coded by researchers as well as those still proceeding through the courts. These cases have not been completed, will change over time, and have not been audited. These cases are provided as a resource, but should be independently investigated and verified before being included in research products.',
@@ -18,14 +18,14 @@ export const TAB_DESCRIPTIONS = {
 export const TAB_DOWNLOAD = {
   General: 'general',
   'Summer-Fall 2020 Protests': 'summer-fall-2020',
-  'Capitol Raid': 'capitol-raid',
+  'Capitol Protest': 'capitol-protest',
   'In Progress': 'in-progress',
 };
 
 export const SHEET_NAMES = [
   'U//FOUO',
   'Summer-Fall 2020 protest cases',
-  'Capitol raid cases',
+  'Capitol protest cases',
   'Completed Case starters',
   'Case starters',
   'J20 cases',

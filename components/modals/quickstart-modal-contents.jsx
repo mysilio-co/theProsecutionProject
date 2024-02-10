@@ -229,13 +229,13 @@ export default function QuickstartModalContents({ setShowModal, router }) {
               />
               <ContentDisclosure
                 name={
-                  'Individuals with a military background who were defendents in the January 6 Capitol raid'
+                  'Individuals with a military background who were defendents in the January 6 Capitol protest'
                 }
                 content={
                   <div className='text-start'>
                     <h5 className='text-gray-700 mb-2'>Tab</h5>
                     <p className='mt-0'>
-                      <span className='font-bold'>Capitol Raid</span>
+                      <span className='font-bold'>Capitol Protest</span>
                     </p>
                     <h4 className='text-gray-700 mb-2'>Categorical Filters</h4>
                     <p className='mt-0'>
@@ -250,7 +250,7 @@ export default function QuickstartModalContents({ setShowModal, router }) {
                     <button
                       onClick={() => {
                         goToExample({
-                          tab: 'Capitol Raid',
+                          tab: 'Capitol Protest',
                           'Veteran status':
                             'Active duty, Dishonorably discharged, Former Active duty, Former active duty and current reserve components, Former active duty and reserve components, Former reserve components, Former/current member of non-U.S. military, Hardship discharge, Honorably discharged, Other than honorable discharge, Reserve/national guard (reserve components)',
                         });

@@ -64,7 +64,7 @@ export default function WelcomeModalContents({ setShowModal, showHowToModal }) {
                   response to the death of George Floyd.
                 </li>
                 <li>
-                  <span className='font-bold'>Capitol Raid</span>, which
+                  <span className='font-bold'>Capitol Protest</span>, which
                   displays federal and non-federal charges levied against
                   protesters active in and around the US Capitol building on
                   January 6, 2021.
