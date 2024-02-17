@@ -67,7 +67,7 @@ export default function DateFilter({ router }) {
 
   return (
     <div>
-      <div className='py-5 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
+      <div className='pt-5 pb-2 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
         <div className='relative pb-4 md:pb-0 px-4'>
           <div className='flex items-end'>
             <div className='basis-2/3 lg:basis-1/2'>
