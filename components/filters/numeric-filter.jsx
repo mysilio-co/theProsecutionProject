@@ -33,6 +33,9 @@ export default function NumericFilter({
         ? addQueryParam(label, value, router)
         : removeQueryParam(label, router);
     }
+    if (enabled && value[0] > value[1]) {
+      setShowError(true);
+    }
   }, [value, enabled]);
 
   return (
