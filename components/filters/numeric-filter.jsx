@@ -15,6 +15,7 @@ export default function NumericFilter({
   const [value, setValue] = useState([min, max]);
   const [enabled, setEnabled] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [showError, setShowError] = useState(false);
   const isDisabled = isLoading && !hasError;
   let noSelection = value[0] === value[1];
 
@@ -83,7 +84,9 @@ export default function NumericFilter({
               onChange={nextValue => {
                 const [start, end] = value;
                 if (nextValue > end) {
-                  return;
+                  setShowError(true);
+                } else {
+                  setShowError(false);
                 }
                 setValue([Number(nextValue), end]);
               }}
@@ -97,7 +100,9 @@ export default function NumericFilter({
               onChange={nextValue => {
                 const [start, end] = value;
                 if (start > nextValue) {
-                  return;
+                  setShowError(true);
+                } else {
+                  setShowError(false);
                 }
                 setValue([start, Number(nextValue)]);
               }}
@@ -105,6 +110,9 @@ export default function NumericFilter({
           </InputGroup>
         </div>
       </div>
+      {showError && (
+        <p className='font-bold text-red-500'>Date range is not valid</p>
+      )}
     </div>
   );
 }
