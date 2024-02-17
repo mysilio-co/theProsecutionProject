@@ -111,7 +111,7 @@ export default function NumericFilter({
         </div>
       </div>
       {showError && (
-        <p className='font-bold text-red-500'>Date range is not valid</p>
+        <p className='font-bold text-red-500'>Numeric range is invalid</p>
       )}
     </div>
   );

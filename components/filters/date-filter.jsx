@@ -211,7 +211,7 @@ export default function DateFilter({ router }) {
         </div>
       </div>
       {showError && (
-        <p className='px-4 font-bold text-red-500'>Date range is not valid</p>
+        <p className='px-4 font-bold text-red-500'>Date range is invalid</p>
       )}
     </div>
   );
