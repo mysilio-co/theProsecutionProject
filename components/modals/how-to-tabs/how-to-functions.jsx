@@ -1,115 +1,65 @@
-import ContentDisclosure from "./content-disclosure";
+import {
+  DATASET,
+  FILTER,
+  DOWNLOAD,
+  SAVE,
+  SEARCH,
+  SORT,
+  VISUALIZE,
+  HOW_TO_CONTENT,
+} from '../../../scripts/how-to-content';
+import HowToCarousel from './how-to-functions/how-to-carousel';
+import { useEffect, useState } from 'react';
+import HowToFunctionsButtons from './how-to-functions/how-to-functions-button';
 
-export default function HowToFunctions() {
+export default function HowToFunctions({ isMobile }) {
+  const [selectedFunction, setSelectedFunction] = useState(DATASET);
+  console.log(isMobile);
+
   return (
     <div>
-      <p className="mt-4 mx-6 text-start">
-        All the capabilities currently possible on the site are listed here.
-      </p>
-      <ContentDisclosure
-        name={"Searching"}
-        content={
-          <div className="text-start">
-            {/* <h4 className="text-gray-700 mb-2">Searching</h4> */}
-            <p>
-              Data can be searched for a keyword using the search bar at the top
-              of the screen. All variables will be searched on if "Any" is
-              selected in the "Search By" box. Select a variable in the "Search
-              By" box to limit your search to only that variable. Only
-              open-ended variables are options to select here, all other
-              variables can be found in the "Filter" section of this guide.
-            </p>
-          </div>
-        }
-      />
-      <ContentDisclosure
-        name={"Sorting"}
-        content={
-          <div className="text-start">
-            {/* <h4 className="text-gray-700 mb-2">Sorting</h4> */}
-            <p>
-              Data is initally sorted by Date but can be sorted by any variable.
-              Click the variable name in the table header once to sort in
-              ascending order, twice for descending, and a third time to return
-              to default.
-            </p>
-          </div>
-        }
-      />
-      <ContentDisclosure
-        name={"Filtering"}
-        content={
-          <div className="text-start">
-            {/* <h4 className="text-gray-700 mb-2">Sorting</h4> */}
-            <p>
-              Data can be filtered by date, categorical variable, or
-              quantitative variable by clicking the "Filter Data" button above
-              the table. Instructions for how to filter each type of variable
-              can be viewed when that modal is opened. A "Filter Active" message
-              will appear if any filter is currently selected.
-            </p>
-          </div>
-        }
-      />
-      <ContentDisclosure
-        name={"Selecting Dataset"}
-        content={
-          <div className="text-start">
-            {/* <h4 className="text-gray-700 mb-2">Selecting Dataset</h4> */}
-            <p>Data are currently displayed across four tabs: </p>
-            <ol className="list-decimal ml-6 text-gray-500">
-              <li>
-                <span className="font-bold">General</span>, which includes
-                completed cases.
-              </li>
-              <li>
-                <span className="font-bold">Summer-Fall 2020 Protests</span>,
-                which covers cases occurring during that time period in response
-                to the death of George Floyd.
-              </li>
-              <li>
-                <span className="font-bold">Capitol Protest</span>, which
-                displays federal and non-federal charges levied against
-                protesters active in and around the US Capitol building on
-                January 6, 2021.
-              </li>
-              <li>
-                <span className="font-bold">In Progress</span>, which includes
-                cases currently being investigated and coded by researchers as
-                well as those still proceeding through the courts. These cases
-                have not been completed, will change over time, and have not
-                been audited. These cases are provided as a resource, but should
-                be independently investigated and verified before being included
-                in research products.
-              </li>
-            </ol>
-          </div>
-        }
-      />
-      <ContentDisclosure
-        name={"Downloading Data"}
-        content={
-          <div className="text-start">
-            {/* <h4 className="text-gray-700 mb-2">Downloading Data</h4> */}
-            <p>
-              Data can be downloaded in .csv format by clicking the "Download
-              Data" button at the bottom of the page after accepting the terms
-              and conditions.
-            </p>
-          </div>
-        }
-      />
-      <ContentDisclosure
-        name={"Saving Query"}
-        content={
-          <div className="text-start">
-            {/* <h4 className="text-gray-700 mb-2">Saving Query</h4> */}
-            <p>
-              A specific search can be revisited by copying the URL and pasting
-              it into the browser's address bar.
-            </p>
-          </div>
-        }
+      <div className='bg-gray-800 border-t border-gray-700'>
+        <nav className='px-2 md:py-2 md:space-x-6' aria-label='Global'>
+          <HowToFunctionsButtons
+            func={DATASET}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+          <HowToFunctionsButtons
+            func={SEARCH}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+          <HowToFunctionsButtons
+            func={SORT}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+          <HowToFunctionsButtons
+            func={FILTER}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+          <HowToFunctionsButtons
+            func={VISUALIZE}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+          <HowToFunctionsButtons
+            func={DOWNLOAD}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+          <HowToFunctionsButtons
+            func={SAVE}
+            setSelectedFunction={setSelectedFunction}
+            selectedFunction={selectedFunction}
+          />
+        </nav>
+      </div>
+      <HowToCarousel
+        content={HOW_TO_CONTENT(isMobile)[selectedFunction]}
+        isMobile={isMobile}
       />
     </div>
   );

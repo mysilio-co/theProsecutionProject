@@ -1,8 +1,8 @@
-import { DROPDOWN_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_DROPDOWN_VALUES, NUMERIC_COLUMNS } from "./constants";
+import { CATEGORICAL_KEYS, IDEOLOGICAL_GROUPING, IDEOLOGICAL_GROUPING_DROPDOWN_VALUES, NUMERIC_COLUMNS } from "./constants";
 
 export function generateListDropdowns(data) {
     let dropdowns = [];
-    for(let col of DROPDOWN_KEYS) {
+    for(let col of CATEGORICAL_KEYS) {
         const listOptions = getListOptionsByKey(data, col);
         if(listOptions.length>0) {
             dropdowns.push({[col]:listOptions});

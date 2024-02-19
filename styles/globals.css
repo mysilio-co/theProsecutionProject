@@ -52,6 +52,10 @@
     height: 42px;
   }
 
+  .h-38px {
+    height: 38px;
+  }
+
   .w-screen {
     width: 100vw;
   }
@@ -124,4 +128,14 @@
     .mobile-w-56 {
       width: 14rem;
     }
+  }
+  
+  .grid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+  }
+  
+  .grid path {
+    stroke-width: 0;
   }
