@@ -1,48 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import { Disclosure } from '@headlessui/react';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import DataTable from '../components/data-table.jsx';
-import { Disclosure } from '@headlessui/react';
 
+import BasicSearch from '../components/basic-search';
+import Footer from '../components/footer.jsx';
+import ContactUsModalContents from '../components/modals/contact-us-modal-contents.jsx';
+import DataVisualizerModalContents from '../components/modals/data-visualizer-modal-contents.jsx';
+import DownloadModalContents from '../components/modals/download-modal-contents.jsx';
+import FilterModalContents from '../components/modals/filter-modal-contents.jsx';
+import HowToModalContents from '../components/modals/how-to-modal-contents.jsx';
+import InProgressModalContents from '../components/modals/in-progress-modal-contents.jsx';
+import Modal from '../components/modals/modal.jsx';
+import QuickstartModalContents from '../components/modals/quickstart-modal-contents.jsx';
+import WelcomeModalContents from '../components/modals/welcome-modal-contents.jsx';
+import ResultsPerPage from '../components/results-per-page.jsx';
+import SearchBy from '../components/search-by';
+import { classNames } from '../scripts/common.js';
 import {
-  findFirstOccurenceOfYear,
+  ALL_COLUMN_KEYS,
+  ORDER_BY_KEYS,
+  RESULTS_PER_PAGE_KEYS,
+  SEARCH_BY_KEYS,
+  SEARCH_BY_KEYS_MOBILE,
+  TAB_NAMES,
+} from '../scripts/constants.js';
+import {
   removeMismatchedDropdown,
   removeMismatchedRange,
   runAllFilters,
 } from '../scripts/data-handling.js';
-import SearchBy from '../components/search-by';
+import {
+  generateListDropdowns,
+  generateNumericRanges,
+} from '../scripts/filter-components.js';
+import { STATIC_QUERIES } from '../scripts/query-constants.js';
 import {
   addMultipleQueryParams,
   addQueryParam,
   retrieveDropdownParams,
   retrieveNumericParams,
 } from '../scripts/router-handling';
-import BasicSearch from '../components/basic-search';
-import ResultsPerPage from '../components/results-per-page.jsx';
-import {
-  RESULTS_PER_PAGE_KEYS,
-  TAB_NAMES,
-  SEARCH_BY_KEYS_MOBILE,
-  ORDER_BY_KEYS,
-  ALL_COLUMN_KEYS,
-  SEARCH_BY_KEYS,
-} from '../scripts/constants.js';
-import Modal from '../components/modals/modal.jsx';
-import DownloadModalContents from '../components/modals/download-modal-contents.jsx';
-import HowToModalContents from '../components/modals/how-to-modal-contents.jsx';
-import ContactUsModalContents from '../components/modals/contact-us-modal-contents.jsx';
-import FilterModalContents from '../components/modals/filter-modal-contents.jsx';
-import DataVisualizerModalContents from '../components/modals/data-visualizer-modal-contents.jsx';
-import { classNames } from '../scripts/common.js';
-import {
-  generateListDropdowns,
-  generateNumericRanges,
-} from '../scripts/filter-components.js';
-import Footer from '../components/footer.jsx';
-import { STATIC_QUERIES } from '../scripts/query-constants.js';
-import WelcomeModalContents from '../components/modals/welcome-modal-contents.jsx';
-import InProgressModalContents from '../components/modals/in-progress-modal-contents.jsx';
-import QuickstartModalContents from '../components/modals/quickstart-modal-contents.jsx';
 
 const fetcher = async url =>
   await fetch(url).then(res => {
@@ -128,7 +127,7 @@ export default function DataExplorer() {
   function getSheetData(tab) {
     const isGeneral = tab === 'General';
     const isInProgress = tab === 'In Progress';
-    const fouo = getChunksOfSheet('U//FOUO', '2010', tab);
+    const fouo = getChunksOfSheet('U//FOUO', tab);
     const { data: pending, error: pendingError } = useSWR(
       isInProgress ? '/api/sheets/getSheets?sheet=Pending cases' : null,
       fetcher,
@@ -151,7 +150,7 @@ export default function DataExplorer() {
     }
   }
 
-  function getChunksOfSheet(sheet, year, tab) {
+  function getChunksOfSheet(sheet, tab) {
     //shouldCall is used to determine if the call should be made using nextJS conditional fetching
     //if false, cascades down and prevents the sheets calls from being made
     const shouldCall = tab === 'General';
@@ -160,36 +159,43 @@ export default function DataExplorer() {
       fetcher,
     );
     updateHasError(dateColumnError);
-    const locationOfYear =
-      dateColumn && !hasError
-        ? findFirstOccurenceOfYear(dateColumn, year)
-        : null;
     const lengthOfSheet = dateColumn ? dateColumn.length : null;
-    const { data: firstHalf, error: firstHalfError } = useSWR(
-      locationOfYear && !hasError
+    const { data: first, error: firstError } = useSWR(
+      !hasError
         ? '/api/sheets/getSheets?sheet=' +
             sheet +
             '&start=' +
             1 +
             '&end=' +
-            (locationOfYear - 1)
+            1500
         : null,
       fetcher,
     );
-    const { data: secondHalf, error: secondHalfError } = useSWR(
-      locationOfYear && lengthOfSheet && !hasError
+    const { data: second, error: secondError } = useSWR(
+      !hasError
         ? '/api/sheets/getSheets?sheet=' +
             sheet +
             '&start=' +
-            (locationOfYear - 1) +
+            1500 +
+            '&end=' +
+            3000
+        : null,
+      fetcher,
+    );
+    const { data: third, error: thirdError } = useSWR(
+      lengthOfSheet && !hasError
+        ? '/api/sheets/getSheets?sheet=' +
+            sheet +
+            '&start=' +
+            3000 +
             '&end=' +
             lengthOfSheet
         : null,
       fetcher,
     );
-    updateHasError(firstHalfError || secondHalfError);
-    return firstHalf && secondHalf && !hasError
-      ? firstHalf.concat(secondHalf)
+    updateHasError(firstError || secondError || thirdError);
+    return first && second && third && !hasError
+      ? first.concat(second).concat(third)
       : null;
   }
 
