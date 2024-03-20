@@ -13,12 +13,10 @@ export const config = {
 export default async function handler(req, res) {
   // Validate Request
   if (!SHEET_NAMES.includes(req.query.sheet)) {
-    res
-      .status(500)
-      .send({
-        error:
-          'sheet param is missing or invalid, must be one of: ' + SHEET_NAMES,
-      });
+    res.status(500).send({
+      error:
+        'sheet param is missing or invalid, must be one of: ' + SHEET_NAMES,
+    });
   }
   try {
     const sheet = [req.query.sheet];

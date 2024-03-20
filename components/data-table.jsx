@@ -1,27 +1,26 @@
 import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ChevronUpDownIcon,
   ArrowLeftCircleIcon,
   ArrowRightCircleIcon,
+  ChevronDownIcon,
+  ChevronUpDownIcon,
+  ChevronUpIcon,
 } from '@heroicons/react/20/solid';
-import { cloneDeep } from 'lodash';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { useEffect, useRef, useState } from 'react';
+import Spinner from '../components/spinner.jsx';
+import { CODEBOOK } from '../scripts/codebook';
+import { classNames } from '../scripts/common.js';
+import {
+  RESULTS_PER_PAGE_KEYS,
+  TABLE_WIDTH_MAP,
+  TAB_DESCRIPTIONS,
+  TAB_NAMES,
+} from '../scripts/constants.js';
 import { filterByColumn } from '../scripts/data-handling';
 import { setSortingParams } from '../scripts/router-handling';
-import Spinner from '../components/spinner.jsx';
-import ShowAllCheckbox from './filters/show-all-checkbox';
-import {
-  TABLE_WIDTH_MAP,
-  TAB_NAMES,
-  RESULTS_PER_PAGE_KEYS,
-  TAB_DESCRIPTIONS,
-} from '../scripts/constants.js';
-import ErrorMessage from './error-message';
-import { classNames } from '../scripts/common.js';
-import { useEffect, useRef, useState } from 'react';
-import { CODEBOOK } from '../scripts/codebook';
 import DataRow from './data-row';
+import ErrorMessage from './error-message';
+import ShowAllCheckbox from './filters/show-all-checkbox';
 import ActiveFilters from './modals/active-filters.jsx';
 
 export default function DataTable({

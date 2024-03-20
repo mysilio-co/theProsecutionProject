@@ -91,6 +91,7 @@ export const SEARCH_BY_KEYS = [
   'Other names/aliases',
   'Service classification',
   'Name of case',
+  'Tags',
 ];
 
 export const SEARCH_BY_KEYS_MOBILE = [
@@ -319,6 +320,7 @@ export const ALL_COLUMN_KEYS = [
   'Service classification',
   'Citizenship status',
   'Short narrative',
+  'Tags',
   'Source description',
 ];
 
@@ -362,6 +364,7 @@ export const DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED = [
   'Combat veteran',
   'Service classification',
   'Citizenship status',
+  'Tags',
   'Source description',
 ];
 
