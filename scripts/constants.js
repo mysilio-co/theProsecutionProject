@@ -36,6 +36,7 @@ export const HOW_TO_TABS = ['Site Guide', 'Codebook'];
 
 export const DATA_VISUALIZER_TABS = ['Explore', 'Premade Charts'];
 
+export const GROUP_AFFILIATION = 'Group affiliation';
 export const IDEOLOGICAL_GROUPING = 'Ideological grouping';
 export const IDEOLOGICAL_AFFILIATION = 'Ideological affiliation';
 
@@ -49,6 +50,7 @@ export const CATEGORICAL_KEYS = [
   'Physical target',
   'Ideological target',
   IDEOLOGICAL_GROUPING,
+  GROUP_AFFILIATION,
   'Ideological affiliation',
   'Affiliation with FTO',
   'Hate crime',

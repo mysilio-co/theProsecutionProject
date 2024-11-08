@@ -1,15 +1,16 @@
-import Fuse from 'fuse.js';
 import * as d3 from 'd3';
+import Fuse from 'fuse.js';
+import { cloneDeep, omit } from 'lodash';
 import {
   ALL_COLUMN_KEYS,
-  DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED,
   CATEGORICAL_KEYS,
+  DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED,
+  GROUP_AFFILIATION,
   IDEOLOGICAL_GROUPING,
   IDEOLOGICAL_GROUPING_FILTER_VALUES,
   NUMERIC_COLUMNS,
   SEARCH_BY_KEYS_MOBILE,
 } from './constants';
-import { cloneDeep, omit } from 'lodash';
 
 export function runAllFilters(data, query, isMobile) {
   data = fuzzySearch(data, query.search, query.searchBy, isMobile);
@@ -105,14 +106,7 @@ export function filterByDropdown(data, queryParams) {
         const isExclude = _.includes(filterParams[key][0], '!');
         const filterParamsCopy = _.cloneDeep(filterParams);
         filterParamsCopy[key][0] = filterParamsCopy[key][0].replace('!', '');
-        if (key != IDEOLOGICAL_GROUPING) {
-          if (
-            (!isExclude && filterParamsCopy[key].includes(row[key])) ||
-            (isExclude && !filterParamsCopy[key].includes(row[key]))
-          ) {
-            matchCount++;
-          }
-        } else {
+        if (key == IDEOLOGICAL_GROUPING) {
           if (
             (!isExclude &&
               filterByIdeologicalGrouping(
@@ -124,6 +118,28 @@ export function filterByDropdown(data, queryParams) {
                 filterParamsCopy[key],
                 row['Ideological affiliation'],
               ))
+          ) {
+            matchCount++;
+          }
+        } else if (key == GROUP_AFFILIATION) {
+          if (
+            (!isExclude &&
+              filterByGroupAffiliation(
+                filterParamsCopy[key],
+                row[GROUP_AFFILIATION],
+              )) ||
+            (isExclude &&
+              !filterByGroupAffiliation(
+                filterParamsCopy[key],
+                row[GROUP_AFFILIATION],
+              ))
+          ) {
+            matchCount++;
+          }
+        } else {
+          if (
+            (!isExclude && filterParamsCopy[key].includes(row[key])) ||
+            (isExclude && !filterParamsCopy[key].includes(row[key]))
           ) {
             matchCount++;
           }
@@ -186,6 +202,18 @@ function filterByIdeologicalGrouping(filterValues, rowValue) {
     if (IDEOLOGICAL_GROUPING_FILTER_VALUES[filterValue].includes(rowValue)) {
       retValue = true;
     }
+  });
+  return retValue;
+}
+
+function filterByGroupAffiliation(filterValues, rowValue) {
+  let retValue = false;
+  filterValues.forEach(filterValue => {
+    rowValue.split(', ').forEach(rowGroup => {
+      if (filterValue.includes(rowGroup)) {
+        retValue = true;
+      }
+    });
   });
   return retValue;
 }
