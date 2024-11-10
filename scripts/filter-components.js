@@ -1,6 +1,7 @@
 import {
   CATEGORICAL_KEYS,
   GROUP_AFFILIATION,
+  GROUP_AFFILIATION_REGEX,
   IDEOLOGICAL_GROUPING,
   IDEOLOGICAL_GROUPING_DROPDOWN_VALUES,
   NUMERIC_COLUMNS,
@@ -52,17 +53,16 @@ function getListOptionsByKey(data, key) {
   }
 }
 
-function getGroupAffiliationOptions(data) {
+export function getGroupAffiliationOptions(data) {
   const groupSet = new Set();
   getListOptionsByKey(data, GROUP_AFFILIATION).forEach(row => {
-    row.split(', ').forEach(group => {
+    row?.split(GROUP_AFFILIATION_REGEX).forEach(group => {
       groupSet.add(group);
     });
   });
-  const groupList = Array.from(groupSet).sort((a, b) => {
+  return Array.from(groupSet).sort((a, b) => {
     return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
   });
-  return Array.from(groupList);
 }
 
 function getNumericColumnValuesByKey(data, key) {

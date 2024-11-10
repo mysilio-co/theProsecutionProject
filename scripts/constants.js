@@ -37,6 +37,9 @@ export const HOW_TO_TABS = ['Site Guide', 'Codebook'];
 export const DATA_VISUALIZER_TABS = ['Explore', 'Premade Charts'];
 
 export const GROUP_AFFILIATION = 'Group affiliation';
+// Used to split group affiliations into individual groups. Unique because a group affiliation could have a
+// comma inside of its parentheses that needs to be ignored ie. "Three Percenters (III Percenters, 3%ers)"
+export const GROUP_AFFILIATION_REGEX = /(?<!\([^)]), (?![^()]*\))/;
 export const IDEOLOGICAL_GROUPING = 'Ideological grouping';
 export const IDEOLOGICAL_AFFILIATION = 'Ideological affiliation';
 

@@ -6,6 +6,7 @@ import {
   CATEGORICAL_KEYS,
   DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED,
   GROUP_AFFILIATION,
+  GROUP_AFFILIATION_REGEX,
   IDEOLOGICAL_GROUPING,
   IDEOLOGICAL_GROUPING_FILTER_VALUES,
   NUMERIC_COLUMNS,
@@ -96,7 +97,7 @@ export function filterByDropdown(data, queryParams) {
     // Extract filter values from query params
     CATEGORICAL_KEYS.forEach(key => {
       if (queryParams[key]) {
-        filterParams[key] = queryParams[key].split(', ');
+        filterParams[key] = queryParams[key]?.split(GROUP_AFFILIATION_REGEX);
       }
     });
     // Filter data by checking if a row contains at least one match in all dropdowns selected
@@ -208,12 +209,15 @@ function filterByIdeologicalGrouping(filterValues, rowValue) {
 
 function filterByGroupAffiliation(filterValues, rowValue) {
   let retValue = false;
-  filterValues.forEach(filterValue => {
-    rowValue.split(', ').forEach(rowGroup => {
-      if (filterValue.includes(rowGroup)) {
-        retValue = true;
-      }
-    });
+  const fuse = new Fuse(filterValues, {
+    isCaseSensitive: false,
+    ignoreLocation: false,
+    threshold: 0.1,
+  });
+  rowValue?.split(GROUP_AFFILIATION_REGEX).forEach(rowGroup => {
+    if (fuse.search(rowGroup).length > 0) {
+      retValue = true;
+    }
   });
   return retValue;
 }
@@ -228,7 +232,7 @@ export function removeMismatchedDropdown(router, dropdownValues) {
         query &&
         dropdownValues.find(dropdownValue => Object.keys(dropdownValue) == key)
       ) {
-        const routerValue = query.split(', ');
+        const routerValue = query?.split(GROUP_AFFILIATION_REGEX);
         const dropdownValue = Object.values(
           dropdownValues.find(
             dropdownValue => Object.keys(dropdownValue) == key,

@@ -1,5 +1,5 @@
-import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 
 export default function Modal({ innerComponent, showModal, setShowModal }) {
   function setModalVisibility(showModalValue) {
@@ -26,7 +26,7 @@ export default function Modal({ innerComponent, showModal, setShowModal }) {
             <div className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 z-10 overflow-y-auto my-10'>
-            <div className='flex min-h-full items-center justify-center p-4 text-center sm:p-0 mx-0 sm:mx-10 md:mx-20 xl:mx-40 2xl:mx-60'>
+            <div className='flex min-h-full items-center justify-center p-4 text-center sm:p-0 mx-0 sm:mx-5 md:mx-10 xl:mx-30 2xl:mx-40'>
               <Transition.Child
                 as={Fragment}
                 enter='ease-out duration-300'

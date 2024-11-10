@@ -1,26 +1,20 @@
-import * as d3 from 'd3';
-import { useRef, useEffect, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import LineChart from './line-chart';
-import BarChart from './bar-chart';
-import PieChart from './pie-chart';
-import ChartDataTable from './chart-data-table';
-import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants';
-import DataVisualizerDropdowns from './data-visualizer-dropdowns';
-import ChartColors from './chart-colors';
-import { classNames, isActiveFilters } from '../../../scripts/common.js';
-import { cloneDeep } from 'lodash';
-import { DATA_VISUALIZER_TABS } from '../../../scripts/constants';
-import ChoroplethChart from './choropleth-chart';
-import ActiveFilters from '../active-filters';
+import { useRef, useState } from 'react';
 import useSWR from 'swr';
-import CitationButton from './citation-button';
+import { classNames, isActiveFilters } from '../../../scripts/common.js';
+import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants';
+import ActiveFilters from '../active-filters';
+import BarChart from './bar-chart';
+import ChartColors from './chart-colors';
+import ChartDataTable from './chart-data-table';
+import ChoroplethChart from './choropleth-chart';
+import DataVisualizerDropdowns from './data-visualizer-dropdowns';
 import DownloadButton from './download-button';
-import CitationContents from './citation-contents';
 import DownloadContents from './download-contents';
-import ShowTitleCheckbox from './show-title-checkbox';
-import ShowActiveFilterCheckbox from './show-filter-checkbox';
 import HelpMessage from './help-message.jsx';
+import LineChart from './line-chart';
+import PieChart from './pie-chart';
+import ShowActiveFilterCheckbox from './show-filter-checkbox';
+import ShowTitleCheckbox from './show-title-checkbox';
 
 export default function ExploreTab({ data, queryParams }) {
   const fetcher = async url =>
@@ -48,6 +42,7 @@ export default function ExploreTab({ data, queryParams }) {
   const [chartColors, setChartColors] = useState([]);
   const [categoryNames, setCategoryNames] = useState([]);
   const [isCensus, setIsCensus] = useState(true);
+  const [numberOfResults, setNumberOfResults] = useState(5);
   const [citationDisplay, setCitationDisplay] = useState(false);
   const [downloadDisplay, setDownloadDisplay] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
@@ -96,17 +91,18 @@ export default function ExploreTab({ data, queryParams }) {
         </nav>
       </div>
       <HelpMessage showHelpMessage={showHelpMessage} chartType={selectedTab} />
-      <div className='block lg:flex justify-between'>
+      <div className='block xl:flex justify-between'>
         <DataVisualizerDropdowns
           chartType={selectedTab}
           chartData={chartData}
           setTimeRange={setTimeRange}
           setVariable={setVariable}
           setIsCensus={setIsCensus}
+          setNumberOfResults={setNumberOfResults}
           setShowHelpMessage={setShowHelpMessage}
         ></DataVisualizerDropdowns>
 
-        <div className='block lg:flex justify-between'>
+        <div className='block xl:flex justify-between'>
           <div className='flex'>
             {selectedTab != DataVisualizerConstants.CHOROPLETH ? (
               <ShowTitleCheckbox
@@ -168,6 +164,7 @@ export default function ExploreTab({ data, queryParams }) {
                 chartType={selectedTab}
                 timeRange={timeRange}
                 variable={variable}
+                numberOfResults={numberOfResults}
                 width={
                   modalRef.current && modalRef.current.offsetWidth > 700
                     ? modalRef.current.offsetWidth
@@ -190,6 +187,7 @@ export default function ExploreTab({ data, queryParams }) {
                 data={data}
                 chartType={selectedTab}
                 variable={variable}
+                numberOfResults={numberOfResults}
                 width={modalRef.current.offsetWidth}
                 offsetWidth={
                   modalRef.current ? modalRef.current.offsetWidth : 0
@@ -208,6 +206,7 @@ export default function ExploreTab({ data, queryParams }) {
                 data={data}
                 chartType={selectedTab}
                 variable={variable}
+                numberOfResults={numberOfResults}
                 width={
                   modalRef.current && modalRef.current.offsetWidth < 400
                     ? modalRef.current.offsetWidth
@@ -255,11 +254,15 @@ export default function ExploreTab({ data, queryParams }) {
           ) : (
             ''
           )}
-          <ChartColors categoryNames={categoryNames} />
+          <ChartColors
+            categoryNames={categoryNames}
+            numberOfResults={numberOfResults}
+          />
         </div>
         <div id={TABLE_ELEMENTS_ID} className='py-2'>
           <ChartDataTable
             data={chartData}
+            numberOfResults={numberOfResults}
             category={
               selectedTab === DataVisualizerConstants.CHOROPLETH
                 ? 'Location: state'
