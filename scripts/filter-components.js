@@ -5,6 +5,8 @@ import {
   IDEOLOGICAL_GROUPING,
   IDEOLOGICAL_GROUPING_DROPDOWN_VALUES,
   NUMERIC_COLUMNS,
+  TAG,
+  TAG_REGEX,
 } from './constants';
 
 export function generateListDropdowns(data) {
@@ -18,9 +20,14 @@ export function generateListDropdowns(data) {
   dropdowns.push({
     [IDEOLOGICAL_GROUPING]: IDEOLOGICAL_GROUPING_DROPDOWN_VALUES,
   });
-  dropdowns = dropdowns.filter(d => Object.keys(d)[0] != GROUP_AFFILIATION);
+  dropdowns = dropdowns.filter(
+    d => Object.keys(d)[0] != GROUP_AFFILIATION && Object.keys(d)[0] != TAG,
+  );
   dropdowns.push({
     [GROUP_AFFILIATION]: getGroupAffiliationOptions(data),
+  });
+  dropdowns.push({
+    [TAG]: getTagOptions(data),
   });
   return dropdowns;
 }
@@ -60,6 +67,19 @@ export function getGroupAffiliationOptions(data) {
       groupSet.add(group);
     });
   });
+  return Array.from(groupSet).sort((a, b) => {
+    return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+  });
+}
+
+export function getTagOptions(data) {
+  const groupSet = new Set();
+  getListOptionsByKey(data, TAG).forEach(row => {
+    row?.split(TAG_REGEX).forEach(group => {
+      groupSet.add(group);
+    });
+  });
+  groupSet.delete('');
   return Array.from(groupSet).sort((a, b) => {
     return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
   });

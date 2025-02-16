@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import useSWR from 'swr';
 import { classNames, isActiveFilters } from '../../../scripts/common.js';
+import { GROUP_AFFILIATION, TAG } from '../../../scripts/constants.js';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants';
 import ActiveFilters from '../active-filters';
 import BarChart from './bar-chart';
@@ -39,11 +40,9 @@ export default function ExploreTab({ data, queryParams }) {
   );
   const [variable, setVariable] = useState('All');
   const [chartData, setChartData] = useState([]);
-  const [chartColors, setChartColors] = useState([]);
   const [categoryNames, setCategoryNames] = useState([]);
   const [isCensus, setIsCensus] = useState(true);
   const [numberOfResults, setNumberOfResults] = useState(5);
-  const [citationDisplay, setCitationDisplay] = useState(false);
   const [downloadDisplay, setDownloadDisplay] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
   const [showActiveFilter, setShowActiveFilter] = useState(true);
@@ -51,10 +50,6 @@ export default function ExploreTab({ data, queryParams }) {
   const ALL_VISUALS_ID = 'all-visuals';
   const VISUAL_ELEMENTS_ID = 'visual-elements';
   const TABLE_ELEMENTS_ID = 'table-elements';
-
-  function setModalVisibility(showModalValue) {
-    setShowModal(showModalValue);
-  }
 
   const { data: censusData, error: censusError } = useSWR(
     selectedTab === DataVisualizerConstants.CHOROPLETH
@@ -132,6 +127,15 @@ export default function ExploreTab({ data, queryParams }) {
           tableElementsId={TABLE_ELEMENTS_ID}
         />
       </div>
+      {(variable === GROUP_AFFILIATION || variable === TAG) &&
+      selectedTab != DataVisualizerConstants.CHOROPLETH ? (
+        <p className='pl-4'>
+          * Cases can have multiple{' '}
+          {variable === TAG ? TAG : `${GROUP_AFFILIATION}s`}
+        </p>
+      ) : (
+        ''
+      )}
 
       <div id={ALL_VISUALS_ID}>
         <div id={VISUAL_ELEMENTS_ID} className='py-2'>

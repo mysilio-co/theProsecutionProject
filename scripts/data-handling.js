@@ -11,6 +11,8 @@ import {
   IDEOLOGICAL_GROUPING_FILTER_VALUES,
   NUMERIC_COLUMNS,
   SEARCH_BY_KEYS_MOBILE,
+  TAG,
+  TAG_REGEX,
 } from './constants';
 
 export function runAllFilters(data, query, isMobile) {
@@ -137,6 +139,13 @@ export function filterByDropdown(data, queryParams) {
           ) {
             matchCount++;
           }
+        } else if (key == TAG) {
+          if (
+            (!isExclude && filterByTag(filterParamsCopy[key], row[TAG])) ||
+            (isExclude && !filterByTag(filterParamsCopy[key], row[TAG]))
+          ) {
+            matchCount++;
+          }
         } else {
           if (
             (!isExclude && filterParamsCopy[key].includes(row[key])) ||
@@ -215,6 +224,21 @@ function filterByGroupAffiliation(filterValues, rowValue) {
     threshold: 0.1,
   });
   rowValue?.split(GROUP_AFFILIATION_REGEX).forEach(rowGroup => {
+    if (fuse.search(rowGroup).length > 0) {
+      retValue = true;
+    }
+  });
+  return retValue;
+}
+
+function filterByTag(filterValues, rowValue) {
+  let retValue = false;
+  const fuse = new Fuse(filterValues, {
+    isCaseSensitive: false,
+    ignoreLocation: false,
+    threshold: 0.1,
+  });
+  rowValue?.split(TAG_REGEX).forEach(rowGroup => {
     if (fuse.search(rowGroup).length > 0) {
       retValue = true;
     }

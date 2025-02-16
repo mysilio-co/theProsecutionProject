@@ -4,6 +4,8 @@ import {
   GROUP_AFFILIATION_REGEX,
   IDEOLOGICAL_AFFILIATION,
   IDEOLOGICAL_GROUPING,
+  TAG,
+  TAG_REGEX,
   generateIdeologicalGroupingCategories,
 } from './constants';
 
@@ -30,6 +32,8 @@ export function groupByCategory(data, category) {
   });
   if (category === GROUP_AFFILIATION) {
     return rollupGroupAffiliationData(chartData);
+  } else if (category === TAG) {
+    return rollupTagData(chartData);
   } else {
     return d3.group(chartData, d => d[category]);
   }
@@ -89,6 +93,19 @@ function rollupGroupAffiliationData(data) {
         map.set(group, []);
       }
       map.get(group).push(d);
+    });
+  });
+  return map;
+}
+
+function rollupTagData(data) {
+  const map = new d3.InternMap();
+  data.forEach(d => {
+    d[TAG]?.split(TAG_REGEX)?.forEach(tag => {
+      if (!map.has(tag)) {
+        map.set(tag, []);
+      }
+      map.get(tag).push(d);
     });
   });
   return map;
