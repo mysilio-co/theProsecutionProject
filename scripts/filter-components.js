@@ -9,7 +9,7 @@ import {
   TAG_REGEX,
 } from './constants';
 
-export function generateListDropdowns(data) {
+export function generateListDropdowns(data, groups, tags) {
   let dropdowns = [];
   for (let col of CATEGORICAL_KEYS) {
     const listOptions = getListOptionsByKey(data, col);
@@ -24,10 +24,12 @@ export function generateListDropdowns(data) {
     d => Object.keys(d)[0] != GROUP_AFFILIATION && Object.keys(d)[0] != TAG,
   );
   dropdowns.push({
-    [GROUP_AFFILIATION]: getGroupAffiliationOptions(data),
+    // [GROUP_AFFILIATION]: getGroupAffiliationOptions(data),
+    [TAG]: tags.map(tag => tag.name),
   });
   dropdowns.push({
-    [TAG]: getTagOptions(data),
+    // [TAG]: getTagOptions(data),
+    [GROUP_AFFILIATION]: groups.map(group => group.name),
   });
   return dropdowns;
 }

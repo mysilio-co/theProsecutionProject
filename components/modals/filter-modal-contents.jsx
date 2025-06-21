@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
 import { Dialog } from '@headlessui/react';
-import DateFilter from '../filters/date-filter';
-import FilterRanges from '../filters/filter-ranges';
-import FilterDropdowns from '../filters/filter-dropdowns';
 import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
+import DateFilter from '../filters/date-filter';
+import FilterDropdowns from '../filters/filter-dropdowns';
+import FilterRanges from '../filters/filter-ranges';
 
 export default function FilterModalContents({
   dropdownValues,
@@ -14,14 +14,16 @@ export default function FilterModalContents({
 }) {
   const invisFocusRef = useRef();
   const router = useRouter();
-
-  useEffect(() => {
-    invisFocusRef.current.focus();
-  }, []);
+  let groups = [];
+  let tags = [];
 
   function setModalVisibility(showModalValue) {
     setShowModal(showModalValue);
   }
+
+  useEffect(() => {
+    invisFocusRef.current.focus();
+  }, []);
 
   return (
     <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full md:m-auto md:h-5/6'>

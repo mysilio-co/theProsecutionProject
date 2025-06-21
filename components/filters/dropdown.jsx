@@ -20,6 +20,7 @@ export default function Dropdown({
   useEffect(() => {
     if (!isDisabled && router.query[label]) {
       let param = _.replace(router.query[label], '!', '');
+      console.log(router.query);
       setSelectedKey(param?.split(GROUP_AFFILIATION_REGEX));
     }
   }, [isDisabled, router.query[label]]);
