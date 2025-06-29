@@ -12,7 +12,7 @@ import {
   DictionarySheet,
   GroupAffiliation,
   TagName,
-} from '../models/dictionarySheet.model';
+} from '../models/DictionarySheet.model';
 
 export async function getSheetsData(sheetId, query) {
   const SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -113,10 +113,12 @@ export function parseDictionaryResponse(file): DictionarySheet {
         sheet.values.map((value, i) => {
           tags.push(createTagNameFromRow(value));
         });
+        tags.sort((a, b) => a.name.localeCompare(b.name));
       } else {
         sheet.values.map((value, i) => {
           groups.push(createGroupAffiliationFromRow(value));
         });
+        groups.sort((a, b) => a.name.localeCompare(b.name));
       }
     });
   }

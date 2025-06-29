@@ -1,5 +1,5 @@
-import Dropdown from './dropdown.jsx';
 import * as d3 from 'd3';
+import Dropdown from './dropdown.jsx';
 
 export default function FilterDropdowns({ values, router }) {
   values = values.sort((a, b) => {

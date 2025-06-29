@@ -1,6 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
+import { GROUP_AFFILIATION, TAG } from '../../scripts/constants';
 import DateFilter from '../filters/date-filter';
 import FilterDropdowns from '../filters/filter-dropdowns';
 import FilterRanges from '../filters/filter-ranges';
@@ -11,11 +12,10 @@ export default function FilterModalContents({
   isLoading,
   hasError,
   setShowModal,
+  isGeneral,
 }) {
   const invisFocusRef = useRef();
   const router = useRouter();
-  let groups = [];
-  let tags = [];
 
   function setModalVisibility(showModalValue) {
     setShowModal(showModalValue);
@@ -71,10 +71,16 @@ export default function FilterModalContents({
                   dropdowns can be closed using the ESC key.
                 </p>
                 <FilterDropdowns
-                  values={dropdownValues}
+                  values={
+                    isGeneral
+                      ? dropdownValues
+                      : dropdownValues.filter(
+                          d =>
+                            Object.keys(d)[0] !== GROUP_AFFILIATION &&
+                            Object.keys(d)[0] !== TAG,
+                        )
+                  }
                   router={router}
-                  isLoading={isLoading}
-                  hasError={hasError}
                 />
               </div>
               <div className='mt-12'>

@@ -17,7 +17,7 @@ import PieChart from './pie-chart';
 import ShowActiveFilterCheckbox from './show-filter-checkbox';
 import ShowTitleCheckbox from './show-title-checkbox';
 
-export default function ExploreTab({ data, queryParams }) {
+export default function ExploreTab({ data, queryParams, isGeneral }) {
   const fetcher = async url =>
     await fetch(url).then(res => {
       if (!res.ok) {
@@ -95,6 +95,7 @@ export default function ExploreTab({ data, queryParams }) {
           setIsCensus={setIsCensus}
           setNumberOfResults={setNumberOfResults}
           setShowHelpMessage={setShowHelpMessage}
+          isGeneral={isGeneral}
         ></DataVisualizerDropdowns>
 
         <div className='block xl:flex justify-between'>

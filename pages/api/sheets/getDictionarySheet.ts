@@ -1,4 +1,4 @@
-import { DictionarySheet } from '../../../models/dictionarySheet.model';
+import { DictionarySheet } from '../../../models/DictionarySheet.model';
 import { SHEET_ID_DICTIONARY } from '../../../scripts/constants';
 import {
   generateSheetsDictionaryQuery,

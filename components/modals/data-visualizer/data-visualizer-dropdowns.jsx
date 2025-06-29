@@ -3,7 +3,11 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { Fragment, useEffect, useState } from 'react';
 import { classNames } from '../../../scripts/common';
-import { CATEGORICAL_KEYS } from '../../../scripts/constants';
+import {
+  CATEGORICAL_KEYS,
+  GROUP_AFFILIATION,
+  TAG,
+} from '../../../scripts/constants';
 import { getTopResultsDropdownArray } from '../../../scripts/data-visualizer';
 import {
   AGGREGATE_OPTIONS,
@@ -23,14 +27,19 @@ export default function DataVisualizerDropdowns({
   setIsCensus,
   setNumberOfResults,
   setShowHelpMessage,
+  isGeneral,
 }) {
-  const CATEGORICAL_OPTIONS = ['All'].concat(CATEGORICAL_KEYS.sort());
+  const categoricalOptions = isGeneral
+    ? ['All'].concat(CATEGORICAL_KEYS.sort())
+    : ['All']
+        .concat(CATEGORICAL_KEYS.sort())
+        .filter(option => option !== GROUP_AFFILIATION && option !== TAG);
   const [aggregateOptions, setAggregateOptions] = useState(
     AGGREGATE_OPTIONS[0],
   );
   const [dateOptions, setDateOptions] = useState(DATE_OPTIONS[0]);
   const [categoricalOption, setCategoricalOption] = useState(
-    CATEGORICAL_OPTIONS[0],
+    categoricalOptions[0],
   );
   const [resultsOptions, setResultsOptions] = useState(RESULTS_OPTIONS[0]);
   const [stateOptions, setStateOptions] = useState(STATE_OPTIONS[0]);
@@ -171,7 +180,7 @@ export default function DataVisualizerDropdowns({
                   leaveTo='opacity-0'
                 >
                   <Listbox.Options className='absolute z-10 mt-1 max-h-64 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-                    {CATEGORICAL_OPTIONS.map((key, idx) => (
+                    {categoricalOptions.map((key, idx) => (
                       <Listbox.Option
                         key={idx}
                         className={({ active }) =>

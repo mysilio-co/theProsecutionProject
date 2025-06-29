@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import DataTable from '../components/data-table.jsx';
 
@@ -41,6 +41,7 @@ import { STATIC_QUERIES } from '../scripts/query-constants.js';
 import {
   addMultipleQueryParams,
   addQueryParam,
+  removeGroupAndTagParams,
   retrieveDropdownParams,
   retrieveNumericParams,
 } from '../scripts/router-handling';
@@ -98,6 +99,7 @@ export default function DataExplorer() {
               setShowModal={setShowModal}
               isLoading={isLoading}
               hasError={hasError}
+              isGeneral={selectedTab === TAB_NAMES.General}
             />,
           );
         }}
@@ -297,6 +299,7 @@ export default function DataExplorer() {
         new Map([...dropdownValuesToBeUpdated, ...rangeValuesToBeUpdated]),
         router,
       );
+      removeGroupAndTagParams(router);
       setNewTabSelected(false);
     }
   }, [filteredData, isLoading]);
@@ -440,6 +443,7 @@ export default function DataExplorer() {
                             data={filteredData}
                             setShowModal={setShowModal}
                             queryParams={query}
+                            isGeneral={selectedTab === TAB_NAMES.General}
                           />,
                         );
                       }}

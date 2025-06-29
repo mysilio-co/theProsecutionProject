@@ -1,6 +1,6 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
-import { Fragment, React, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { classNames } from '../../scripts/common';
 import { GROUP_AFFILIATION_REGEX } from '../../scripts/constants';
 import { addQueryParam, removeQueryParam } from '../../scripts/router-handling';
