@@ -186,13 +186,24 @@ export default function DataExplorer() {
             '&start=' +
             3000 +
             '&end=' +
+            4500
+        : null,
+      fetcher,
+    );
+    const { data: fourth, error: fourthError } = useSWR(
+      lengthOfSheet && !hasError
+        ? '/api/sheets/getSheets?sheet=' +
+            sheet +
+            '&start=' +
+            4500 +
+            '&end=' +
             lengthOfSheet
         : null,
       fetcher,
     );
-    updateHasError(firstError || secondError || thirdError);
-    return first && second && third && !hasError
-      ? first.concat(second).concat(third)
+    updateHasError(firstError || secondError || thirdError || fourthError);
+    return first && second && third && fourth && !hasError
+      ? first.concat(second).concat(third).concat(fourth)
       : null;
   }
 
