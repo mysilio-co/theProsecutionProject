@@ -11,7 +11,7 @@ export default function DownloadButton({ display, setDisplay }) {
         onClick={function () {
           setDownloadaDisply(!downloadDisplay);
         }}
-        className='relative h-38px w-full lg:w-28 whitespace-nowrap bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white rounded'
+        className='relative h-38px w-full xl:w-28 whitespace-nowrap bg-gray-800 hover:bg-gray-500 active:bg-gray-700 focus:bg-gray-500 text-white rounded'
       >
         <span className='flex items-center'>
           <span className='ml-3 block truncate'>Download</span>

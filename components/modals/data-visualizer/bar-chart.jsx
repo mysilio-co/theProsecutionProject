@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
-import { cloneDeep } from 'lodash';
 import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function BarChart({
   svgRef,
   data,
   variable,
+  numberOfResults,
   setCategoryNames,
   setChartData,
   width = 900,
@@ -37,15 +37,17 @@ export default function BarChart({
     const gy = useRef();
     const svg = d3.select(svgRef.current);
     const categoryNames = instanceData.map(category => category.key);
+    const categoryNamesSliced = categoryNames.slice(0, numberOfResults);
     const categoryValues = instanceData.map(category => category.value);
+    const categoryValuesSliced = categoryValues.slice(0, numberOfResults);
     const x = d3
       .scaleBand()
       .range([marginLeft, width])
-      .domain(categoryNames)
+      .domain(categoryNamesSliced)
       .padding(0.2);
     const y = d3
       .scaleLinear()
-      .domain([0, d3.max(categoryValues)])
+      .domain([0, d3.max(categoryValuesSliced)])
       .range([height - marginBottom, marginTop]);
 
     useEffect(
@@ -68,7 +70,7 @@ export default function BarChart({
       .call(DataVisualizerScripts.gridY(y, 10).tickSize(-width).tickFormat(''));
     svg
       .selectAll('mybar')
-      .data(instanceData)
+      .data(instanceData.slice(0, numberOfResults))
       .enter()
       .append('rect')
       .attr('x', function (d) {

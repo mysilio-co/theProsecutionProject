@@ -7,7 +7,7 @@ export default function ShowActiveFilterCheckbox({
 }) {
   const disabled = !isActiveFilters;
   return (
-    <div className='flex ml-6 mb-1 items-center'>
+    <div className='flex ml-4 mb-1 items-center'>
       <label
         className={classNames(
           disabled

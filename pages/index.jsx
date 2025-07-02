@@ -17,14 +17,16 @@ import QuickstartModalContents from '../components/modals/quickstart-modal-conte
 import WelcomeModalContents from '../components/modals/welcome-modal-contents.jsx';
 import ResultsPerPage from '../components/results-per-page.jsx';
 import SearchBy from '../components/search-by';
-import { classNames } from '../scripts/common.js';
+import { classNames, fetcher } from '../scripts/common.js';
 import {
   ALL_COLUMN_KEYS,
+  GROUP_AFFILIATION,
   ORDER_BY_KEYS,
   RESULTS_PER_PAGE_KEYS,
   SEARCH_BY_KEYS,
   SEARCH_BY_KEYS_MOBILE,
   TAB_NAMES,
+  TAG,
 } from '../scripts/constants.js';
 import {
   removeMismatchedDropdown,
@@ -39,19 +41,10 @@ import { STATIC_QUERIES } from '../scripts/query-constants.js';
 import {
   addMultipleQueryParams,
   addQueryParam,
+  removeGroupAndTagParams,
   retrieveDropdownParams,
   retrieveNumericParams,
 } from '../scripts/router-handling';
-
-const fetcher = async url =>
-  await fetch(url).then(res => {
-    if (!res.ok) {
-      const error = new Error('An error occurred while fetching the data.');
-      error.status = res.status;
-      throw error;
-    }
-    return res.json();
-  });
 
 export default function DataExplorer() {
   const tabs = Object.keys(TAB_NAMES);
@@ -63,6 +56,8 @@ export default function DataExplorer() {
   const [rangeValues, setRangeValues] = useState([]);
   const [dropdownValues, setDropdownValues] = useState([]);
   let displayData = [];
+  let groups = [];
+  let tags = [];
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -104,6 +99,7 @@ export default function DataExplorer() {
               setShowModal={setShowModal}
               isLoading={isLoading}
               hasError={hasError}
+              isGeneral={selectedTab === TAB_NAMES.General}
             />,
           );
         }}
@@ -128,6 +124,7 @@ export default function DataExplorer() {
     const isGeneral = tab === 'General';
     const isInProgress = tab === 'In Progress';
     const fouo = getChunksOfSheet('U//FOUO', tab);
+
     const { data: pending, error: pendingError } = useSWR(
       isInProgress ? '/api/sheets/getSheets?sheet=Pending cases' : null,
       fetcher,
@@ -210,6 +207,19 @@ export default function DataExplorer() {
       : null;
   }
 
+  function retrieveDictionaryValues() {
+    const retDict = {};
+    const { data: dictionary, error: dictionaryError } = useSWR(
+      '/api/sheets/getDictionarySheet',
+      fetcher,
+    );
+    if (dictionary) {
+      retDict[GROUP_AFFILIATION] = dictionary[GROUP_AFFILIATION];
+      retDict[TAG] = dictionary[TAG];
+    }
+    return retDict;
+  }
+
   function handleWindowSizeChange() {
     if (typeof window !== 'undefined') {
       setWidth(window.innerWidth);
@@ -265,7 +275,7 @@ export default function DataExplorer() {
   // filter data when any filter values are updated
   useEffect(() => {
     if (untouchedData) {
-      setDropdownValues(generateListDropdowns(untouchedData));
+      setDropdownValues(generateListDropdowns(untouchedData, groups, tags));
       setRangeValues(generateNumericRanges(untouchedData));
       setFilteredData(runAllFilters(untouchedData, query, isMobile));
     }
@@ -300,6 +310,7 @@ export default function DataExplorer() {
         new Map([...dropdownValuesToBeUpdated, ...rangeValuesToBeUpdated]),
         router,
       );
+      removeGroupAndTagParams(router);
       setNewTabSelected(false);
     }
   }, [filteredData, isLoading]);
@@ -359,6 +370,9 @@ export default function DataExplorer() {
 
   const search = query.search || '';
   untouchedData = getSheetData(selectedTab);
+  const dictionaryValues = retrieveDictionaryValues();
+  groups = dictionaryValues[GROUP_AFFILIATION] || [];
+  tags = dictionaryValues[TAG] || [];
   updateIsLoadingState();
 
   if (filteredData && query.currentPage && query.numShown) {
@@ -440,6 +454,7 @@ export default function DataExplorer() {
                             data={filteredData}
                             setShowModal={setShowModal}
                             queryParams={query}
+                            isGeneral={selectedTab === TAB_NAMES.General}
                           />,
                         );
                       }}

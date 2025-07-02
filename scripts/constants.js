@@ -32,10 +32,24 @@ export const SHEET_NAMES = [
   'Pending cases',
 ];
 
+export const SHEET_ID_TEAM_SPREADSHEET =
+  '19n55x92uJQBbRmIa_8bR-SP8phiZ-NQC4oW86sbGNm4';
+export const SHEET_ID_DICTIONARY =
+  '1TLEyreJNXPPGrpFmFRWcaDSSM4UIc-x0wrnsi7tEEoY';
+
+export const DICTIONARY_TAG_TAB = 'Tags';
+export const DICTIONARY_GROUP_TAB = 'Group affiliations';
+
 export const HOW_TO_TABS = ['Site Guide', 'Codebook'];
 
 export const DATA_VISUALIZER_TABS = ['Explore', 'Premade Charts'];
 
+export const GROUP_AFFILIATION = 'Group affiliation';
+// Used to split group affiliations into individual groups. Unique because a group affiliation could have a
+// comma inside of its parentheses that needs to be ignored ie. "Three Percenters (III Percenters, 3%ers)"
+export const GROUP_AFFILIATION_REGEX = /(?<!\([^)]), (?![^()]*\))/;
+export const TAG = 'Tags';
+export const TAG_REGEX = /[,;]/;
 export const IDEOLOGICAL_GROUPING = 'Ideological grouping';
 export const IDEOLOGICAL_AFFILIATION = 'Ideological affiliation';
 
@@ -49,6 +63,8 @@ export const CATEGORICAL_KEYS = [
   'Physical target',
   'Ideological target',
   IDEOLOGICAL_GROUPING,
+  GROUP_AFFILIATION,
+  TAG,
   'Ideological affiliation',
   'Affiliation with FTO',
   'Hate crime',

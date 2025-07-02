@@ -1,15 +1,19 @@
-import Fuse from 'fuse.js';
 import * as d3 from 'd3';
+import Fuse from 'fuse.js';
+import { cloneDeep, omit } from 'lodash';
 import {
   ALL_COLUMN_KEYS,
-  DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED,
   CATEGORICAL_KEYS,
+  DESKTOP_EXPRESS_KEYS_TO_BE_OMITTED,
+  GROUP_AFFILIATION,
+  GROUP_AFFILIATION_REGEX,
   IDEOLOGICAL_GROUPING,
   IDEOLOGICAL_GROUPING_FILTER_VALUES,
   NUMERIC_COLUMNS,
   SEARCH_BY_KEYS_MOBILE,
+  TAG,
+  TAG_REGEX,
 } from './constants';
-import { cloneDeep, omit } from 'lodash';
 
 export function runAllFilters(data, query, isMobile) {
   data = fuzzySearch(data, query.search, query.searchBy, isMobile);
@@ -95,7 +99,7 @@ export function filterByDropdown(data, queryParams) {
     // Extract filter values from query params
     CATEGORICAL_KEYS.forEach(key => {
       if (queryParams[key]) {
-        filterParams[key] = queryParams[key].split(', ');
+        filterParams[key] = queryParams[key]?.split(GROUP_AFFILIATION_REGEX);
       }
     });
     // Filter data by checking if a row contains at least one match in all dropdowns selected
@@ -105,14 +109,7 @@ export function filterByDropdown(data, queryParams) {
         const isExclude = _.includes(filterParams[key][0], '!');
         const filterParamsCopy = _.cloneDeep(filterParams);
         filterParamsCopy[key][0] = filterParamsCopy[key][0].replace('!', '');
-        if (key != IDEOLOGICAL_GROUPING) {
-          if (
-            (!isExclude && filterParamsCopy[key].includes(row[key])) ||
-            (isExclude && !filterParamsCopy[key].includes(row[key]))
-          ) {
-            matchCount++;
-          }
-        } else {
+        if (key == IDEOLOGICAL_GROUPING) {
           if (
             (!isExclude &&
               filterByIdeologicalGrouping(
@@ -124,6 +121,35 @@ export function filterByDropdown(data, queryParams) {
                 filterParamsCopy[key],
                 row['Ideological affiliation'],
               ))
+          ) {
+            matchCount++;
+          }
+        } else if (key == GROUP_AFFILIATION) {
+          if (
+            (!isExclude &&
+              filterByGroupAffiliation(
+                filterParamsCopy[key],
+                row[GROUP_AFFILIATION],
+              )) ||
+            (isExclude &&
+              !filterByGroupAffiliation(
+                filterParamsCopy[key],
+                row[GROUP_AFFILIATION],
+              ))
+          ) {
+            matchCount++;
+          }
+        } else if (key == TAG) {
+          if (
+            (!isExclude && filterByTag(filterParamsCopy[key], row[TAG])) ||
+            (isExclude && !filterByTag(filterParamsCopy[key], row[TAG]))
+          ) {
+            matchCount++;
+          }
+        } else {
+          if (
+            (!isExclude && filterParamsCopy[key].includes(row[key])) ||
+            (isExclude && !filterParamsCopy[key].includes(row[key]))
           ) {
             matchCount++;
           }
@@ -190,6 +216,36 @@ function filterByIdeologicalGrouping(filterValues, rowValue) {
   return retValue;
 }
 
+function filterByGroupAffiliation(filterValues, rowValue) {
+  let retValue = false;
+  const fuse = new Fuse(filterValues, {
+    isCaseSensitive: false,
+    ignoreLocation: false,
+    threshold: 0.1,
+  });
+  rowValue?.split(GROUP_AFFILIATION_REGEX).forEach(rowGroup => {
+    if (fuse.search(rowGroup).length > 0) {
+      retValue = true;
+    }
+  });
+  return retValue;
+}
+
+function filterByTag(filterValues, rowValue) {
+  let retValue = false;
+  const fuse = new Fuse(filterValues, {
+    isCaseSensitive: false,
+    ignoreLocation: false,
+    threshold: 0.1,
+  });
+  rowValue?.split(TAG_REGEX).forEach(rowGroup => {
+    if (fuse.search(rowGroup).length > 0) {
+      retValue = true;
+    }
+  });
+  return retValue;
+}
+
 export function removeMismatchedDropdown(router, dropdownValues) {
   let columnsToBeUpdated = new Map();
   if (router.query && dropdownValues.length != 0) {
@@ -200,7 +256,7 @@ export function removeMismatchedDropdown(router, dropdownValues) {
         query &&
         dropdownValues.find(dropdownValue => Object.keys(dropdownValue) == key)
       ) {
-        const routerValue = query.split(', ');
+        const routerValue = query?.split(GROUP_AFFILIATION_REGEX);
         const dropdownValue = Object.values(
           dropdownValues.find(
             dropdownValue => Object.keys(dropdownValue) == key,

@@ -1,4 +1,7 @@
-import { SHEET_NAMES } from '../../../scripts/constants';
+import {
+  SHEET_ID_TEAM_SPREADSHEET,
+  SHEET_NAMES,
+} from '../../../scripts/constants';
 import { parseSheetsResponse } from '../../../scripts/data-handling';
 import {
   concatAllColumns,
@@ -23,6 +26,7 @@ export default async function handler(req, res) {
     const start = !!req.query.start ? req.query.start : '';
     const end = !!req.query.end ? req.query.end : '';
     const file: any = await getSheetsData(
+      SHEET_ID_TEAM_SPREADSHEET,
       generateSheetsQuery(sheet, start, end),
     );
     let sheetData: any = [];
