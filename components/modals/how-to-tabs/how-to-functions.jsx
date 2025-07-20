@@ -14,8 +14,6 @@ import HowToFunctionsButtons from './how-to-functions/how-to-functions-button';
 
 export default function HowToFunctions({ isMobile }) {
   const [selectedFunction, setSelectedFunction] = useState(DATASET);
-  console.log(isMobile);
-
   return (
     <div>
       <div className='bg-gray-800 border-t border-gray-700'>
