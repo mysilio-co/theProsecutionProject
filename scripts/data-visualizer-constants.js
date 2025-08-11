@@ -30,6 +30,10 @@ export const STATE_OPTIONS = [STATE_COUNT, STATE_RATIO];
 
 export const DATE_OPTIONS = [YEAR, MONTH, DAY];
 
+export const RESULTS_OPTIONS = [
+  5, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500,
+];
+
 export const DOWNLOAD_OPTIONS = [
   {
     name: CHART_ONLY,

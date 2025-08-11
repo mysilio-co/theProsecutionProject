@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
+import { useEffect } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
-import { cloneDeep } from 'lodash';
-import { useEffect, useState } from 'react';
 import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function PieChart({
   svgRef,
   data,
   variable,
+  numberOfResults,
   setCategoryNames,
   setChartData,
   width = 400,
@@ -34,7 +34,7 @@ export default function PieChart({
     var pie = d3.pie().value(function (d) {
       return d['value'];
     });
-    var pieData = pie(instanceData);
+    var pieData = pie(instanceData.slice(0, numberOfResults));
     svg
       .selectAll('pie')
       .data(pieData)

@@ -1,12 +1,20 @@
 import * as d3 from 'd3';
-import { cloneDeep } from 'lodash';
 import {
+  GROUP_AFFILIATION,
+  GROUP_AFFILIATION_REGEX,
   IDEOLOGICAL_AFFILIATION,
   IDEOLOGICAL_GROUPING,
+  TAG,
+  TAG_REGEX,
   generateIdeologicalGroupingCategories,
 } from './constants';
 
-import { BAR, CENSUS_RATIO_KEY, CHOROPLETH } from './data-visualizer-constants';
+import {
+  BAR,
+  CENSUS_RATIO_KEY,
+  CHOROPLETH,
+  RESULTS_OPTIONS,
+} from './data-visualizer-constants';
 
 export function groupByCategory(data, category) {
   const chartData = _.cloneDeep(data);
@@ -22,7 +30,13 @@ export function groupByCategory(data, category) {
       d[category] = '';
     }
   });
-  return d3.group(chartData, d => d[category]);
+  if (category === GROUP_AFFILIATION) {
+    return rollupGroupAffiliationData(chartData);
+  } else if (category === TAG) {
+    return rollupTagData(chartData);
+  } else {
+    return d3.group(chartData, d => d[category]);
+  }
 }
 
 export function gridX(x, ticks) {
@@ -69,6 +83,47 @@ export function sortCensusData(data) {
       return 0;
     }
   });
+}
+
+function rollupGroupAffiliationData(data) {
+  const map = new d3.InternMap();
+  data.forEach(d => {
+    d[GROUP_AFFILIATION]?.split(GROUP_AFFILIATION_REGEX)?.forEach(group => {
+      if (!map.has(group)) {
+        map.set(group, []);
+      }
+      map.get(group).push(d);
+    });
+  });
+  return map;
+}
+
+function rollupTagData(data) {
+  const map = new d3.InternMap();
+  data.forEach(d => {
+    d[TAG]?.split(TAG_REGEX)?.forEach(tag => {
+      if (!map.has(tag)) {
+        map.set(tag, []);
+      }
+      map.get(tag).push(d);
+    });
+  });
+  return map;
+}
+
+export function getTopResultsDropdownArray(data) {
+  const dataLength = data?.length ? data.length : 0;
+  let highestIndex = -1;
+  for (let i = 0; i < RESULTS_OPTIONS.length; i++) {
+    if (dataLength >= RESULTS_OPTIONS[i]) {
+      highestIndex = i;
+    } else {
+      break;
+    }
+  }
+  const dropdownArray = RESULTS_OPTIONS.slice(0, highestIndex + 1);
+  dropdownArray.push(dataLength);
+  return dropdownArray;
 }
 
 export function appendTooltipToSvg(svg) {

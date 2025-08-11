@@ -10,7 +10,7 @@ export default function HelpMessage({ showHelpMessage, chartType }) {
     <div
       className={classNames(
         showHelpMessage ? 'opacity-100' : 'opacity-0 invisible',
-        'absolute md:-translate-y-24 lg:-translate-y-20 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300',
+        'absolute translate-y-16 left-8 right-8 bg-white text-sm text-gray-700 border border-gray-800 rounded p-5 z-50 transition-opacity ease-in-out duration-300',
       )}
     >
       {chartType === LINE || chartType === PIE || chartType === BAR ? (
@@ -35,6 +35,15 @@ export default function HelpMessage({ showHelpMessage, chartType }) {
           <span className='font-bold'>Statistic</span>: The number that is shown
           for each state in the U.S., either raw number of cases or the
           percentage of cases vs. state population.
+        </p>
+      ) : (
+        ''
+      )}
+      {chartType === LINE || chartType === PIE || chartType === BAR ? (
+        <p>
+          <span className='font-bold'># shown</span>: The number of groupings
+          that are displayed on the chart. There must be at least 5 groups for
+          this option to be available.
         </p>
       ) : (
         ''

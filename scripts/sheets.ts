@@ -1,9 +1,20 @@
-import { RANGE_MAP } from './constants';
+import {
+  DICTIONARY_GROUP_TAB,
+  DICTIONARY_TAG_TAB,
+  GROUP_AFFILIATION,
+  RANGE_MAP,
+  TAG,
+} from './constants';
 
-const { google } = require('googleapis');
-const { GoogleAuth } = require('google-auth-library');
+import { GoogleAuth } from 'google-auth-library';
+import { google } from 'googleapis';
+import {
+  DictionarySheet,
+  GroupAffiliation,
+  TagName,
+} from '../models/DictionarySheet.model';
 
-export async function getSheetsData(query) {
+export async function getSheetsData(sheetId, query) {
   const SCOPES = ['https://www.googleapis.com/auth/drive'];
   const creds = {
     client_email: process.env.GCP_CLIENT_EMAIL,
@@ -18,7 +29,7 @@ export async function getSheetsData(query) {
   let ret = null;
   await sheets.spreadsheets.values
     .batchGet({
-      spreadsheetId: '19n55x92uJQBbRmIa_8bR-SP8phiZ-NQC4oW86sbGNm4',
+      spreadsheetId: sheetId,
       ranges: query,
     })
     .then(function (result) {
@@ -27,7 +38,7 @@ export async function getSheetsData(query) {
   return ret;
 }
 
-export async function getSingleSheetData(query) {
+export async function getSingleSheetData(sheetId, query) {
   const SCOPES = ['https://www.googleapis.com/auth/drive'];
   const creds = {
     client_email: process.env.GCP_CLIENT_EMAIL,
@@ -42,7 +53,7 @@ export async function getSingleSheetData(query) {
   let ret = null;
   await sheets.spreadsheets.values
     .get({
-      spreadsheetId: '19n55x92uJQBbRmIa_8bR-SP8phiZ-NQC4oW86sbGNm4',
+      spreadsheetId: sheetId,
       range: query,
     })
     .then(function (result) {
@@ -69,6 +80,13 @@ export function generateSheetsDateQuery(tab) {
   return query;
 }
 
+export function generateSheetsDictionaryQuery() {
+  let query = [];
+  query.push(DICTIONARY_TAG_TAB + '!A:B');
+  query.push(DICTIONARY_GROUP_TAB + '!A:B');
+  return query;
+}
+
 export function concatAllColumns(file) {
   let sheetData = [];
   if (!!file) {
@@ -83,6 +101,44 @@ export function concatAllColumns(file) {
     });
   }
   return sheetData;
+}
+
+export function parseDictionaryResponse(file): DictionarySheet {
+  const dictionary: DictionarySheet = new DictionarySheet();
+  const tags: TagName[] = [];
+  const groups: GroupAffiliation[] = [];
+  if (!!file) {
+    file.data.valueRanges.forEach(function (sheet, index) {
+      if (index == 0) {
+        sheet.values.map((value, i) => {
+          tags.push(createTagNameFromRow(value));
+        });
+        tags.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        sheet.values.map((value, i) => {
+          groups.push(createGroupAffiliationFromRow(value));
+        });
+        groups.sort((a, b) => a.name.localeCompare(b.name));
+      }
+    });
+  }
+  dictionary[TAG] = tags;
+  dictionary[GROUP_AFFILIATION] = groups;
+  return dictionary;
+}
+
+function createTagNameFromRow(row): TagName {
+  const tag = new TagName();
+  tag.name = row[0];
+  tag.description = row[1];
+  return tag;
+}
+
+function createGroupAffiliationFromRow(row): GroupAffiliation {
+  const group = new GroupAffiliation();
+  group.name = row[0];
+  group.description = row[1];
+  return group;
 }
 
 export function concatSpecificColumns(file, range) {

@@ -1,14 +1,9 @@
-import { React, useState, Fragment, useEffect } from 'react';
-import { Disclosure, Listbox, Transition } from '@headlessui/react';
-import { addQueryParam, removeQueryParam } from '../../scripts/router-handling';
-import { snakeCase, includes } from 'lodash';
-import {
-  MagnifyingGlassIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from '@heroicons/react/20/solid';
+import { Listbox, Transition } from '@headlessui/react';
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { Fragment, useEffect, useState } from 'react';
 import { classNames } from '../../scripts/common';
+import { GROUP_AFFILIATION, GROUP_AFFILIATION_REGEX, TAG } from '../../scripts/constants';
+import { addQueryParam, removeQueryParam } from '../../scripts/router-handling';
 
 export default function Dropdown({
   label,
@@ -16,16 +11,18 @@ export default function Dropdown({
   router,
   isLoading,
   hasError,
+  isGeneral
 }) {
   const [selectedKey, setSelectedKey] = useState([]);
   const isDisabled = isLoading && !hasError;
+  const [isDisabledOutsideGeneral, setIsDisabledOutsideGeneral] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [isExclude, setIsExclude] = useState(false);
 
   useEffect(() => {
     if (!isDisabled && router.query[label]) {
       let param = _.replace(router.query[label], '!', '');
-      setSelectedKey(param.split(', '));
+      setSelectedKey(param?.split(GROUP_AFFILIATION_REGEX));
     }
   }, [isDisabled, router.query[label]]);
 
@@ -40,6 +37,7 @@ export default function Dropdown({
         : addQueryParam(label, paramValue, router);
     }
     setInitialLoad(false);
+    setIsDisabledOutsideGeneral(!isGeneral && (label == GROUP_AFFILIATION || label == TAG));
   }, [selectedKey, isExclude]);
 
   useEffect(() => {
@@ -53,13 +51,14 @@ export default function Dropdown({
   }
 
   return (
-    <div className='pt-2 flex'>
+    <div className='pt-2 flex flex-wrap'>
       <div className='w-4/5'>
         <Listbox
           value={selectedKey}
           onChange={setSelectedKey}
           multiple
           className='z-0'
+          disabled={isDisabledOutsideGeneral}
         >
           {({ open }) => (
             <>
@@ -154,8 +153,12 @@ export default function Dropdown({
           type='checkbox'
           onChange={handleCheckChange}
           checked={isExclude}
+          disabled={isDisabledOutsideGeneral}
         />
       </div>
+      {isDisabledOutsideGeneral && (
+        <p className='text-start text-sm pr-2 text-gray-400'>This filter is only available in the General tab</p>
+      )}
     </div>
   );
 }

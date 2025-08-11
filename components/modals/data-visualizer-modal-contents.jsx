@@ -1,8 +1,5 @@
-import * as d3 from 'd3';
-import { useRef, useEffect, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { classNames } from '../../scripts/common.js';
-import { cloneDeep } from 'lodash';
+import { Dialog } from '@headlessui/react';
+import { useState } from 'react';
 import { DATA_VISUALIZER_TABS } from '../../scripts/constants';
 import ExploreTab from './data-visualizer/explore-tab';
 
@@ -10,6 +7,7 @@ export default function DataVisualizerModalContents({
   data,
   setShowModal,
   queryParams,
+  isGeneral,
 }) {
   const [selectedTab, setSelectedTab] = useState(DATA_VISUALIZER_TABS[0]);
   function setModalVisibility(showModalValue) {
@@ -56,7 +54,11 @@ export default function DataVisualizerModalContents({
               </nav>
             </div> */}
             {selectedTab === 'Explore' ? (
-              <ExploreTab data={data} queryParams={queryParams} />
+              <ExploreTab
+                data={data}
+                queryParams={queryParams}
+                isGeneral={isGeneral}
+              />
             ) : (
               ''
             )}

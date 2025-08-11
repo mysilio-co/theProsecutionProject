@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as DataVisualizerConstants from '../../../scripts/data-visualizer-constants.js';
-import { cloneDeep, spread } from 'lodash';
 import * as DataVisualizerScripts from '../../../scripts/data-visualizer.js';
 
 export default function LineChart({
@@ -9,6 +8,7 @@ export default function LineChart({
   data,
   timeRange,
   variable,
+  numberOfResults,
   setCategoryNames,
   setChartData,
   width = 900,
@@ -51,6 +51,7 @@ export default function LineChart({
     lineData.sort(function compare(a, b) {
       return b.length - a.length;
     });
+    lineData = lineData.slice(0, numberOfResults);
     const allDates = getAllDates(lineData);
     const allValues = getAllValues(lineData);
     const finalChartData = combineChartDataWithAllDates(
