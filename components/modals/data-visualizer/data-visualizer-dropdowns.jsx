@@ -346,7 +346,7 @@ export default function DataVisualizerDropdowns({
                         className={({ active }) =>
                           classNames(
                             active ? 'text-white bg-gray-800' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-3 pr-9 text-sm',
+                            'relative cursor-default select-none py-2 pl-3 pr-4 text-sm',
                           )
                         }
                         value={key}
