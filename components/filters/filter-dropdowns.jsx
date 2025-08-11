@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import Dropdown from './dropdown.jsx';
 
-export default function FilterDropdowns({ values, router }) {
+export default function FilterDropdowns({ values, router, isGeneral }) {
   values = values.sort((a, b) => {
     return d3.ascending(Object.keys(a)[0], Object.keys(b)[0]);
   });
@@ -14,6 +14,7 @@ export default function FilterDropdowns({ values, router }) {
             label={Object.keys(entry)}
             options={Object.values(entry)[0]}
             key={index}
+            isGeneral={isGeneral}
           />
         );
       })}

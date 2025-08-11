@@ -2,7 +2,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Fragment, useEffect, useState } from 'react';
 import { classNames } from '../../scripts/common';
-import { GROUP_AFFILIATION_REGEX } from '../../scripts/constants';
+import { GROUP_AFFILIATION, GROUP_AFFILIATION_REGEX, TAG } from '../../scripts/constants';
 import { addQueryParam, removeQueryParam } from '../../scripts/router-handling';
 
 export default function Dropdown({
@@ -11,9 +11,11 @@ export default function Dropdown({
   router,
   isLoading,
   hasError,
+  isGeneral
 }) {
   const [selectedKey, setSelectedKey] = useState([]);
   const isDisabled = isLoading && !hasError;
+  const [isDisabledOutsideGeneral, setIsDisabledOutsideGeneral] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [isExclude, setIsExclude] = useState(false);
 
@@ -35,6 +37,7 @@ export default function Dropdown({
         : addQueryParam(label, paramValue, router);
     }
     setInitialLoad(false);
+    setIsDisabledOutsideGeneral(!isGeneral && (label == GROUP_AFFILIATION || label == TAG));
   }, [selectedKey, isExclude]);
 
   useEffect(() => {
@@ -48,13 +51,14 @@ export default function Dropdown({
   }
 
   return (
-    <div className='pt-2 flex'>
+    <div className='pt-2 flex flex-wrap'>
       <div className='w-4/5'>
         <Listbox
           value={selectedKey}
           onChange={setSelectedKey}
           multiple
           className='z-0'
+          disabled={isDisabledOutsideGeneral}
         >
           {({ open }) => (
             <>
@@ -149,8 +153,12 @@ export default function Dropdown({
           type='checkbox'
           onChange={handleCheckChange}
           checked={isExclude}
+          disabled={isDisabledOutsideGeneral}
         />
       </div>
+      {isDisabledOutsideGeneral && (
+        <p className='text-start text-sm pr-2 text-gray-400'>This filter is only available in the General tab</p>
+      )}
     </div>
   );
 }
