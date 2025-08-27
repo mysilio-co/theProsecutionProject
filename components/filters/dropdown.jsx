@@ -102,6 +102,7 @@ export default function Dropdown({
                           )
                         }
                         value={key}
+                        title={key}
                       >
                         {({ selectedKey, active }) => (
                           <>
