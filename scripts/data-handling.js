@@ -12,7 +12,7 @@ import {
   NUMERIC_COLUMNS,
   SEARCH_BY_KEYS_MOBILE,
   TAG,
-  TAG_REGEX,
+  TAG_REGEX
 } from './constants';
 
 export function runAllFilters(data, query, isMobile) {
@@ -218,30 +218,26 @@ function filterByIdeologicalGrouping(filterValues, rowValue) {
 
 function filterByGroupAffiliation(filterValues, rowValue) {
   let retValue = false;
-  const fuse = new Fuse(filterValues, {
-    isCaseSensitive: false,
-    ignoreLocation: false,
-    threshold: 0.1,
-  });
-  rowValue?.split(GROUP_AFFILIATION_REGEX).forEach(rowGroup => {
-    if (fuse.search(rowGroup).length > 0) {
-      retValue = true;
-    }
+  rowValue?.split(GROUP_AFFILIATION_REGEX).forEach(rowTag => {
+    rowTag = rowTag.trim();
+    filterValues.forEach(filterValue => {
+      if (filterValue === rowTag) {
+        retValue = true;
+      }
+    });
   });
   return retValue;
 }
 
 function filterByTag(filterValues, rowValue) {
   let retValue = false;
-  const fuse = new Fuse(filterValues, {
-    isCaseSensitive: false,
-    ignoreLocation: false,
-    threshold: 0.1,
-  });
-  rowValue?.split(TAG_REGEX).forEach(rowGroup => {
-    if (fuse.search(rowGroup).length > 0) {
-      retValue = true;
-    }
+  rowValue?.split(TAG_REGEX).forEach(rowTag => {
+    rowTag = rowTag.trim();
+    filterValues.forEach(filterValue => {
+      if (filterValue === rowTag) {
+        retValue = true;
+      }
+    });
   });
   return retValue;
 }
